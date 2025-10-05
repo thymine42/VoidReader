@@ -50,9 +50,10 @@ class AnxSegmentedButton<T> extends StatelessWidget {
               value: segment.value,
               label: Text(
                 segment.label,
+                softWrap: false,
                 style: segment.labelStyle,
                 maxLines: segment.maxLines ?? 1,
-                overflow: segment.overflow ?? TextOverflow.ellipsis,
+                overflow: segment.overflow ?? TextOverflow.fade,
               ),
               icon: segment.icon,
             ),
