@@ -108,7 +108,7 @@ dependencies:
   langchain_openai:
     git:
       url: https://github.com/Anxcye/langchain_dart.git
-      ref: 4155175fabd0b94a365fc06cb19b65962ca1cc90
+      ref: bb06c17ca667a906e3e37154b0bda95023d0c9bd
       path: packages/langchain_openai
   langchain_core: ^0.3.9
   skeletonizer: ^2.1.0+1
@@ -118,7 +118,7 @@ dependency_overrides:
   openai_dart:
     git:
       url: https://github.com/Anxcye/langchain_dart.git
-      ref: 4155175fabd0b94a365fc06cb19b65962ca1cc90
+      ref: bb06c17ca667a906e3e37154b0bda95023d0c9bd
       path: packages/openai_dart
   
 

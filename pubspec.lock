@@ -1203,8 +1203,8 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/langchain_openai"
-      ref: "4155175fabd0b94a365fc06cb19b65962ca1cc90"
-      resolved-ref: "4155175fabd0b94a365fc06cb19b65962ca1cc90"
+      ref: bb06c17ca667a906e3e37154b0bda95023d0c9bd
+      resolved-ref: bb06c17ca667a906e3e37154b0bda95023d0c9bd
       url: "https://github.com/Anxcye/langchain_dart.git"
     source: git
     version: "0.7.6+2"
@@ -1364,8 +1364,8 @@ packages:
     dependency: "direct overridden"
     description:
       path: "packages/openai_dart"
-      ref: "4155175fabd0b94a365fc06cb19b65962ca1cc90"
-      resolved-ref: "4155175fabd0b94a365fc06cb19b65962ca1cc90"
+      ref: bb06c17ca667a906e3e37154b0bda95023d0c9bd
+      resolved-ref: bb06c17ca667a906e3e37154b0bda95023d0c9bd
       url: "https://github.com/Anxcye/langchain_dart.git"
     source: git
     version: "0.5.5"
