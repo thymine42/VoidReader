@@ -44,9 +44,9 @@ class AiChat extends _$AiChat {
 
     String assistantResponse = "";
     await for (final chunk in aiGenerateStream(
-      widgetRef,
       messages,
       regenerate: isRegenerate,
+      useAgent: true,
     )) {
       assistantResponse = chunk;
 

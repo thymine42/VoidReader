@@ -9,7 +9,8 @@ import 'package:anx_reader/service/ai/langchain_ai_config.dart';
 import 'package:anx_reader/service/ai/langchain_registry.dart';
 import 'package:anx_reader/service/ai/langchain_runner.dart';
 import 'package:anx_reader/utils/log/common.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:langchain/langchain.dart'
+    show AgentExecutor, ConversationBufferMemory, ToolsAgent;
 import 'package:langchain_core/chat_models.dart';
 import 'package:langchain_core/prompts.dart';
 
@@ -17,31 +18,18 @@ final LangchainAiRegistry _registry = LangchainAiRegistry();
 final CancelableLangchainRunner _runner = CancelableLangchainRunner();
 
 Stream<String> aiGenerateStream(
-  WidgetRef ref,
   List<ChatMessage> messages, {
   String? identifier,
   Map<String, String>? config,
   bool regenerate = false,
+  bool useAgent = false,
 }) {
   return _generateStream(
     messages: messages,
     identifier: identifier,
     overrideConfig: config,
     regenerate: regenerate,
-  );
-}
-
-Stream<String> aiGenerateStreamWithoutRef(
-  List<ChatMessage> messages, {
-  String? identifier,
-  Map<String, String>? config,
-  bool regenerate = false,
-}) {
-  return _generateStream(
-    messages: messages,
-    identifier: identifier,
-    overrideConfig: config,
-    regenerate: regenerate,
+    useAgent: useAgent,
   );
 }
 
@@ -54,6 +42,7 @@ Stream<String> _generateStream({
   String? identifier,
   Map<String, String>? overrideConfig,
   required bool regenerate,
+  required bool useAgent,
 }) async* {
   AnxLog.info('aiGenerateStream called identifier: $identifier');
   final selectedIdentifier = identifier ?? Prefs().selectedAiService;
@@ -76,19 +65,61 @@ Stream<String> _generateStream({
     config = mergeConfigs(config, override);
   }
 
-  final prompt = PromptValue.chat(messages);
   final hash = _hashMessages(messages);
   final cacheEntry = await AiCache.getAiCache(hash);
 
-  if (cacheEntry != null && cacheEntry.data.isNotEmpty && !regenerate) {
+  if (!useAgent &&
+      cacheEntry != null &&
+      cacheEntry.data.isNotEmpty &&
+      !regenerate) {
     yield cacheEntry.decoratedText();
     return;
   }
 
-  AnxLog.info('aiGenerateStream: $selectedIdentifier, model: ${config.model}');
+  AnxLog.info(
+      'aiGenerateStream: $selectedIdentifier, model: ${config.model}, baseUrl: ${config.baseUrl}');
 
-  final model = _registry.resolve(config);
-  final stream = _runner.stream(model: model, prompt: prompt);
+  final pipeline = _registry.resolve(config, useAgent: useAgent);
+  final model = pipeline.model;
+
+  Stream<String> stream;
+  if (useAgent) {
+    final inputMessage = _latestUserMessage(messages);
+    if (inputMessage == null) {
+      yield 'No user input provided';
+      return;
+    }
+
+    final tools = pipeline.tools;
+    if (tools.isEmpty) {
+      yield 'Agent mode not supported for this provider.';
+      return;
+    }
+
+    final memory = ConversationBufferMemory(returnMessages: true);
+    final historyMessages = messages.sublist(0, messages.length - 1);
+    for (final message in historyMessages) {
+      await memory.chatHistory.addChatMessage(message);
+    }
+
+    final agent = ToolsAgent.fromLLMAndTools(
+      llm: model,
+      tools: tools,
+      memory: memory,
+    );
+    final executor = AgentExecutor(
+      agent: agent,
+      maxIterations: 120,
+      returnIntermediateSteps: true,
+    );
+    stream = _runner.streamAgent(
+      executor: executor,
+      input: inputMessage,
+    );
+  } else {
+    final prompt = PromptValue.chat(messages);
+    stream = _runner.stream(model: model, prompt: prompt);
+  }
 
   var buffer = cacheEntry?.data ?? '';
 
@@ -98,7 +129,7 @@ Stream<String> _generateStream({
       yield buffer;
     }
 
-    if (buffer.isNotEmpty) {
+    if (!useAgent && buffer.isNotEmpty) {
       final conversation = [...messages, ChatMessage.ai(buffer)];
       await AiCache.setAiCache(hash, buffer, selectedIdentifier, conversation);
     }
@@ -106,6 +137,10 @@ Stream<String> _generateStream({
     final mapped = _mapError(error);
     AnxLog.severe('AI error: $mapped\n$stack');
     yield mapped;
+  } finally {
+    try {
+      model.close();
+    } catch (_) {}
   }
 }
 
@@ -161,4 +196,14 @@ String _mapError(Object error) {
   }
 
   return '$base${error.toString()}';
+}
+
+String? _latestUserMessage(List<ChatMessage> messages) {
+  for (var i = messages.length - 1; i >= 0; i--) {
+    final message = messages[i];
+    if (message is HumanChatMessage) {
+      return message.contentAsString;
+    }
+  }
+  return null;
 }

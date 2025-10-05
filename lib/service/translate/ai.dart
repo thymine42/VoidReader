@@ -35,7 +35,7 @@ class AiTranslateProvider extends TranslateServiceProvider {
       final messages = payload.buildMessages();
 
       await for (final result
-          in aiGenerateStreamWithoutRef(messages, regenerate: false)) {
+          in aiGenerateStream(messages, regenerate: false)) {
         yield result;
       }
     } catch (e) {

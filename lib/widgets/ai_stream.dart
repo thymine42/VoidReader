@@ -18,6 +18,7 @@ class AiStream extends ConsumerStatefulWidget {
     this.config,
     this.canCopy = true,
     this.regenerate = false,
+    this.useAgent = false,
   });
 
   final PromptTemplatePayload prompt;
@@ -25,6 +26,7 @@ class AiStream extends ConsumerStatefulWidget {
   final Map<String, String>? config;
   final bool canCopy;
   final bool regenerate;
+  final bool useAgent;
 
   @override
   AiStreamState createState() => AiStreamState();
@@ -44,11 +46,11 @@ class AiStreamState extends ConsumerState<AiStream> {
   Stream<String> _createStream(bool regenerate) {
     final messages = widget.prompt.buildMessages();
     return aiGenerateStream(
-      ref,
       messages,
       identifier: widget.identifier,
       config: widget.config,
       regenerate: regenerate,
+      useAgent: widget.useAgent,
     );
   }
 
@@ -62,15 +64,15 @@ class AiStreamState extends ConsumerState<AiStream> {
         }
 
         if (!snapshot.hasData) {
-          return const Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CircularProgressIndicator(),
-            ],
-          );
+          return SizedBox(
+              width: 300,
+              height: 60,
+              child: Skeletonizer.zone(
+                child: Bone.multiText(),
+              ));
         }
 
+        final l10n = L10n.of(context);
         final data = snapshot.data!;
         final parsed = parseReasoningContent(data);
         _syncReasoningState(parsed);
@@ -79,9 +81,9 @@ class AiStreamState extends ConsumerState<AiStream> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (parsed.hasThink)
+              if (parsed.timeline.isNotEmpty)
                 ReasoningPanel(
-                  think: parsed.think,
+                  timeline: parsed.timeline,
                   expanded: _reasoningExpanded,
                   streaming: !parsed.hasAnswer,
                   onToggle: () {
@@ -96,8 +98,8 @@ class AiStreamState extends ConsumerState<AiStream> {
                   padding: const EdgeInsets.only(top: 8.0),
                   child: MarkdownBody(data: parsed.answer),
                 )
-              else if (!parsed.hasThink)
-                Skeletonizer.zone(child: Bone.multiText()),
+              else if (parsed.timeline.isEmpty)
+                SizedBox.shrink(),
               if (widget.canCopy)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -110,14 +112,14 @@ class AiStreamState extends ConsumerState<AiStream> {
                           stream = _createStream(true);
                         });
                       },
-                      child: Text(L10n.of(context).aiRegenerate),
+                      child: Text(l10n.aiRegenerate),
                     ),
                     TextButton(
                       onPressed: () {
                         Clipboard.setData(ClipboardData(text: data));
-                        AnxToast.show(L10n.of(context).notesPageCopied);
+                        AnxToast.show(l10n.notesPageCopied);
                       },
-                      child: Text(L10n.of(context).commonCopy),
+                      child: Text(l10n.commonCopy),
                     ),
                   ],
                 ),

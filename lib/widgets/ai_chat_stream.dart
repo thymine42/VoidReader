@@ -82,6 +82,29 @@ class AiChatStreamState extends ConsumerState<AiChatStream> {
     });
   }
 
+  Widget _buildLoadingSkeletonList() {
+    return ListView.separated(
+      controller: _scrollController,
+      padding: const EdgeInsets.all(16),
+      itemBuilder: (_, __) => _buildLoadingSkeletonTile(),
+      separatorBuilder: (_, __) => const SizedBox(height: 12),
+      itemCount: 3,
+    );
+  }
+
+  Widget _buildLoadingSkeletonTile() {
+    return Skeletonizer.zone(
+      child: Card(
+        child: ListTile(
+          leading: Bone.circle(size: 48),
+          title: Bone.text(words: 2),
+          subtitle: Bone.text(),
+          trailing: Bone.icon(),
+        ),
+      ),
+    );
+  }
+
   void _sendMessage({bool isRegenerate = false}) {
     if (inputController.text.trim().isEmpty) return;
     final message = inputController.text.trim();
@@ -161,9 +184,7 @@ class AiChatStreamState extends ConsumerState<AiChatStream> {
                     stream: _messageStream,
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
-                        return const Center(
-                          child: CircularProgressIndicator(color: Colors.red),
-                        );
+                        return _buildLoadingSkeletonList();
                       }
 
                       final messages = snapshot.data!;
@@ -180,8 +201,7 @@ class AiChatStreamState extends ConsumerState<AiChatStream> {
 
                         return _buildMessageList(messages);
                       },
-                      loading: () =>
-                          const Center(child: CircularProgressIndicator()),
+                      loading: () => _buildLoadingSkeletonList(),
                       error: (error, stack) =>
                           Center(child: Text('error: $error')),
                     ),
@@ -262,7 +282,7 @@ class AiChatStreamState extends ConsumerState<AiChatStream> {
     final isLongMessage = content.length > 300;
     final lastAssistantMessage = _getLastAssistantMessage();
 
-    if (!isUser && parsed.hasThink) {
+    if (!isUser && (parsed.hasThink || parsed.hasToolSteps)) {
       _syncMessageExpansion(index, parsed, isStreaming);
     }
 
@@ -366,9 +386,9 @@ class AiChatStreamState extends ConsumerState<AiChatStream> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (parsed.hasThink)
+        if (parsed.timeline.isNotEmpty)
           ReasoningPanel(
-            think: parsed.think,
+            timeline: parsed.timeline,
             expanded: expanded,
             streaming: !parsed.hasAnswer,
             onToggle: onToggle,
@@ -376,7 +396,7 @@ class AiChatStreamState extends ConsumerState<AiChatStream> {
           ),
         if (parsed.hasAnswer)
           MarkdownBody(data: parsed.answer)
-        else if (!parsed.hasThink)
+        else if (!parsed.hasToolSteps)
           Skeletonizer.zone(child: Bone.multiText()),
       ],
     );

@@ -112,6 +112,7 @@ dependencies:
       path: packages/langchain_openai
   langchain_core: ^0.3.9
   skeletonizer: ^2.1.0+1
+  math_expressions: ^2.5.0
 
 dependency_overrides:
   openai_dart:
