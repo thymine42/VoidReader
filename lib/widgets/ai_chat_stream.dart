@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:anx_reader/l10n/generated/L10n.dart';
 import 'package:anx_reader/providers/ai_chat.dart';
+import 'package:anx_reader/service/ai/index.dart';
 import 'package:anx_reader/utils/toast/common.dart';
 import 'package:anx_reader/utils/ai_reasoning_parser.dart';
 import 'package:anx_reader/widgets/ai_reasoning_panel.dart';
@@ -24,9 +27,12 @@ class AiChatStream extends ConsumerStatefulWidget {
 class AiChatStreamState extends ConsumerState<AiChatStream> {
   final TextEditingController inputController = TextEditingController();
   Stream<List<ChatMessage>>? _messageStream;
+  StreamController<List<ChatMessage>>? _messageController;
+  StreamSubscription<List<ChatMessage>>? _messageSubscription;
   final ScrollController _scrollController = ScrollController();
   final Map<int, bool> _expandedState = <int, bool>{};
   final Set<int> _userControlled = <int>{};
+  bool _isStreaming = false;
 
   List<Map<String, String>> _getQuickPrompts(BuildContext context) {
     return [
@@ -66,6 +72,8 @@ class AiChatStreamState extends ConsumerState<AiChatStream> {
   @override
   void dispose() {
     inputController.dispose();
+    _messageSubscription?.cancel();
+    _messageController?.close();
     _scrollController.dispose();
     super.dispose();
   }
@@ -106,17 +114,58 @@ class AiChatStreamState extends ConsumerState<AiChatStream> {
   }
 
   void _sendMessage({bool isRegenerate = false}) {
+    if (_isStreaming) {
+      return;
+    }
+
     if (inputController.text.trim().isEmpty) return;
     final message = inputController.text.trim();
     inputController.clear();
 
+    _messageSubscription?.cancel();
+    _messageController?.close();
+
+    final controller = StreamController<List<ChatMessage>>();
+    final stream = ref.read(aiChatProvider.notifier).sendMessageStream(
+          message,
+          ref,
+          isRegenerate,
+        );
+
     setState(() {
-      _messageStream = ref.read(aiChatProvider.notifier).sendMessageStream(
-            message,
-            ref,
-            isRegenerate,
-          );
+      _messageController = controller;
+      _messageStream = controller.stream;
+      _isStreaming = true;
     });
+
+    _messageSubscription = stream.listen(
+      (event) {
+        controller.add(event);
+        _scrollToBottom();
+      },
+      onError: (error, stack) {
+        controller.addError(error, stack);
+        if (!controller.isClosed) {
+          controller.close();
+        }
+        if (mounted) {
+          setState(() {
+            _isStreaming = false;
+          });
+        }
+      },
+      onDone: () {
+        if (!controller.isClosed) {
+          controller.close();
+        }
+        if (mounted) {
+          setState(() {
+            _isStreaming = false;
+          });
+        }
+      },
+      cancelOnError: false,
+    );
   }
 
   void _useQuickPrompt(String prompt) {
@@ -125,6 +174,13 @@ class AiChatStreamState extends ConsumerState<AiChatStream> {
   }
 
   void _clearMessage() {
+    if (_isStreaming) {
+      return;
+    }
+    _messageSubscription?.cancel();
+    _messageSubscription = null;
+    _messageController?.close();
+    _messageController = null;
     setState(() {
       ref.read(aiChatProvider.notifier).clear();
       _messageStream = null;
@@ -132,6 +188,9 @@ class AiChatStreamState extends ConsumerState<AiChatStream> {
   }
 
   void _regenerateLastMessage() {
+    if (_isStreaming) {
+      return;
+    }
     final messages = ref.read(aiChatProvider).value;
     if (messages == null || messages.isEmpty) {
       return;
@@ -154,6 +213,19 @@ class AiChatStreamState extends ConsumerState<AiChatStream> {
   void _copyMessageContent(String content) {
     Clipboard.setData(ClipboardData(text: content));
     AnxToast.show(L10n.of(context).notesPageCopied);
+  }
+
+  void _cancelStreaming() {
+    if (!_isStreaming) return;
+    cancelActiveAiRequest();
+    _messageSubscription?.cancel();
+    _messageSubscription = null;
+    _messageController?.close();
+    _messageController = null;
+    setState(() {
+      _isStreaming = false;
+      _messageStream = null;
+    });
   }
 
   ChatMessage? _getLastAssistantMessage() {
@@ -247,8 +319,8 @@ class AiChatStreamState extends ConsumerState<AiChatStream> {
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.send),
-                  onPressed: _sendMessage,
+                  icon: Icon(_isStreaming ? Icons.stop : Icons.send),
+                  onPressed: _isStreaming ? _cancelStreaming : _sendMessage,
                 ),
               ],
             ),
