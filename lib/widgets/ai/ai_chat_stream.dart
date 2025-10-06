@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:anx_reader/config/shared_preference_provider.dart';
 import 'package:anx_reader/l10n/generated/L10n.dart';
 import 'package:anx_reader/providers/ai_chat.dart';
+import 'package:anx_reader/service/ai/ai_services.dart';
 import 'package:anx_reader/service/ai/index.dart';
 import 'package:anx_reader/utils/toast/common.dart';
 import 'package:anx_reader/utils/ai_reasoning_parser.dart';
@@ -34,6 +36,8 @@ class AiChatStreamState extends ConsumerState<AiChatStream> {
   final Map<int, bool> _expandedState = <int, bool>{};
   final Set<int> _userControlled = <int>{};
   bool _isStreaming = false;
+  late List<AiServiceOption> _serviceOptions;
+  late String _selectedServiceId;
 
   List<Map<String, String>> _getQuickPrompts(BuildContext context) {
     return [
@@ -63,6 +67,13 @@ class AiChatStreamState extends ConsumerState<AiChatStream> {
   @override
   void initState() {
     super.initState();
+    _serviceOptions = buildDefaultAiServices();
+    _selectedServiceId = Prefs().selectedAiService;
+    final availableIds = _serviceOptions.map((option) => option.identifier);
+    if (!availableIds.contains(_selectedServiceId)) {
+      _selectedServiceId = _serviceOptions.first.identifier;
+      Prefs().selectedAiService = _selectedServiceId;
+    }
     inputController.text = widget.initialMessage ?? '';
     if (widget.sendImmediate) {
       _sendMessage();
@@ -77,6 +88,32 @@ class AiChatStreamState extends ConsumerState<AiChatStream> {
     _messageController?.close();
     _scrollController.dispose();
     super.dispose();
+  }
+
+  AiServiceOption get _currentService => _serviceOptions.firstWhere(
+        (option) => option.identifier == _selectedServiceId,
+        orElse: () => _serviceOptions.first,
+      );
+
+  String _modelLabel(String serviceId) {
+    final option = _serviceOptions.firstWhere(
+      (element) => element.identifier == serviceId,
+      orElse: () => _serviceOptions.first,
+    );
+    final stored = Prefs().getAiConfig(serviceId);
+    final model = stored['model'];
+    if (model != null && model.trim().isNotEmpty) {
+      return model;
+    }
+    return option.defaultModel;
+  }
+
+  void _onServiceSelected(String identifier) {
+    if (_isStreaming || identifier == _selectedServiceId) return;
+    Prefs().selectedAiService = identifier;
+    setState(() {
+      _selectedServiceId = identifier;
+    });
   }
 
   void _scrollToBottom() {
@@ -224,6 +261,58 @@ class AiChatStreamState extends ConsumerState<AiChatStream> {
   Widget build(BuildContext context) {
     final quickPrompts = _getQuickPrompts(context);
 
+    var aiService = PopupMenuButton<String>(
+      enabled: !_isStreaming,
+      onSelected: _onServiceSelected,
+      itemBuilder: (context) {
+        return _serviceOptions.map((option) {
+          final isSelected = option.identifier == _selectedServiceId;
+          final label = _modelLabel(option.identifier);
+          return PopupMenuItem<String>(
+            value: option.identifier,
+            child: Row(
+              children: [
+                Image.asset(
+                  option.logo,
+                  width: 20,
+                  height: 20,
+                  errorBuilder: (_, __, ___) => const SizedBox(),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    '${option.title} · $label',
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                if (isSelected) const Icon(Icons.check, size: 16),
+              ],
+            ),
+          );
+        }).toList(growable: false);
+      },
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Image.asset(
+            _currentService.logo,
+            width: 20,
+            height: 20,
+            errorBuilder: (_, __, ___) => const SizedBox(),
+          ),
+          const SizedBox(width: 6),
+          Flexible(
+            child: Text(
+              '${_currentService.title} · ${_modelLabel(_selectedServiceId)}',
+              style: Theme.of(context).textTheme.bodySmall,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          const SizedBox(width: 4),
+          const Icon(Icons.expand_more, size: 16),
+        ],
+      ),
+    );
     Widget inputBox = FilledContainer(
       padding: const EdgeInsets.all(4),
       radius: 10,
@@ -266,12 +355,19 @@ class AiChatStreamState extends ConsumerState<AiChatStream> {
           ),
           SizedBox(height: 4),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              IconButton(
-                icon: const Icon(Icons.clear, size: 18),
-                onPressed: _clearMessage,
+              Expanded(
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.clear, size: 18),
+                      onPressed: _clearMessage,
+                    ),
+                    Flexible(child: aiService),
+                  ],
+                ),
               ),
-              const Spacer(),
               IconButton(
                 icon: Icon(_isStreaming ? Icons.stop : Icons.send, size: 18),
                 onPressed: _isStreaming ? _cancelStreaming : _sendMessage,

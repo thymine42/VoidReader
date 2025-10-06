@@ -3,9 +3,9 @@ import 'package:anx_reader/enums/ai_prompts.dart';
 import 'package:anx_reader/l10n/generated/L10n.dart';
 import 'package:anx_reader/page/settings_page/subpage/ai_chat_page.dart';
 import 'package:anx_reader/providers/ai_cache_count.dart';
+import 'package:anx_reader/service/ai/ai_services.dart';
 import 'package:anx_reader/service/ai/index.dart';
 import 'package:anx_reader/service/ai/prompt_generate.dart';
-import 'package:anx_reader/utils/env_var.dart';
 import 'package:anx_reader/widgets/ai/ai_stream.dart';
 import 'package:anx_reader/widgets/settings/settings_section.dart';
 import 'package:anx_reader/widgets/settings/settings_tile.dart';
@@ -28,75 +28,43 @@ class _AISettingsState extends ConsumerState<AISettings> {
   late List<Map<String, dynamic>> initialServicesConfig;
   bool _obscureApiKey = true;
 
-  List<Map<String, dynamic>> services = [
-    EnvVar.isBeian
-        ? {
-            "identifier": "openai",
-            "title": "通用",
-            "logo": "assets/images/commonAi.png",
-            "config": {
-              "url":
-                  "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
-              "api_key": "YOUR_API_KEY",
-              "model": "qwen-long",
-            },
-          }
-        : {
-            "identifier": "openai",
-            "title": "OpenAI",
-            "logo": "assets/images/openai.png",
-            "config": {
-              "url": "https://api.openai.com/v1/chat/completions",
-              "api_key": "YOUR_API_KEY",
-              "model": "gpt-4o-mini",
-            },
-          },
-    {
-      "identifier": "claude",
-      "title": "Claude",
-      "logo": "assets/images/claude.png",
-      "config": {
-        "url": "https://api.anthropic.com/v1/messages",
-        "api_key": "YOUR_API_KEY",
-        "model": "claude-3-5-sonnet-20240620",
-      },
-    },
-    {
-      "identifier": "gemini",
-      "title": "Gemini",
-      "logo": "assets/images/gemini.png",
-      "config": {
-        "url":
-            "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
-        "api_key": "YOUR_API_KEY",
-        "model": "gemini-2.0-flash"
-      },
-    },
-    {
-      "identifier": "deepseek",
-      "title": "DeepSeek",
-      "logo": "assets/images/deepseek.png",
-      "config": {
-        "url": "https://api.deepseek.com/v1/chat/completions",
-        "api_key": "YOUR_API_KEY",
-        "model": "deepseek-chat",
-      },
-    },
-  ];
+  late final List<AiServiceOption> serviceOptions;
+  late List<Map<String, dynamic>> services;
 
   @override
   void initState() {
-    initialServicesConfig = services.map((service) {
-      return {
-        ...service,
-        'config': Map<String, String>.from(service['config']),
-      };
-    }).toList();
-    for (var service in services) {
-      for (var key in service["config"].keys) {
-        service["config"][key] =
-            Prefs().getAiConfig(service["identifier"])[key] ??
-                service["config"][key];
+    serviceOptions = buildDefaultAiServices();
+    services = serviceOptions
+        .map(
+          (option) {
+            return {
+              'identifier': option.identifier,
+              'title': option.title,
+              'logo': option.logo,
+              'config': {
+                'url': option.defaultUrl,
+                'api_key': option.defaultApiKey,
+                'model': option.defaultModel,
+              },
+            };
+          },
+        )
+        .toList();
+    initialServicesConfig = services
+        .map(
+          (service) => {
+            ...service,
+            'config': Map<String, String>.from(
+              service['config'] as Map<String, String>,
+            ),
+          },
+        )
+        .toList();
+    for (final service in services) {
+      final stored = Prefs().getAiConfig(service['identifier'] as String);
+      final config = service['config'] as Map<String, String>;
+      for (final entry in stored.entries) {
+        config[entry.key] = entry.value;
       }
     }
     super.initState();
@@ -300,7 +268,7 @@ class _AISettingsState extends ConsumerState<AISettings> {
                             const SizedBox(
                               height: 10,
                             ),
-                            Text(services[index]["title"]),
+                            FittedBox(child: Text(services[index]["title"])),
                           ],
                         ),
                       ),
