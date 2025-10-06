@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:anx_reader/service/ai/repository/notes_repository.dart';
+import 'package:anx_reader/service/ai/tools/repository/notes_repository.dart';
 
 import 'base_tool.dart';
 

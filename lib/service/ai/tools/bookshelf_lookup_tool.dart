@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:anx_reader/service/ai/repository/books_repository.dart';
+import 'package:anx_reader/service/ai/tools/repository/books_repository.dart';
 
 import 'base_tool.dart';
 

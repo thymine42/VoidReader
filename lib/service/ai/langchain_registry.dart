@@ -5,9 +5,9 @@ import 'package:langchain_google/langchain_google.dart';
 import 'package:langchain_openai/langchain_openai.dart';
 
 import 'langchain_ai_config.dart';
-import 'repository/books_repository.dart';
-import 'repository/notes_repository.dart';
-import 'repository/reading_history_repository.dart';
+import 'tools/repository/books_repository.dart';
+import 'tools/repository/notes_repository.dart';
+import 'tools/repository/reading_history_repository.dart';
 import 'tools/bookshelf_lookup_tool.dart';
 import 'tools/calculator_tool.dart';
 import 'tools/current_time_tool.dart';

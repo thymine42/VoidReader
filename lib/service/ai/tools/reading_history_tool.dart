@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:anx_reader/service/ai/repository/reading_history_repository.dart';
+import 'package:anx_reader/service/ai/tools/repository/reading_history_repository.dart';
 import 'package:anx_reader/utils/date/convert_seconds.dart';
 
 import 'base_tool.dart';
