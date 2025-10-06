@@ -5,7 +5,7 @@ import 'package:anx_reader/dao/database.dart';
 import 'package:anx_reader/enums/sync_direction.dart';
 import 'package:anx_reader/enums/sync_trigger.dart';
 import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/page/ai_page.dart';
+import 'package:anx_reader/page/home_page/ai_page.dart';
 import 'package:anx_reader/service/iap_service.dart';
 import 'package:anx_reader/service/initialization_check.dart';
 import 'package:anx_reader/page/home_page/bookshelf_page.dart';
@@ -177,8 +177,8 @@ class _HomePageState extends ConsumerState<HomePage> {
       },
     ];
 
-    void onBottomTap(index) {
-      if (navBarItems[index]['identifier'] == 'ai') {
+    void onBottomTap(int index, bool fromRail) {
+      if (navBarItems[index]['identifier'] == 'ai' && !fromRail) {
         showCupertinoSheet(context:  context, builder: (context) => const AiPage());
         return;
       }
@@ -233,7 +233,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                     groupAlignment: 1,
                     extended: false,
                     selectedIndex: _currentIndex,
-                    onDestinationSelected: onBottomTap,
+                    onDestinationSelected: (int index) => onBottomTap(index, true),
                     destinations: railBarItems,
                     labelType: NavigationRailLabelType.all,
                     backgroundColor: Colors.transparent,
@@ -245,6 +245,9 @@ class _HomePageState extends ConsumerState<HomePage> {
             ),
           );
         } else {
+          if (navBarItems[_currentIndex]['identifier'] == 'ai') {
+            _currentIndex = 0;
+          }
           return Scaffold(
             extendBody: true,
             body: BottomBar(
@@ -282,7 +285,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                       landscapeLayout:
                           BottomNavigationBarLandscapeLayout.linear,
                       currentIndex: _currentIndex,
-                      onTap: onBottomTap,
+                      onTap: (int index) => onBottomTap(index, false),
                       items: bottomBarItems,
                       backgroundColor: Colors.transparent,
                       elevation: 0,
