@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class ParsedReasoning {
   const ParsedReasoning({
     required this.timeline,
@@ -81,11 +83,9 @@ ParsedReasoning parseReasoningContent(String content) {
         ParsedToolStep(
           name: _unescapeAttr(attrs['name'] ?? ''),
           status: (attrs['status'] ?? 'pending').toLowerCase(),
-          input: attrs['input'] != null ? _unescapeAttr(attrs['input']!) : null,
-          output:
-              attrs['output'] != null ? _unescapeAttr(attrs['output']!) : null,
-          error:
-              attrs['error'] != null ? _unescapeAttr(attrs['error']!) : null,
+          input: _decodeAttrValue(attrs, 'input'),
+          output: _decodeAttrValue(attrs, 'output'),
+          error: _decodeAttrValue(attrs, 'error'),
         ),
       ),
     );
@@ -105,6 +105,19 @@ Map<String, String> _parseAttributes(String raw) {
     attrs[match.group(1)!] = match.group(2)!;
   }
   return attrs;
+}
+
+String? _decodeAttrValue(Map<String, String> attrs, String key) {
+  final direct = attrs[key];
+  if (direct != null) {
+    return _unescapeAttr(direct);
+  }
+  final encoded = attrs['${key}_b64'];
+  if (encoded != null) {
+    final decoded = utf8.decode(base64Decode(_unescapeAttr(encoded)));
+    return decoded;
+  }
+  return null;
 }
 
 String _unescapeAttr(String value) {
@@ -134,13 +147,9 @@ void _parseTimeline(String source, List<ParsedReasoningEntry> timeline) {
           ParsedToolStep(
             name: _unescapeAttr(attrs['name'] ?? ''),
             status: (attrs['status'] ?? 'pending').toLowerCase(),
-            input: attrs['input'] != null ? _unescapeAttr(attrs['input']!) : null,
-            output: attrs['output'] != null
-                ? _unescapeAttr(attrs['output']!)
-                : null,
-            error: attrs['error'] != null
-                ? _unescapeAttr(attrs['error']!)
-                : null,
+            input: _decodeAttrValue(attrs, 'input'),
+            output: _decodeAttrValue(attrs, 'output'),
+            error: _decodeAttrValue(attrs, 'error'),
           ),
         ),
       );

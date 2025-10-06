@@ -88,7 +88,8 @@ class ReadingHistoryTool
       limit: input.resolvedLimit(),
     );
 
-    final totalSeconds = records.fold<int>(0, (sum, item) => sum + item.entry.readingTime);
+    final totalSeconds =
+        records.fold<int>(0, (sum, item) => sum + item.entry.readingTime);
 
     return {
       'bookId': input.bookId,
@@ -106,4 +107,5 @@ class ReadingHistoryTool
   }
 }
 
-final readingHistoryTool = ReadingHistoryTool(const ReadingHistoryRepository()).tool;
+final readingHistoryTool =
+    ReadingHistoryTool(const ReadingHistoryRepository()).tool;

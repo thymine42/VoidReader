@@ -309,16 +309,29 @@ class _ToolStep {
       AgentStep(action: action, observation: observation);
 
   String toTag() {
+    String? encode(String? value) {
+      if (value == null || value.isEmpty) {
+        return null;
+      }
+      final encoded = base64Encode(utf8.encode(value));
+      return _escapeAttr(encoded);
+    }
+
     final buffer = StringBuffer(
       '<tool-step name=\'${_escapeAttr(action.tool)}\' '
       "status='${status.name}'",
     );
-    buffer.write(" input='${_escapeAttr(jsonEncode(action.toolInput))}'");
-    if (output != null && output!.isNotEmpty) {
-      buffer.write(" output='${_escapeAttr(output!)}'");
+    final inputEncoded = encode(jsonEncode(action.toolInput));
+    if (inputEncoded != null) {
+      buffer.write(" input_b64='$inputEncoded'");
     }
-    if (error != null && error!.isNotEmpty) {
-      buffer.write(" error='${_escapeAttr(error!)}'");
+    final outputEncoded = encode(output);
+    if (outputEncoded != null) {
+      buffer.write(" output_b64='$outputEncoded'");
+    }
+    final errorEncoded = encode(error);
+    if (errorEncoded != null) {
+      buffer.write(" error_b64='$errorEncoded'");
     }
     buffer.write('/>');
     return buffer.toString();
