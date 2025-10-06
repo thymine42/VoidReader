@@ -732,7 +732,7 @@ class AiChatStreamState extends ConsumerState<AiChatStream> {
               decoration: BoxDecoration(
                 color: isUser
                     ? Theme.of(context).colorScheme.secondaryContainer
-                    : Theme.of(context).colorScheme.surfaceContainer,
+                    : Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.only(
                   topLeft: isUser ? const Radius.circular(12) : Radius.zero,
                   topRight: isUser ? Radius.zero : const Radius.circular(12),
