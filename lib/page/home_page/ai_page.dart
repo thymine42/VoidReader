@@ -7,10 +7,13 @@ class AiPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+double bottomPadding = constraints.maxWidth > 600 ? 0.0 : 80.0;
+
+
     return Scaffold(
       body: Container(
         padding:
-            constraints.maxWidth > 600 ? null : const EdgeInsets.only(bottom: 80.0),
+             EdgeInsets.fromLTRB(6, 6, 6, bottomPadding),
         child: const AiChatStream(),
       ),
     );
