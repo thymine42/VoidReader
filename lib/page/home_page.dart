@@ -5,6 +5,7 @@ import 'package:anx_reader/dao/database.dart';
 import 'package:anx_reader/enums/sync_direction.dart';
 import 'package:anx_reader/enums/sync_trigger.dart';
 import 'package:anx_reader/l10n/generated/L10n.dart';
+import 'package:anx_reader/page/home_page/ai_page.dart';
 import 'package:anx_reader/service/iap_service.dart';
 import 'package:anx_reader/service/initialization_check.dart';
 import 'package:anx_reader/page/home_page/bookshelf_page.dart';
@@ -127,9 +128,14 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    Widget pages(int index, ScrollController? controller) {
+    Widget pages(
+      int index,
+      BoxConstraints constraints,
+      ScrollController? controller,
+    ) {
       final page = [
         BookshelfPage(controller: controller),
+        AiPage(constraints: constraints),
         if (Prefs().bottomNavigatorShowStatistics)
           StatisticPage(
             controller: controller,
@@ -142,6 +148,7 @@ class _HomePageState extends ConsumerState<HomePage> {
 
     List<Map<String, dynamic>> navBarItems = [
       {'icon': EvaIcons.book_open, 'label': L10n.of(context).navBarBookshelf},
+      {'icon': Icons.auto_awesome, 'label': L10n.of(context).navBarAI},
       if (Prefs().bottomNavigatorShowStatistics)
         {'icon': Icons.show_chart, 'label': L10n.of(context).navBarStatistics},
       if (Prefs().bottomNavigatorShowNote)
@@ -202,7 +209,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                     // elevation: 0,
                   ),
                 ),
-                Expanded(child: pages(_currentIndex, null)),
+                Expanded(child: pages(_currentIndex, constraints, null)),
               ],
             ),
           );
@@ -210,7 +217,8 @@ class _HomePageState extends ConsumerState<HomePage> {
           return Scaffold(
             extendBody: true,
             body: BottomBar(
-              body: (_, controller) => pages(_currentIndex, controller),
+              body: (_, controller) =>
+                  pages(_currentIndex, constraints, controller),
               hideOnScroll: true,
               scrollOpposite: false,
               curve: Curves.easeIn,
