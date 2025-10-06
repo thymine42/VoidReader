@@ -5,7 +5,7 @@ import 'package:anx_reader/dao/database.dart';
 import 'package:anx_reader/enums/sync_direction.dart';
 import 'package:anx_reader/enums/sync_trigger.dart';
 import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/page/home_page/ai_page.dart';
+import 'package:anx_reader/page/ai_page.dart';
 import 'package:anx_reader/service/iap_service.dart';
 import 'package:anx_reader/service/initialization_check.dart';
 import 'package:anx_reader/page/home_page/bookshelf_page.dart';
@@ -21,6 +21,7 @@ import 'package:anx_reader/utils/log/common.dart';
 import 'package:anx_reader/providers/sync.dart';
 import 'package:anx_reader/config/shared_preference_provider.dart';
 import 'package:anx_reader/utils/toast/common.dart';
+import 'package:anx_reader/widgets/ai/ai_chat_stream.dart';
 import 'package:anx_reader/widgets/common/container/filled_container.dart';
 import 'package:anx_reader/widgets/settings/about.dart';
 import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
@@ -135,7 +136,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     ) {
       final page = [
         BookshelfPage(controller: controller),
-        if (Prefs().bottomNavigatorShowAI) AiPage(constraints: constraints),
+        if (Prefs().bottomNavigatorShowAI) AiChatStream(),
         if (Prefs().bottomNavigatorShowStatistics)
           StatisticPage(controller: controller),
         if (Prefs().bottomNavigatorShowNote) NotesPage(controller: controller),
@@ -145,15 +146,47 @@ class _HomePageState extends ConsumerState<HomePage> {
     }
 
     List<Map<String, dynamic>> navBarItems = [
-      {'icon': EvaIcons.book_open, 'label': L10n.of(context).navBarBookshelf},
+      {
+        'icon': EvaIcons.book_open,
+        'label': L10n.of(context).navBarBookshelf,
+        'identifier': 'bookshelf'
+      },
       if (Prefs().bottomNavigatorShowAI)
-        {'icon': Icons.auto_awesome, 'label': L10n.of(context).navBarAI},
+        {
+          'icon': Icons.auto_awesome,
+          'label': L10n.of(context).navBarAI,
+          'identifier': 'ai'
+        },
       if (Prefs().bottomNavigatorShowStatistics)
-        {'icon': Icons.show_chart, 'label': L10n.of(context).navBarStatistics},
+        {
+          'icon': Icons.show_chart,
+          'label': L10n.of(context).navBarStatistics,
+          'identifier': 'statistics'
+        },
       if (Prefs().bottomNavigatorShowNote)
-        {'icon': Icons.note, 'label': L10n.of(context).navBarNotes},
-      {'icon': EvaIcons.settings_2, 'label': L10n.of(context).navBarSettings},
+        {
+          'icon': Icons.note,
+          'label': L10n.of(context).navBarNotes,
+          'identifier': 'notes'
+        },
+      {
+        'icon': EvaIcons.settings_2,
+        'label': L10n.of(context).navBarSettings,
+        'identifier': 'settings'
+      },
     ];
+
+    void onBottomTap(index) {
+      if (navBarItems[index]['identifier'] == 'ai') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const AiPage()),
+        );
+      }
+      setState(() {
+        _currentIndex = index;
+      });
+    }
 
     List<NavigationRailDestination> railBarItems = navBarItems.map((item) {
       return NavigationRailDestination(
@@ -201,7 +234,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                     groupAlignment: 1,
                     extended: false,
                     selectedIndex: _currentIndex,
-                    onDestinationSelected: _onBottomTap,
+                    onDestinationSelected: onBottomTap,
                     destinations: railBarItems,
                     labelType: NavigationRailLabelType.all,
                     backgroundColor: Colors.transparent,
@@ -250,7 +283,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                       landscapeLayout:
                           BottomNavigationBarLandscapeLayout.linear,
                       currentIndex: _currentIndex,
-                      onTap: _onBottomTap,
+                      onTap: onBottomTap,
                       items: bottomBarItems,
                       backgroundColor: Colors.transparent,
                       elevation: 0,
@@ -264,11 +297,5 @@ class _HomePageState extends ConsumerState<HomePage> {
         }
       },
     );
-  }
-
-  void _onBottomTap(index) {
-    setState(() {
-      _currentIndex = index;
-    });
   }
 }
