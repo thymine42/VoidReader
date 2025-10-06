@@ -189,22 +189,25 @@ class _NotesPageState extends ConsumerState<NotesPage> {
                   Text(book.title, style: titleStyle),
                   const SizedBox(height: 18),
                   // Reading time
-                  Row(
-                  children: [
-                    Icon(Icons.access_time, size: 16, color: Colors.grey),
-                    const SizedBox(width: 4),
-                    Text(
-                    convertSeconds(readingTime),
-                    style: readingTimeStyle,
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                    children: [
+                      Icon(Icons.access_time, size: 16, color: Colors.grey),
+                      const SizedBox(width: 4),
+                      Text(
+                      convertSeconds(readingTime),
+                      style: readingTimeStyle,
+                      ),
+                      Text(" | ", style: readingTimeStyle),
+                      Icon(Icons.bar_chart, size: 16, color: Colors.grey),
+                      const SizedBox(width: 4),
+                      Text(
+                      '${(book.readingPercentage * 100).toStringAsFixed(1)}%',
+                      style: readingTimeStyle,
+                      ),
+                    ],
                     ),
-                    Text(" | ", style: readingTimeStyle),
-                    Icon(Icons.bar_chart, size: 16, color: Colors.grey),
-                    const SizedBox(width: 4),
-                    Text(
-                    '${(book.readingPercentage * 100).toStringAsFixed(1)}%',
-                    style: readingTimeStyle,
-                    ),
-                  ],
                   ),
                 ],
               ),
