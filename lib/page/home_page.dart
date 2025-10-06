@@ -24,6 +24,7 @@ import 'package:anx_reader/utils/toast/common.dart';
 import 'package:anx_reader/widgets/ai/ai_chat_stream.dart';
 import 'package:anx_reader/widgets/common/container/filled_container.dart';
 import 'package:anx_reader/widgets/settings/about.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -178,10 +179,7 @@ class _HomePageState extends ConsumerState<HomePage> {
 
     void onBottomTap(index) {
       if (navBarItems[index]['identifier'] == 'ai') {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const AiPage()),
-        );
+        showCupertinoSheet(context:  context, builder: (context) => const AiPage());
         return;
       }
       setState(() {
