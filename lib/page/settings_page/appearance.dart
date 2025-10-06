@@ -22,7 +22,7 @@ const List<Map<String, String>> languageOptions = [
   {'Français': 'fr'},
   {'Español': 'es'},
   {'Italiano': 'it'},
-  {'Português': 'pt'}, 
+  {'Português': 'pt'},
   {'日本語': 'ja'},
   {'한국어': 'ko'},
 ];
@@ -101,8 +101,8 @@ class _AppearanceSettingState extends State<AppearanceSetting> {
                     showLanguagePickerDialog(context);
                   }),
               SettingsTile.switchTile(
-                title: Text(
-                    L10n.of(context).settingsAppearanceOpenBookAnimation),
+                title:
+                    Text(L10n.of(context).settingsAppearanceOpenBookAnimation),
                 leading: const Icon(Icons.animation),
                 initialValue: Prefs().openBookAnimation,
                 onToggle: (bool value) {
@@ -139,9 +139,17 @@ class _AppearanceSettingState extends State<AppearanceSetting> {
               )),
             ]),
         SettingsSection(
-          title:
-              Text(L10n.of(context).settingsAppearanceBottomNavigatorShow),
+          title: Text(L10n.of(context).settingsAppearanceBottomNavigatorShow),
           tiles: [
+            SettingsTile.switchTile(
+              title: Text(L10n.of(context).navBarAI),
+              initialValue: Prefs().bottomNavigatorShowAI,
+              onToggle: (bool value) {
+                setState(() {
+                  Prefs().bottomNavigatorShowAI = value;
+                });
+              },
+            ),
             SettingsTile.switchTile(
               title: Text(L10n.of(context).navBarStatistics),
               initialValue: Prefs().bottomNavigatorShowStatistics,

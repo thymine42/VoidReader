@@ -135,11 +135,9 @@ class _HomePageState extends ConsumerState<HomePage> {
     ) {
       final page = [
         BookshelfPage(controller: controller),
-        AiPage(constraints: constraints),
+        if (Prefs().bottomNavigatorShowAI) AiPage(constraints: constraints),
         if (Prefs().bottomNavigatorShowStatistics)
-          StatisticPage(
-            controller: controller,
-          ),
+          StatisticPage(controller: controller),
         if (Prefs().bottomNavigatorShowNote) NotesPage(controller: controller),
         SettingsPage(controller: controller),
       ];
@@ -148,7 +146,8 @@ class _HomePageState extends ConsumerState<HomePage> {
 
     List<Map<String, dynamic>> navBarItems = [
       {'icon': EvaIcons.book_open, 'label': L10n.of(context).navBarBookshelf},
-      {'icon': Icons.auto_awesome, 'label': L10n.of(context).navBarAI},
+      if (Prefs().bottomNavigatorShowAI)
+        {'icon': Icons.auto_awesome, 'label': L10n.of(context).navBarAI},
       if (Prefs().bottomNavigatorShowStatistics)
         {'icon': Icons.show_chart, 'label': L10n.of(context).navBarStatistics},
       if (Prefs().bottomNavigatorShowNote)
