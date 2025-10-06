@@ -136,9 +136,9 @@ class _HomePageState extends ConsumerState<HomePage> {
     ) {
       final page = [
         BookshelfPage(controller: controller),
-        if (Prefs().bottomNavigatorShowAI) AiChatStream(),
         if (Prefs().bottomNavigatorShowStatistics)
           StatisticPage(controller: controller),
+        if (Prefs().bottomNavigatorShowAI) AiChatStream(),
         if (Prefs().bottomNavigatorShowNote) NotesPage(controller: controller),
         SettingsPage(controller: controller),
       ];
@@ -151,17 +151,17 @@ class _HomePageState extends ConsumerState<HomePage> {
         'label': L10n.of(context).navBarBookshelf,
         'identifier': 'bookshelf'
       },
-      if (Prefs().bottomNavigatorShowAI)
-        {
-          'icon': Icons.auto_awesome,
-          'label': L10n.of(context).navBarAI,
-          'identifier': 'ai'
-        },
       if (Prefs().bottomNavigatorShowStatistics)
         {
           'icon': Icons.show_chart,
           'label': L10n.of(context).navBarStatistics,
           'identifier': 'statistics'
+        },
+      if (Prefs().bottomNavigatorShowAI)
+        {
+          'icon': Icons.auto_awesome,
+          'label': L10n.of(context).navBarAI,
+          'identifier': 'ai'
         },
       if (Prefs().bottomNavigatorShowNote)
         {
@@ -182,6 +182,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           context,
           MaterialPageRoute(builder: (context) => const AiPage()),
         );
+        return;
       }
       setState(() {
         _currentIndex = index;

@@ -88,26 +88,26 @@ class CancelableLangchainRunner {
   }
 
   Stream<String> streamAgent({
-    required AgentExecutor executor,
+    required BaseChatModel model,
+    required List<Tool> tools,
+    required List<ChatMessage> history,
     required String input,
+    ChatMessage? systemMessage,
+    int maxIterations = 120,
   }) {
     final controller = StreamController<String>();
 
     Future<void>(() async {
-      final steps = <_ToolStep>[];
-      final timeline = <_ReasoningItem>[];
-      var finalAnswer = '';
-
+      final parser = const ToolsAgentOutputParser();
       final toolMap = <String, Tool>{
-        for (final tool in executor.agent.tools) tool.name: tool,
+        for (final tool in tools) tool.name: tool,
         ExceptionTool.toolName: ExceptionTool(),
       };
+      final toolSpecs = tools.cast<ToolSpec>().toList(growable: false);
+      final steps = <AgentStep>[];
+      final timeline = <_ReasoningItem>[];
 
-      final maxIterations = executor.maxIterations;
-      final maxExecutionTime = executor.maxExecutionTime;
-      final stopwatch = Stopwatch()..start();
-      final inputs = {'input': input};
-
+      var finalAnswer = '';
       var iterations = 0;
 
       void emit() {
@@ -120,79 +120,99 @@ class CancelableLangchainRunner {
         );
       }
 
-      Map<String, dynamic> resolveReturnValues(Map<String, dynamic> values) {
-        if (executor.agent.returnValues.isEmpty) {
-          return values;
-        }
-        final key = executor.agent.returnValues.first;
-        final value = values[key];
-        return {key: value};
+      List<ChatMessage> buildScratchpad() {
+        return steps
+            .map((step) {
+              final messages = <ChatMessage>[];
+              messages.addAll(step.action.messageLog);
+              messages.add(
+                ChatMessage.tool(
+                  toolCallId: step.action.id,
+                  content: step.observation,
+                ),
+              );
+              return messages;
+            })
+            .expand((messages) => messages)
+            .toList(growable: false);
       }
 
-      Future<void> finishWith(AgentFinish finish) async {
-        final resolved = resolveReturnValues(finish.returnValues);
-        finalAnswer = resolved.values.first?.toString() ?? '';
-        emit();
+      List<ChatMessage> buildConversation() {
+        return <ChatMessage>[
+          if (systemMessage != null) systemMessage,
+          ...history,
+          ChatMessage.humanText(input),
+          ...buildScratchpad(),
+        ];
       }
+
+      var streamFailed = false;
 
       try {
-        while (true) {
-          if (maxIterations != null && iterations >= maxIterations) {
-            final stopped = executor.agent.returnStoppedResponse(
-              executor.earlyStoppingMethod,
-              steps.map((s) => s.toAgentStep()).toList(growable: false),
-            );
-            await finishWith(stopped);
-            break;
+        while (iterations < maxIterations && !controller.isClosed) {
+          final promptMessages = buildConversation();
+          if (promptMessages.isEmpty) {
+            throw StateError('Agent prompt messages cannot be empty');
           }
 
-          if (maxExecutionTime != null &&
-              stopwatch.elapsed >= maxExecutionTime) {
-            final stopped = executor.agent.returnStoppedResponse(
-              executor.earlyStoppingMethod,
-              steps.map((s) => s.toAgentStep()).toList(growable: false),
-            );
-            await finishWith(stopped);
-            break;
+          final prompt = PromptValue.chat(promptMessages);
+          final options = model.defaultOptions.copyWith(tools: toolSpecs);
+
+          ChatResult? aggregated;
+          String lastEmitted = '';
+
+          final completer = Completer<void>();
+          _subscription = model.stream(prompt, options: options).listen(
+            (chunk) {
+              aggregated = aggregated == null
+                  ? chunk
+                  : aggregated!.concat(chunk);
+
+              final content = aggregated!.output.content;
+              if (content != lastEmitted) {
+                finalAnswer = content;
+                emit();
+                lastEmitted = content;
+              }
+            },
+            onError: (Object error, StackTrace stack) {
+              streamFailed = true;
+              if (!controller.isClosed) {
+                controller.addError(error, stack);
+              }
+              if (!completer.isCompleted) {
+                completer.completeError(error, stack);
+              }
+            },
+            onDone: () {
+              _subscription = null;
+              if (!completer.isCompleted) {
+                completer.complete();
+              }
+            },
+            cancelOnError: true,
+          );
+
+          await completer.future;
+
+          if (aggregated == null) {
+            throw StateError('Model returned no output');
           }
 
-          List<BaseAgentAction> actions;
-          try {
-            actions = await executor.agent.plan(
-              AgentPlanInput(
-                inputs,
-                steps.map((s) => s.toAgentStep()).toList(growable: false),
-              ),
-            );
-          } on OutputParserException catch (e) {
-            if (executor.handleParsingErrors == null) rethrow;
-            actions = [
-              AgentAction(
-                id: 'error',
-                tool: ExceptionTool.toolName,
-                toolInput: executor.handleParsingErrors!(e),
-                log: e.toString(),
-              ),
-            ];
-          }
+          final message = aggregated!.output;
+          final actions = await parser.parseChatMessage(message);
 
-          var finished = false;
+          var shouldStop = false;
           for (final action in actions) {
             if (action is AgentFinish) {
-              await finishWith(action);
-              finished = true;
+              final resolved = action.returnValues;
+              finalAnswer = resolved.values.first?.toString() ?? '';
+              emit();
+              shouldStop = true;
               break;
             }
 
             final agentAction = action as AgentAction;
-            final sanitizedLog = _sanitizeAgentLog(agentAction.log);
-            if (sanitizedLog.isNotEmpty) {
-              timeline.add(
-                _ReasoningItem.think(sanitizedLog),
-              );
-              emit();
-            }
-
             final tool = toolMap[agentAction.tool];
             if (tool == null) {
               throw Exception('Tool ${agentAction.tool} not found');
@@ -202,53 +222,60 @@ class CancelableLangchainRunner {
               action: agentAction,
               status: ToolStepStatus.pending,
             );
-            steps.add(toolStep);
             timeline.add(_ReasoningItem.tool(toolStep));
             emit();
 
             try {
-              final toolInput = tool.getInputFromJson(agentAction.toolInput);
+              final inputJson = agentAction.toolInput is Map<String, dynamic>
+                  ? agentAction.toolInput as Map<String, dynamic>
+                  : Map<String, dynamic>.from(agentAction.toolInput as Map);
+              final toolInput = tool.getInputFromJson(inputJson);
               final observation = await tool.invoke(toolInput);
+              final observationText = observation.toString();
               toolStep.status = ToolStepStatus.success;
-              toolStep.output = observation.toString();
-              toolStep.observation = observation.toString();
+              toolStep.output = observationText;
+              toolStep.observation = observationText;
               emit();
+
+              steps.add(
+                AgentStep(
+                  action: agentAction,
+                  observation: observationText,
+                ),
+              );
             } catch (error) {
               final message = error.toString();
               toolStep.status = ToolStepStatus.failed;
               toolStep.error = message;
               toolStep.observation = message;
-              finalAnswer = "Tool ${agentAction.tool} failed: $message";
+              finalAnswer = 'Tool ${agentAction.tool} failed: $message';
               emit();
-              finished = true;
+              shouldStop = true;
               break;
             }
 
-            emit();
-
             if (tool.returnDirect) {
-              final finish = AgentFinish(
-                returnValues: {
-                  executor.agent.returnValues.first: toolStep.output ?? '',
-                },
-              );
-              await finishWith(finish);
-              finished = true;
+              finalAnswer = toolStep.output ?? '';
+              emit();
+              shouldStop = true;
               break;
             }
           }
 
-          if (finished) {
+          if (shouldStop) {
             break;
           }
 
           iterations += 1;
         }
-      } catch (e, stack) {
-        if (!controller.isClosed) {
-          controller.addError(e, stack);
+      } catch (error, stack) {
+        if (!controller.isClosed && !streamFailed) {
+          controller.addError(error, stack);
         }
       } finally {
+        await _subscription?.cancel();
+        _subscription = null;
+        await _closeModel(model);
         if (!controller.isClosed) {
           await controller.close();
         }
@@ -366,24 +393,4 @@ class _ReasoningItem {
     }
     return '';
   }
-}
-
-String _sanitizeAgentLog(String log) {
-  final lines = log
-      .split('\n')
-      .map((line) => line.trim())
-      .where((line) => line.isNotEmpty && !_shouldDropLogLine(line))
-      .toList(growable: false);
-
-  return lines.join('\n').trim();
-}
-
-bool _shouldDropLogLine(String line) {
-  final normalized = line.toLowerCase();
-  return normalized.contains('invoking:') ||
-      normalized.contains('responded:') ||
-      normalized.contains('observation:') ||
-      normalized.contains('tool call:') ||
-      normalized.contains('tool input:') ||
-      normalized.contains('tool output:');
 }
