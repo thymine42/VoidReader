@@ -6,6 +6,7 @@ import 'package:anx_reader/service/ai/index.dart';
 import 'package:anx_reader/utils/toast/common.dart';
 import 'package:anx_reader/utils/ai_reasoning_parser.dart';
 import 'package:anx_reader/widgets/ai/ai_reasoning_panel.dart';
+import 'package:anx_reader/widgets/common/container/filled_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -88,29 +89,6 @@ class AiChatStreamState extends ConsumerState<AiChatStream> {
         );
       }
     });
-  }
-
-  Widget _buildLoadingSkeletonList() {
-    return ListView.separated(
-      controller: _scrollController,
-      padding: const EdgeInsets.all(16),
-      itemBuilder: (_, __) => _buildLoadingSkeletonTile(),
-      separatorBuilder: (_, __) => const SizedBox(height: 12),
-      itemCount: 3,
-    );
-  }
-
-  Widget _buildLoadingSkeletonTile() {
-    return Skeletonizer.zone(
-      child: Card(
-        child: ListTile(
-          leading: Bone.circle(size: 48),
-          title: Bone.text(words: 2),
-          subtitle: Bone.text(),
-          trailing: Bone.icon(),
-        ),
-      ),
-    );
   }
 
   void _sendMessage({bool isRegenerate = false}) {
@@ -246,6 +224,64 @@ class AiChatStreamState extends ConsumerState<AiChatStream> {
   Widget build(BuildContext context) {
     final quickPrompts = _getQuickPrompts(context);
 
+    Widget inputBox = FilledContainer(
+      padding: const EdgeInsets.all(4),
+      radius: 10,
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox.shrink(),
+              Expanded(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  reverse: true,
+                  child: Row(
+                    spacing: 8,
+                    children: quickPrompts.map((prompt) {
+                      return ActionChip(
+                        // labelPadding: EdgeInsets.all(0),
+                        label: Text(prompt['label']!),
+                        onPressed: () => _useQuickPrompt(prompt['prompt']!),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 4),
+          TextField(
+            controller: inputController,
+            decoration: InputDecoration(
+              isDense: true,
+              hintText: L10n.of(context).aiHintInputPlaceholder,
+              border: InputBorder.none,
+            ),
+            maxLines: 5,
+            minLines: 1,
+            textInputAction: TextInputAction.send,
+            onSubmitted: (_) => _sendMessage(),
+          ),
+          SizedBox(height: 4),
+          Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.clear, size: 18),
+                onPressed: _clearMessage,
+              ),
+              const Spacer(),
+              IconButton(
+                icon: Icon(_isStreaming ? Icons.stop : Icons.send, size: 18),
+                onPressed: _isStreaming ? _cancelStreaming : _sendMessage,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Column(
@@ -256,7 +292,7 @@ class AiChatStreamState extends ConsumerState<AiChatStream> {
                     stream: _messageStream,
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
-                        return _buildLoadingSkeletonList();
+                        return Skeletonizer.zone(child: Bone.multiText());
                       }
 
                       final messages = snapshot.data!;
@@ -273,58 +309,12 @@ class AiChatStreamState extends ConsumerState<AiChatStream> {
 
                         return _buildMessageList(messages);
                       },
-                      loading: () => _buildLoadingSkeletonList(),
+                      loading: () => Skeletonizer.zone(child: Bone.multiText()),
                       error: (error, stack) =>
                           Center(child: Text('error: $error')),
                     ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: quickPrompts.map((prompt) {
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 8.0),
-                    child: ActionChip(
-                      label: Text(prompt['label']!),
-                      onPressed: () => _useQuickPrompt(prompt['prompt']!),
-                    ),
-                  );
-                }).toList(),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.clear),
-                  onPressed: _clearMessage,
-                ),
-                Expanded(
-                  child: TextField(
-                    controller: inputController,
-                    decoration: InputDecoration(
-                      isDense: true,
-                      hintText: L10n.of(context).aiHintInputPlaceholder,
-                      border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30)),
-                      ),
-                    ),
-                    maxLines: null,
-                    textInputAction: TextInputAction.send,
-                    onSubmitted: (_) => _sendMessage(),
-                  ),
-                ),
-                IconButton(
-                  icon: Icon(_isStreaming ? Icons.stop : Icons.send),
-                  onPressed: _isStreaming ? _cancelStreaming : _sendMessage,
-                ),
-              ],
-            ),
-          ),
+          inputBox,
         ],
       ),
     );
