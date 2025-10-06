@@ -556,5 +556,16 @@
   "noSamples": "Aucun échantillon",
   "hintBannerRestoreToast": "Vous pouvez réactiver toutes les astuces dans Plus de réglages -> Avancé.",
   "aiReasoningThinking": "Réflexion...",
-  "aiReasoningTitle": "Processus de raisonnement"
+  "aiReasoningTitle": "Processus de raisonnement",
+  "tryAQuickPrompt": "Essayez une invite rapide :",
+  "quickPrompt1": "Quels livres ai-je lus au cours des 7 derniers jours ?",
+  "quickPrompt2": "Résumez ma dernière session de lecture.",
+  "quickPrompt3": "Quels livres ont la plus haute progression de lecture ?",
+  "quickPrompt4": "Listez toutes les notes que j'ai prises hier.",
+  "quickPrompt5": "Affichez les livres non lus dans mon étagère.",
+  "quickPrompt6": "Recommandez un livre basé sur mes lectures récentes.",
+  "quickPrompt7": "Résumez les points forts d'aujourd'hui.",
+  "quickPrompt8": "Quel livre m'a pris le plus de temps cette semaine ?",
+  "quickPrompt9": "Donnez-moi une citation de mes notes.",
+  "quickPrompt10": "Que devrais-je lire ensuite ?"
 }

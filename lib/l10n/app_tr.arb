@@ -556,5 +556,16 @@
   "noSamples": "Örnek yok",
   "hintBannerRestoreToast": "Tüm ipuçlarını Daha Fazla Ayar -> Gelişmiş bölümünden yeniden etkinleştirebilirsiniz.",
   "aiReasoningThinking": "Düşünülüyor...",
-  "aiReasoningTitle": "Düşünce süreci"
+  "aiReasoningTitle": "Düşünce süreci",
+  "tryAQuickPrompt": "Hızlı bir istem deneyin:",
+  "quickPrompt1": "Son 7 günde hangi kitapları okudum?",
+  "quickPrompt2": "Son okuma oturumumu özetle.",
+  "quickPrompt3": "Hangi kitapların okuma ilerlemesi en yüksek?",
+  "quickPrompt4": "Dün aldığım tüm notları listele.",
+  "quickPrompt5": "Rafımdaki okunmamış kitapları göster.",
+  "quickPrompt6": "Son okumalarma göre bir kitap öner.",
+  "quickPrompt7": "Bugünün öne çıkanlarını özetle.",
+  "quickPrompt8": "Bu hafta en çok zamanımı alan kitap hangisi?",
+  "quickPrompt9": "Notlarımıdan bir alıntı ver.",
+  "quickPrompt10": "Sonra ne okumalıyım?"
 }

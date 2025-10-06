@@ -556,5 +556,16 @@
   "noSamples": "暂无示例",
   "hintBannerRestoreToast": "可在更多设置 -> 高级中重新显示所有提示。",
   "aiReasoningThinking": "思考中...",
-  "aiReasoningTitle": "思考过程"
+  "aiReasoningTitle": "思考过程",
+  "tryAQuickPrompt": "试试快速提示：",
+  "quickPrompt1": "我过去7天读了哪些书？",
+  "quickPrompt2": "总结我最近的阅读会话。",
+  "quickPrompt3": "哪些书阅读进度最高？",
+  "quickPrompt4": "列出我昨天记的所有笔记。",
+  "quickPrompt5": "显示我书架上的未读书籍。",
+  "quickPrompt6": "根据我最近的阅读推荐一本书。",
+  "quickPrompt7": "总结今天的亮点。",
+  "quickPrompt8": "这周哪本书花的时间最多？",
+  "quickPrompt9": "从我的笔记中给我一句引用。",
+  "quickPrompt10": "接下来我应该读什么？"
 }

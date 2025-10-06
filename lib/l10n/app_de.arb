@@ -556,5 +556,16 @@
   "noSamples": "Keine Beispiele",
   "hintBannerRestoreToast": "Du kannst alle Hinweise unter Weitere Einstellungen -> Erweitert wieder aktivieren.",
   "aiReasoningThinking": "Am Überlegen...",
-  "aiReasoningTitle": "Denkprozess"
+  "aiReasoningTitle": "Denkprozess",
+  "tryAQuickPrompt": "Versuche eine schnelle Eingabeaufforderung:",
+  "quickPrompt1": "Welche Bücher habe ich in den letzten 7 Tagen gelesen?",
+  "quickPrompt2": "Fasse meine letzte Lesesitzung zusammen.",
+  "quickPrompt3": "Welche Bücher haben den höchsten Leseprogress?",
+  "quickPrompt4": "Liste alle Notizen auf, die ich gestern gemacht habe.",
+  "quickPrompt5": "Zeige ungelesene Bücher in meinem Regal.",
+  "quickPrompt6": "Empfehle ein Buch basierend auf meinen letzten Lektüren.",
+  "quickPrompt7": "Fasse die Höhepunkte von heute zusammen.",
+  "quickPrompt8": "Welches Buch hat diese Woche am meisten Zeit gekostet?",
+  "quickPrompt9": "Gib mir ein Zitat aus meinen Notizen.",
+  "quickPrompt10": "Was sollte ich als nächstes lesen?"
 }

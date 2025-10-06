@@ -556,5 +556,16 @@
   "noSamples": "Sem amostras",
   "hintBannerRestoreToast": "Você pode reativar todas as dicas em Mais configurações -> Avançado.",
   "aiReasoningThinking": "Pensando...",
-  "aiReasoningTitle": "Processo de raciocínio"
+  "aiReasoningTitle": "Processo de raciocínio",
+  "tryAQuickPrompt": "Experimente um prompt rápido:",
+  "quickPrompt1": "Quais livros li nos últimos 7 dias?",
+  "quickPrompt2": "Resuma minha última sessão de leitura.",
+  "quickPrompt3": "Quais livros têm o maior progresso de leitura?",
+  "quickPrompt4": "Liste todas as notas que fiz ontem.",
+  "quickPrompt5": "Mostre livros não lidos na minha estante.",
+  "quickPrompt6": "Recomende um livro baseado nas minhas leituras recentes.",
+  "quickPrompt7": "Resuma os destaques de hoje.",
+  "quickPrompt8": "Qual livro me tomou mais tempo esta semana?",
+  "quickPrompt9": "Dê-me uma citação das minhas notas.",
+  "quickPrompt10": "O que devo ler em seguida?"
 }

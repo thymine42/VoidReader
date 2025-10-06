@@ -556,5 +556,16 @@
   "noSamples": "サンプルがありません",
   "hintBannerRestoreToast": "「その他の設定」→「詳細設定」で全てのヒントを再度有効にできます。",
   "aiReasoningThinking": "思考中...",
-  "aiReasoningTitle": "思考プロセス"
+  "aiReasoningTitle": "思考プロセス",
+  "tryAQuickPrompt": "クイックプロンプトをお試しください：",
+  "quickPrompt1": "過去7日間に読んだ本は何ですか？",
+  "quickPrompt2": "最新の読書セッションを要約してください。",
+  "quickPrompt3": "どの本の読書進捗が最も高いですか？",
+  "quickPrompt4": "昨日取った全てのノートをリストアップしてください。",
+  "quickPrompt5": "本棚の未読本を表示してください。",
+  "quickPrompt6": "最近の読書に基づいて本を1冊おすすめしてください。",
+  "quickPrompt7": "今日のハイライトを要約してください。",
+  "quickPrompt8": "今週最も時間がかかった本はどれですか？",
+  "quickPrompt9": "私のノートから引用を1つ教えてください。",
+  "quickPrompt10": "次に何を読むべきですか？"
 }

@@ -556,5 +556,16 @@
   "noSamples": "No samples",
   "hintBannerRestoreToast": "You can re-enable all hints in More Settings -> Advanced.",
   "aiReasoningThinking": "Thinking...",
-  "aiReasoningTitle": "Reasoning Process"
+  "aiReasoningTitle": "Reasoning Process",
+  "tryAQuickPrompt": "Try a quick prompt:",
+  "quickPrompt1": "What books did I read in the last 7 days?",
+  "quickPrompt2": "Summarize my latest reading session.",
+  "quickPrompt3": "Which books have the highest reading progress?",
+  "quickPrompt4": "List all notes I took yesterday.",
+  "quickPrompt5": "Show unread books in my shelf.",
+  "quickPrompt6": "Recommend a book based on my recent reads.",
+  "quickPrompt7": "Summarize today's highlights.",
+  "quickPrompt8": "Which book took the most time this week?",
+  "quickPrompt9": "Give me a quote from my notes.",
+  "quickPrompt10": "What should I read next?"
 }

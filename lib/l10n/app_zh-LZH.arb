@@ -556,5 +556,16 @@
   "noSamples": "無例",
   "hintBannerRestoreToast": "於更多設定 -> 高級中可復顯諸提示。",
   "aiReasoningThinking": "思慮中...",
-  "aiReasoningTitle": "思路"
+  "aiReasoningTitle": "思路",
+  "tryAQuickPrompt": "試速提示：",
+  "quickPrompt1": "吾近七日讀何書？",
+  "quickPrompt2": "撮吾近讀會。",
+  "quickPrompt3": "何書讀進最高？",
+  "quickPrompt4": "列吾昨日所記諸筆記。",
+  "quickPrompt5": "示吾書架未讀之書。",
+  "quickPrompt6": "依吾近讀薦一書。",
+  "quickPrompt7": "撮今日之要點。",
+  "quickPrompt8": "本週何書費時最多？",
+  "quickPrompt9": "自吾筆記中取一言。",
+  "quickPrompt10": "吾下將讀何？"
 }
