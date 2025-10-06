@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:anx_reader/config/shared_preference_provider.dart';
 import 'package:anx_reader/l10n/generated/L10n.dart';
+import 'package:anx_reader/main.dart';
 import 'package:anx_reader/providers/ai_chat.dart';
 import 'package:anx_reader/service/ai/ai_services.dart';
 import 'package:anx_reader/service/ai/index.dart';
@@ -39,19 +40,7 @@ class AiChatStreamState extends ConsumerState<AiChatStream> {
   late List<AiServiceOption> _serviceOptions;
   late String _selectedServiceId;
   late List<String> _suggestedPrompts;
-
-  static const List<String> _starterPrompts = [
-    'What books did I read in the last 7 days?',
-    'Summarize my latest reading session.',
-    'Which books have the highest reading progress?',
-    'List all notes I took yesterday.',
-    'Show unread books in my shelf.',
-    'Recommend a book based on my recent reads.',
-    'Summarize today\'s highlights.',
-    'Which book took the most time this week?',
-    'Give me a quote from my notes.',
-    'What should I read next?',
-  ];
+  late List<String> _starterPrompts;
 
   List<Map<String, String>> _getQuickPrompts(BuildContext context) {
     return [
@@ -81,6 +70,18 @@ class AiChatStreamState extends ConsumerState<AiChatStream> {
   @override
   void initState() {
     super.initState();
+    _starterPrompts = [
+      L10n.of(navigatorKey.currentContext!).quickPrompt1,
+      L10n.of(navigatorKey.currentContext!).quickPrompt2,
+      L10n.of(navigatorKey.currentContext!).quickPrompt3,
+      L10n.of(navigatorKey.currentContext!).quickPrompt4,
+      L10n.of(navigatorKey.currentContext!).quickPrompt5,
+      L10n.of(navigatorKey.currentContext!).quickPrompt6,
+      L10n.of(navigatorKey.currentContext!).quickPrompt7,
+      L10n.of(navigatorKey.currentContext!).quickPrompt8,
+      L10n.of(navigatorKey.currentContext!).quickPrompt9,
+      L10n.of(navigatorKey.currentContext!).quickPrompt10,
+    ];
     _serviceOptions = buildDefaultAiServices();
     _selectedServiceId = Prefs().selectedAiService;
     final availableIds = _serviceOptions.map((option) => option.identifier);
@@ -406,7 +407,7 @@ class AiChatStreamState extends ConsumerState<AiChatStream> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'Try a quick prompt:',
+              L10n.of(context).tryAQuickPrompt,
               style: theme.textTheme.titleMedium,
             ),
             const SizedBox(height: 12),
