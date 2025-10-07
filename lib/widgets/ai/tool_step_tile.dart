@@ -114,13 +114,16 @@ class _ExpandableField extends StatelessWidget {
           ],
         ),
         FilledContainer(
-          color: theme.colorScheme.surfaceVariant,
+          color: theme.colorScheme.primaryContainer,
           width: double.infinity,
           padding: const EdgeInsets.all(8),
           radius: 6,
-          child: SelectableText(
-            value,
-            style: theme.textTheme.bodyMedium,
+          child: Container(
+            constraints: const BoxConstraints(maxHeight: 200),
+            child: SelectableText(
+              value,
+              style: theme.textTheme.bodyMedium,
+            ),
           ),
         ),
       ],
