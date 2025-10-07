@@ -161,7 +161,6 @@ class CancelableLangchainRunner {
           final options = model.defaultOptions.copyWith(tools: toolSpecs);
 
           ChatResult? aggregated;
-          String lastEmitted = '';
 
           final completer = Completer<void>();
           _subscription = model.stream(prompt, options: options).listen(
@@ -172,24 +171,17 @@ class CancelableLangchainRunner {
                   ? normalizedChunk
                   : aggregated!.concat(normalizedChunk);
               final output = aggregated!.output;
-              if (output.toolCalls.isNotEmpty || _isThinkChunk(chunk.outputAsString)) {
+
+              if (output.toolCalls.isNotEmpty ||
+                  _isThinkChunk(chunk.outputAsString)) {
                 final thought = normalizedChunk.outputAsString;
                 if (thought.isNotEmpty) {
                   timeline.add(_ReasoningItem.think(thought));
                   emit();
                 }
-                if (finalAnswer.isNotEmpty) {
-                  finalAnswer = '';
-                  lastEmitted = '';
-                  emit();
-                }
               } else {
-                final content = output.content;
-                if (content != lastEmitted) {
-                  finalAnswer = content;
-                  emit();
-                  lastEmitted = content;
-                }
+                finalAnswer += chunk.outputAsString;
+                emit();
               }
             },
             onError: (Object error, StackTrace stack) {
