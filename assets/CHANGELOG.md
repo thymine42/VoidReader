@@ -9,6 +9,7 @@
 - Feat: Optimize the interface design of the thinking model
 - Fix: Fix the issue of some AI services loading indefinitely
 - Fix: The bottom details on the bookshelf page sometimes do not work when clicked
+- Fix: Gemini model cannot be used
 - UI: Optimize part of the interface design
 
 - Feat: 在 导航栏 添加 AI 页面
@@ -19,6 +20,7 @@
 - Feat: 优化思考模型的界面设计
 - Fix: 修复部分 AI 服务无限加载的问题
 - Fix: 书架页面底部详情有时点击后不起作用的问题
+- Fix: Gemini 模型无法使用的问题
 - UI: 优化部分界面设计
 
 ## 1.8.1
