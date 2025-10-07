@@ -142,8 +142,10 @@ Future<List<BookNote>> searchBookNotesAdvanced({
   final where = <String>[];
   final whereArgs = <Object?>[];
 
-  where.add('(content LIKE ? OR reader_note LIKE ? OR chapter LIKE ?)');
-  whereArgs.addAll(['%$query%', '%$query%', '%$query%']);
+  if (query != null && query.isNotEmpty) {
+    where.add('(content LIKE ? OR reader_note LIKE ? OR chapter LIKE ?)');
+    whereArgs.addAll(['%$query%', '%$query%', '%$query%']);
+  }
 
   if (bookId != null) {
     where.add('book_id = ?');
@@ -162,8 +164,8 @@ Future<List<BookNote>> searchBookNotesAdvanced({
 
   final List<Map<String, dynamic>> maps = await db.query(
     'tb_notes',
-    where: where.join(' AND '),
-    whereArgs: whereArgs,
+    where: where.isNotEmpty ? where.join(' AND ') : null,
+    whereArgs: whereArgs.isNotEmpty ? whereArgs : null,
     orderBy: 'update_time DESC',
     limit: limit,
   );
