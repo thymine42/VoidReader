@@ -52,8 +52,9 @@ abstract class RepositoryTool<I extends Object, O> {
   bool shouldLogError(Object error) => true;
 
   Future<String> _execute(I input) async {
-    AnxLog.info('AiTool: Executing tool $name with input: $input');
     try {
+      AnxLog.info(
+          'AiTool: Executing tool $name with input: ${jsonEncode(input)}');
       final result = await _runWithTimeout(() => run(input));
       final serialized = serializeSuccess(result);
       final resultJson = jsonEncode(serialized);

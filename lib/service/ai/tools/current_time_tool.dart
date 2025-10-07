@@ -1,26 +1,11 @@
 import 'dart:async';
 
+import 'package:anx_reader/service/ai/tools/input/current_time_input.dart';
+
 import 'base_tool.dart';
 
-class _CurrentTimeInput {
-  const _CurrentTimeInput({this.includeTimezone = true});
-
-  final bool includeTimezone;
-
-  factory _CurrentTimeInput.fromJson(Map<String, dynamic> json) {
-    final raw = json['include_timezone'] ?? json['includeTimezone'];
-    final include = switch (raw) {
-      bool value => value,
-      String value => value.toLowerCase() == 'true',
-      num value => value != 0,
-      _ => true,
-    };
-    return _CurrentTimeInput(includeTimezone: include);
-  }
-}
-
 class CurrentTimeTool
-    extends RepositoryTool<_CurrentTimeInput, Map<String, dynamic>> {
+    extends RepositoryTool<CurrentTimeInput, Map<String, dynamic>> {
   CurrentTimeTool()
       : super(
           name: 'current_time',
@@ -40,12 +25,12 @@ class CurrentTimeTool
         );
 
   @override
-  _CurrentTimeInput parseInput(Map<String, dynamic> json) {
-    return _CurrentTimeInput.fromJson(json);
+  CurrentTimeInput parseInput(Map<String, dynamic> json) {
+    return CurrentTimeInput.fromJson(json);
   }
 
   @override
-  Future<Map<String, dynamic>> run(_CurrentTimeInput input) async {
+  Future<Map<String, dynamic>> run(CurrentTimeInput input) async {
     final now = DateTime.now();
     final utc = now.toUtc();
     final offset = now.timeZoneOffset;

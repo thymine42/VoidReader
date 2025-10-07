@@ -1,24 +1,13 @@
 import 'dart:async';
 
+import 'package:anx_reader/service/ai/tools/input/calculator_input.dart';
 import 'package:anx_reader/utils/log/common.dart';
 import 'package:math_expressions/math_expressions.dart';
 
 import 'base_tool.dart';
 
-class _CalculatorInput {
-  const _CalculatorInput({required this.expression});
-
-  final String expression;
-
-  factory _CalculatorInput.fromJson(Map<String, dynamic> json) {
-    return _CalculatorInput(
-      expression: json['expression']?.toString() ?? '',
-    );
-  }
-}
-
 class CalculatorTool
-    extends RepositoryTool<_CalculatorInput, Map<String, dynamic>> {
+    extends RepositoryTool<CalculatorInput, Map<String, dynamic>> {
   CalculatorTool()
       : super(
           name: 'calculator',
@@ -38,13 +27,13 @@ class CalculatorTool
         );
 
   @override
-  _CalculatorInput parseInput(Map<String, dynamic> json) {
-    return _CalculatorInput.fromJson(json);
+  CalculatorInput parseInput(Map<String, dynamic> json) {
+    return CalculatorInput.fromJson(json);
   }
 
   @override
-  Future<Map<String, dynamic>> run(_CalculatorInput input) async {
-    final expression = input.expression.trim();
+  Future<Map<String, dynamic>> run(CalculatorInput input) async {
+    final expression = input.expression?.trim() ?? '';
     if (expression.isEmpty) {
       throw ArgumentError('Expression cannot be empty');
     }

@@ -1,53 +1,12 @@
 import 'dart:async';
 
+import 'package:anx_reader/service/ai/tools/input/notes_search_input.dart';
 import 'package:anx_reader/service/ai/tools/repository/notes_repository.dart';
 
 import 'base_tool.dart';
 
-class _NotesSearchInput {
-  _NotesSearchInput({
-    this.keyword,
-    this.bookId,
-    this.from,
-    this.to,
-    this.limit,
-  });
-
-  final String? keyword;
-  final int? bookId;
-  final DateTime? from;
-  final DateTime? to;
-  final int? limit;
-
-  factory _NotesSearchInput.fromJson(Map<String, dynamic> json) {
-    DateTime? parseDate(String? raw) {
-      if (raw == null) return null;
-      return DateTime.tryParse(raw);
-    }
-
-    int? parseInt(dynamic value) {
-      if (value == null) return null;
-      if (value is int) return value;
-      return int.tryParse(value.toString());
-    }
-
-    return _NotesSearchInput(
-      keyword: json['keyword']?.toString() ?? '',
-      bookId: parseInt(json['book_id'] ?? json['bookId']),
-      from: parseDate(json['from']?.toString()),
-      to: parseDate(json['to']?.toString()),
-      limit: parseInt(json['limit']),
-    );
-  }
-
-  int resolvedLimit([int fallback = 10]) {
-    final value = limit ?? fallback;
-    return value.clamp(1, 50);
-  }
-}
-
 class NotesSearchTool
-    extends RepositoryTool<_NotesSearchInput, Map<String, dynamic>> {
+    extends RepositoryTool<NotesSearchInput, Map<String, dynamic>> {
   NotesSearchTool(this._repository)
       : super(
           name: 'notes_search',
@@ -66,11 +25,13 @@ class NotesSearchTool
               },
               'from': {
                 'type': 'string',
-                'description': 'ISO8601 timestamp to filter notes updated after this time.',
+                'description':
+                    'ISO8601 timestamp to filter notes updated after this time.',
               },
               'to': {
                 'type': 'string',
-                'description': 'ISO8601 timestamp to filter notes updated before this time.',
+                'description':
+                    'ISO8601 timestamp to filter notes updated before this time.',
               },
               'limit': {
                 'type': 'integer',
@@ -85,12 +46,12 @@ class NotesSearchTool
   final NotesRepository _repository;
 
   @override
-  _NotesSearchInput parseInput(Map<String, dynamic> json) {
-    return _NotesSearchInput.fromJson(json);
+  NotesSearchInput parseInput(Map<String, dynamic> json) {
+    return NotesSearchInput.fromJson(json);
   }
 
   @override
-  Future<Map<String, dynamic>> run(_NotesSearchInput input) async {
+  Future<Map<String, dynamic>> run(NotesSearchInput input) async {
     final results = await _repository.searchNotes(
       keyword: input.keyword,
       bookId: input.bookId,

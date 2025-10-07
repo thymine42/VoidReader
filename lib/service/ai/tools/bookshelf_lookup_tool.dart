@@ -1,52 +1,12 @@
 import 'dart:async';
 
+import 'package:anx_reader/service/ai/tools/input/bookshelf_lookup_input.dart';
 import 'package:anx_reader/service/ai/tools/repository/books_repository.dart';
 
 import 'base_tool.dart';
 
-class _BookshelfLookupInput {
-  _BookshelfLookupInput({
-    required this.query,
-    this.groupId,
-    this.includeDeleted = false,
-    this.limit,
-  });
-
-  final String? query;
-  final int? groupId;
-  final bool includeDeleted;
-  final int? limit;
-
-  factory _BookshelfLookupInput.fromJson(Map<String, dynamic> json) {
-    bool parseBool(dynamic value) {
-      if (value is bool) return value;
-      if (value == null) return false;
-      final normalized = value.toString().toLowerCase();
-      return normalized == 'true' || normalized == '1';
-    }
-
-    int? parseInt(dynamic value) {
-      if (value == null) return null;
-      if (value is int) return value;
-      return int.tryParse(value.toString());
-    }
-
-    return _BookshelfLookupInput(
-      query: json['query']?.toString(),
-      groupId: parseInt(json['group_id'] ?? json['groupId']),
-      includeDeleted: parseBool(json['include_deleted'] ?? json['includeDeleted']),
-      limit: parseInt(json['limit']),
-    );
-  }
-
-  int resolvedLimit([int fallback = 10]) {
-    final value = limit ?? fallback;
-    return value.clamp(1, 50);
-  }
-}
-
 class BookshelfLookupTool
-    extends RepositoryTool<_BookshelfLookupInput, Map<String, dynamic>> {
+    extends RepositoryTool<BookshelfLookupInput, Map<String, dynamic>> {
   BookshelfLookupTool(this._repository)
       : super(
           name: 'bookshelf_lookup',
@@ -79,12 +39,12 @@ class BookshelfLookupTool
   final BooksRepository _repository;
 
   @override
-  _BookshelfLookupInput parseInput(Map<String, dynamic> json) {
-    return _BookshelfLookupInput.fromJson(json);
+  BookshelfLookupInput parseInput(Map<String, dynamic> json) {
+    return BookshelfLookupInput.fromJson(json);
   }
 
   @override
-  Future<Map<String, dynamic>> run(_BookshelfLookupInput input) async {
+  Future<Map<String, dynamic>> run(BookshelfLookupInput input) async {
     final results = await _repository.searchBooks(
       keyword: input.query,
       groupId: input.groupId,
