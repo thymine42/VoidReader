@@ -165,10 +165,11 @@ class CancelableLangchainRunner {
           final completer = Completer<void>();
           _subscription = model.stream(prompt, options: options).listen(
             (chunk) {
-              aggregated = aggregated == null
-                  ? chunk
-                  : aggregated!.concat(chunk);
+              final normalizedChunk = _normalizeThinkChunk(chunk);
 
+              aggregated = aggregated == null
+                  ? normalizedChunk
+                  : aggregated!.concat(normalizedChunk);
               final output = aggregated!.output;
               if (output.toolCalls.isNotEmpty) {
                 pendingThought = output.content;
@@ -301,6 +302,27 @@ class CancelableLangchainRunner {
     });
 
     return controller.stream;
+  }
+
+  ChatResult _normalizeThinkChunk(ChatResult chunk) {
+    final content = _normalizeThinkText(chunk.output.content);
+    final output =
+        AIChatMessage(content: content, toolCalls: chunk.output.toolCalls);
+
+    return ChatResult(
+      output: output,
+      usage: chunk.usage,
+      id: chunk.id,
+      finishReason: chunk.finishReason,
+      metadata: chunk.metadata,
+    );
+  }
+
+  String _normalizeThinkText(String text) {
+    if (text.isEmpty || !_isThinkChunk(text)) {
+      return text;
+    }
+    return _cleanThinkChunk(text);
   }
 
   String _composeAgentPayload({
