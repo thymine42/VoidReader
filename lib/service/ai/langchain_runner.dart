@@ -109,7 +109,7 @@ class CancelableLangchainRunner {
       final timeline = <_ReasoningItem>[];
 
       var finalAnswer = '';
-      String? pendingThought;
+      // String? pendingThought;
       var iterations = 0;
 
       void emit() {
@@ -172,8 +172,12 @@ class CancelableLangchainRunner {
                   ? normalizedChunk
                   : aggregated!.concat(normalizedChunk);
               final output = aggregated!.output;
-              if (output.toolCalls.isNotEmpty) {
-                pendingThought = output.content;
+              if (output.toolCalls.isNotEmpty || _isThinkChunk(chunk.outputAsString)) {
+                final thought = normalizedChunk.outputAsString;
+                if (thought.isNotEmpty) {
+                  timeline.add(_ReasoningItem.think(thought));
+                  emit();
+                }
                 if (finalAnswer.isNotEmpty) {
                   finalAnswer = '';
                   lastEmitted = '';
@@ -215,14 +219,9 @@ class CancelableLangchainRunner {
           final message = aggregated!.output;
           final actions = await parser.parseChatMessage(message);
 
-          if (message.toolCalls.isNotEmpty) {
-            final thought = (pendingThought ?? message.content).trim();
-            if (thought.isNotEmpty) {
-              timeline.add(_ReasoningItem.think(thought));
-              emit();
-            }
-            pendingThought = null;
-          }
+          // if (message.toolCalls.isNotEmpty || pendingThought != null) {
+          //   // pendingThought = null;
+          // }
 
           var shouldStop = false;
           for (final action in actions) {
@@ -264,7 +263,8 @@ class CancelableLangchainRunner {
                 ),
               );
             } catch (error) {
-              AnxLog.severe('Tool ${agentAction.tool} execution failed: $error');
+              AnxLog.severe(
+                  'Tool ${agentAction.tool} execution failed: $error');
               final message = error.toString();
               toolStep.status = ToolStepStatus.failed;
               toolStep.error = message;
