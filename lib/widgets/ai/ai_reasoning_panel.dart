@@ -3,6 +3,7 @@ import 'package:anx_reader/widgets/common/container/outlined_container.dart';
 import 'package:flutter/material.dart';
 import 'package:anx_reader/utils/ai_reasoning_parser.dart';
 import 'package:anx_reader/widgets/ai/tool_step_tile.dart';
+import 'package:anx_reader/widgets/ai/tool_tiles/organize_bookshelf_step_tile.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
 class ReasoningPanel extends StatelessWidget {
@@ -83,7 +84,7 @@ class _ReasoningTimeline extends StatelessWidget {
           ),
         );
       } else if (entry.isToolStep && entry.toolStep != null) {
-        children.add(ToolStepTile(step: entry.toolStep!));
+        children.add(_buildToolTile(entry.toolStep!));
       }
 
       if (i != timeline.length - 1) {
@@ -95,5 +96,14 @@ class _ReasoningTimeline extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: children,
     );
+  }
+}
+
+Widget _buildToolTile(ParsedToolStep step) {
+  switch (step.name) {
+    case 'bookshelf_organize':
+      return OrganizeBookshelfStepTile(step: step);
+    default:
+      return ToolStepTile(step: step);
   }
 }
