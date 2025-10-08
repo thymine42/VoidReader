@@ -36,11 +36,20 @@ class _OrganizeBookshelfStepTileState
   bool _requiresConfirmation = false;
   BookshelfOrganizePlan? _plan;
   String? _parseError;
+  bool _didInitialSync = false;
 
   @override
   void initState() {
     super.initState();
-    _syncFromStep(initial: true);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_didInitialSync) {
+      _didInitialSync = true;
+      _syncFromStep(initial: true, useSetState: true);
+    }
   }
 
   @override
