@@ -569,6 +569,8 @@
   "quickPrompt8": "Welches Buch hat diese Woche am meisten Zeit gekostet?",
   "quickPrompt9": "Gib mir ein Zitat aus meinen Notizen.",
   "quickPrompt10": "Was sollte ich als nächstes lesen?",
+  "quickPrompt11": "Bücherregal nach Buchgenre organisieren",
+  "quickPrompt12": "Bücherregal nach Leseprogress organisieren",
   "history": "Geschichte",
   "conversationHistory": "Gesprächsgeschichte",
   "noConversationTip": "Noch keine Gespräche, fangen Sie an zu chatten!",

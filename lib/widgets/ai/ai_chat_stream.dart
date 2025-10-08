@@ -84,6 +84,8 @@ class AiChatStreamState extends ConsumerState<AiChatStream> {
       L10n.of(navigatorKey.currentContext!).quickPrompt8,
       L10n.of(navigatorKey.currentContext!).quickPrompt9,
       L10n.of(navigatorKey.currentContext!).quickPrompt10,
+      L10n.of(navigatorKey.currentContext!).quickPrompt11,
+      L10n.of(navigatorKey.currentContext!).quickPrompt12,
     ];
     _serviceOptions = buildDefaultAiServices();
     _selectedServiceId = Prefs().selectedAiService;

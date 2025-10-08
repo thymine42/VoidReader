@@ -569,6 +569,8 @@
   "quickPrompt8": "这周哪本书花的时间最多？",
   "quickPrompt9": "从我的笔记中给我一句引用。",
   "quickPrompt10": "接下来我应该读什么？",
+  "quickPrompt11": "按书籍风格整理书架",
+  "quickPrompt12": "按阅读进度整理书架",
   "history": "历史",
   "conversationHistory": "对话历史",
   "noConversationTip": "还没有对话，开始聊天！",

@@ -569,6 +569,8 @@
   "quickPrompt8": "今週最も時間がかかった本はどれですか？",
   "quickPrompt9": "私のノートから引用を1つ教えてください。",
   "quickPrompt10": "次に何を読むべきですか？",
+  "quickPrompt11": "本のジャンルで本棚を整理",
+  "quickPrompt12": "読書進捗で本棚を整理",
   "history": "歴史",
   "conversationHistory": "会話の歴史",
   "noConversationTip": "会話はまだありません、チャットを始めてください！",

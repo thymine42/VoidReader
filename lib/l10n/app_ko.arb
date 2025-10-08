@@ -569,6 +569,8 @@
   "quickPrompt8": "이번 주에 가장 많은 시간을 투자한 책은 무엇인가요?",
   "quickPrompt9": "내 노트에서 인용구를 하나 알려주세요.",
   "quickPrompt10": "다음에 무엇을 읽어야 할까요?",
+  "quickPrompt11": "책 장르로 책장 정리",
+  "quickPrompt12": "읽기 진행률로 책장 정리",
   "history": "역사",
   "conversationHistory": "대화 역사",
   "noConversationTip": "아직 대화가 없습니다, 채팅을 시작하십시오!",

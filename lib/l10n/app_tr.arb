@@ -569,6 +569,8 @@
   "quickPrompt8": "Bu hafta en çok zamanımı alan kitap hangisi?",
   "quickPrompt9": "Notlarımıdan bir alıntı ver.",
   "quickPrompt10": "Sonra ne okumalıyım?",
+  "quickPrompt11": "Kitaplığı kitap türüne göre düzenle",
+  "quickPrompt12": "Kitaplığı okuma ilerlemesine göre düzenle",
   "history": "Tarih",
   "conversationHistory": "Konuşma geçmişi",
   "noConversationTip": "Henüz konuşma yok, sohbet etmeye başlayın!",

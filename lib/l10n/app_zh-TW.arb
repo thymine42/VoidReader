@@ -569,6 +569,8 @@
   "quickPrompt8": "這週哪本書花的時間最多？",
   "quickPrompt9": "從我的筆記中給我一句引用。",
   "quickPrompt10": "接下來我應該讀什麼？",
+  "quickPrompt11": "按書籍風格整理書架",
+  "quickPrompt12": "按閱讀進度整理書架",
   "history": "歷史",
   "conversationHistory": "對話歷史",
   "noConversationTip": "還沒有對話，開始聊天！",

@@ -569,6 +569,8 @@
   "quickPrompt8": "Quel livre m'a pris le plus de temps cette semaine ?",
   "quickPrompt9": "Donnez-moi une citation de mes notes.",
   "quickPrompt10": "Que devrais-je lire ensuite ?",
+  "quickPrompt11": "Organiser la bibliothèque par genre de livre",
+  "quickPrompt12": "Organiser la bibliothèque par progression de lecture",
   "history": "Histoire",
   "conversationHistory": "Histoire de la conversation",
   "noConversationTip": "Pas encore de conversations, commencez à discuter!",
