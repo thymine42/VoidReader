@@ -14,8 +14,8 @@ class BookshelfOrganizeTool
     this._groupsRepository,
   ) : super(
           name: 'bookshelf_organize',
-          description:
-              'Propose bookshelf regrouping plans. Provide target groups with their book IDs and optional names. Returns a plan that requires user confirmation before applying.',
+              description:
+                'Propose bookshelf regrouping plans. Provide target groups with their book IDs and optional names. Returns a plan that requires user confirmation before applying. You can prompt the user to click the apply button in the interface.',
           inputJsonSchema: const {
             'type': 'object',
             'properties': {
