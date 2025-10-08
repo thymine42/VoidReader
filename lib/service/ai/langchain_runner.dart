@@ -215,8 +215,7 @@ class CancelableLangchainRunner {
           }
 
           final message = aggregated!.output;
-          final hydratedMessage =
-              _hydrateToolArguments(message);
+          final hydratedMessage = _hydrateToolArguments(message);
           final actions = await parser.parseChatMessage(hydratedMessage);
 
           // if (message.toolCalls.isNotEmpty || pendingThought != null) {
