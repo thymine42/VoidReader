@@ -30,7 +30,7 @@ class OrganizeBookshelfStepTile extends ConsumerStatefulWidget {
 
 class _OrganizeBookshelfStepTileState
     extends ConsumerState<OrganizeBookshelfStepTile> {
-  bool _expanded = false;
+  bool _expanded = true;
   bool _isApplying = false;
   bool _applied = false;
   bool _requiresConfirmation = false;
