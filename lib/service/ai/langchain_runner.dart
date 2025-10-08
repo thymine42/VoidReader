@@ -215,7 +215,9 @@ class CancelableLangchainRunner {
           }
 
           final message = aggregated!.output;
-          final actions = await parser.parseChatMessage(message);
+          final hydratedMessage =
+              _hydrateToolArguments(message);
+          final actions = await parser.parseChatMessage(hydratedMessage);
 
           // if (message.toolCalls.isNotEmpty || pendingThought != null) {
           //   // pendingThought = null;
@@ -232,6 +234,7 @@ class CancelableLangchainRunner {
             }
 
             final agentAction = action as AgentAction;
+
             final tool = toolMap[agentAction.tool];
             if (tool == null) {
               throw Exception('Tool ${agentAction.tool} not found');
@@ -246,14 +249,21 @@ class CancelableLangchainRunner {
 
             try {
               final inputJson = agentAction.toolInput;
-              final toolInput = tool.getInputFromJson(inputJson);
-              final observation = await tool.invoke(toolInput);
+              String? message;
+              late final dynamic toolInput;
+              try {
+                toolInput = tool.getInputFromJson(inputJson);
+              } catch (e) {
+                message = 'Invalid tool input: $e';
+              }
+              final observation = message == null
+                  ? await tool.invoke(toolInput)
+                  : 'Error: $message';
               final observationText = observation.toString();
               toolStep.status = ToolStepStatus.success;
               toolStep.output = observationText;
               toolStep.observation = observationText;
               emit();
-
               steps.add(
                 AgentStep(
                   action: agentAction,
@@ -349,6 +359,52 @@ class CancelableLangchainRunner {
 
   String _cleanThinkChunk(String chunk) {
     return chunk.substring(thinkTag.length);
+  }
+
+  AIChatMessage _hydrateToolArguments(AIChatMessage message) {
+    if (message.toolCalls.isEmpty) {
+      return message;
+    }
+
+    var mutated = false;
+    final enrichedToolCalls = <AIChatMessageToolCall>[];
+
+    for (final toolCall in message.toolCalls) {
+      if (toolCall.arguments.isNotEmpty ||
+          toolCall.argumentsRaw.trim().isEmpty) {
+        enrichedToolCalls.add(toolCall);
+        continue;
+      }
+
+      try {
+        final decoded = jsonDecode(toolCall.argumentsRaw);
+        if (decoded is Map<String, dynamic>) {
+          enrichedToolCalls.add(
+            AIChatMessageToolCall(
+              id: toolCall.id,
+              name: toolCall.name,
+              argumentsRaw: toolCall.argumentsRaw,
+              arguments: decoded,
+            ),
+          );
+          mutated = true;
+          continue;
+        }
+      } catch (_) {
+        // Keep original tool call if decoding fails.
+      }
+
+      enrichedToolCalls.add(toolCall);
+    }
+
+    if (!mutated) {
+      return message;
+    }
+
+    return AIChatMessage(
+      content: message.content,
+      toolCalls: enrichedToolCalls,
+    );
   }
 
   Future<void> _closeModel(BaseChatModel model) async {
