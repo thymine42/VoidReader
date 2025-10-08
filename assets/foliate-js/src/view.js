@@ -233,11 +233,38 @@ export class View extends HTMLElement {
     for (const img of doc.querySelectorAll('img')) {
       // disable for a link
       if (img.closest('a[href]')) continue;
-      img.addEventListener('click', e => {
-        e.preventDefault()
-        e.stopPropagation()
-        this.#emit('click-image', { img })
-      })
+
+      // Check if device supports touch (mobile/tablet)
+      const isTouchDevice = 'ontouchstart' in window;
+
+      if (!isTouchDevice) {
+        // For touch devices, implement longpress
+        let longPressTimer;
+        const longPressDelay = 500; // 500ms for longpress
+
+        img.addEventListener('touchstart', e => {
+          // e.preventDefault();
+          // e.stopPropagation();
+          longPressTimer = setTimeout(() => {
+            this.#emit('click-image', { img });
+          }, longPressDelay);
+        });
+
+        img.addEventListener('touchend', e => {
+          clearTimeout(longPressTimer);
+        });
+
+        img.addEventListener('touchmove', e => {
+          clearTimeout(longPressTimer);
+        });
+      } else {
+        // For desktop devices, keep original click behavior
+        img.addEventListener('click', e => {
+          e.preventDefault()
+          e.stopPropagation()
+          this.#emit('click-image', { img })
+        })
+      }
     }
   }
 
