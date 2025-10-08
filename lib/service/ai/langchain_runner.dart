@@ -107,8 +107,6 @@ class CancelableLangchainRunner {
       final toolSpecs = tools.cast<ToolSpec>().toList(growable: false);
       final steps = <AgentStep>[];
       final timeline = <_ReasoningItem>[];
-
-      var finalAnswer = '';
       // String? pendingThought;
       var iterations = 0;
 
@@ -117,9 +115,20 @@ class CancelableLangchainRunner {
         controller.add(
           _composeAgentPayload(
             timeline: timeline,
-            answer: finalAnswer,
           ),
         );
+      }
+
+      void appendReplyChunk(String text) {
+        if (text.trim().isEmpty) {
+          return;
+        }
+        if (timeline.isNotEmpty &&
+            timeline.last.type == _ReasoningItemType.reply) {
+          timeline.last.appendReply(text);
+        } else {
+          timeline.add(_ReasoningItem.reply(text));
+        }
       }
 
       List<ChatMessage> buildScratchpad() {
@@ -178,16 +187,12 @@ class CancelableLangchainRunner {
                   : aggregated!.concat(normalizedChunk);
               final output = aggregated!.output;
 
-              if (output.toolCalls.isNotEmpty ||
-                  _isThinkChunk(chunk.outputAsString)) {
-                final thought = normalizedChunk.outputAsString;
-                if (thought.isNotEmpty) {
-                  timeline.add(_ReasoningItem.think(thought));
+              if (output.toolCalls.isEmpty) {
+                final textChunk = normalizedChunk.outputAsString;
+                if (textChunk.trim().isNotEmpty) {
+                  appendReplyChunk(textChunk);
                   emit();
                 }
-              } else {
-                finalAnswer += chunk.outputAsString;
-                emit();
               }
             },
             onError: (Object error, StackTrace stack) {
@@ -226,8 +231,17 @@ class CancelableLangchainRunner {
           for (final action in actions) {
             if (action is AgentFinish) {
               final resolved = action.returnValues;
-              finalAnswer = resolved.values.first?.toString() ?? '';
-              emit();
+              final text = resolved.values.first?.toString();
+              if (text != null && text.trim().isNotEmpty) {
+                final existing = timeline.isNotEmpty &&
+                        timeline.last.type == _ReasoningItemType.reply
+                    ? timeline.last.reply?.trim()
+                    : null;
+                if (existing != text.trim()) {
+                  appendReplyChunk(text);
+                  emit();
+                }
+              }
               shouldStop = true;
               break;
             }
@@ -276,14 +290,15 @@ class CancelableLangchainRunner {
               toolStep.status = ToolStepStatus.failed;
               toolStep.error = message;
               toolStep.observation = message;
-              finalAnswer = 'Tool ${agentAction.tool} failed: $message';
+              appendReplyChunk('Tool ${agentAction.tool} failed: $message');
               emit();
               shouldStop = true;
               break;
             }
 
             if (tool.returnDirect) {
-              finalAnswer = toolStep.output ?? '';
+              final direct = toolStep.output ?? '';
+              appendReplyChunk(direct);
               emit();
               shouldStop = true;
               break;
@@ -336,20 +351,15 @@ class CancelableLangchainRunner {
 
   String _composeAgentPayload({
     required List<_ReasoningItem> timeline,
-    required String answer,
   }) {
     final buffer = StringBuffer();
-    buffer.write('<think>');
     for (final item in timeline) {
-      buffer.write(item.toTag());
+      final tag = item.toTag();
+      if (tag.isNotEmpty) {
+        buffer.write(tag);
+      }
     }
-    buffer.writeln('</think>');
-
-    if (answer.trim().isNotEmpty) {
-      buffer.writeln(answer.trim());
-    }
-
-    return buffer.toString().trim();
+    return buffer.toString();
   }
 
   bool _isThinkChunk(String chunk) {
@@ -466,26 +476,43 @@ String _escapeAttr(String value) {
   return Uri.encodeComponent(value);
 }
 
+enum _ReasoningItemType { reply, tool }
+
 class _ReasoningItem {
-  _ReasoningItem.think(this.thought)
-      : toolStep = null,
-        isThink = true;
+  _ReasoningItem.reply(String text)
+      : reply = text,
+        toolStep = null,
+        type = _ReasoningItemType.reply;
 
   _ReasoningItem.tool(this.toolStep)
-      : thought = null,
-        isThink = false;
+      : reply = null,
+        type = _ReasoningItemType.tool;
 
-  final String? thought;
+  String? reply;
   final _ToolStep? toolStep;
-  final bool isThink;
+  final _ReasoningItemType type;
+
+  void appendReply(String text) {
+    if (type != _ReasoningItemType.reply) {
+      return;
+    }
+    reply = (reply ?? '') + text;
+  }
 
   String toTag() {
-    if (isThink && thought != null) {
-      return "<think-block text='${_escapeAttr(thought!)}'/>";
+    switch (type) {
+      case _ReasoningItemType.reply:
+        final text = reply;
+        if (text == null || text.isEmpty) {
+          return '';
+        }
+        final encoded = base64Encode(utf8.encode(text));
+        return "<reply text_b64='${_escapeAttr(encoded)}'/>";
+      case _ReasoningItemType.tool:
+        if (toolStep == null) {
+          return '';
+        }
+        return toolStep!.toTag();
     }
-    if (toolStep != null) {
-      return toolStep!.toTag();
-    }
-    return '';
   }
 }
