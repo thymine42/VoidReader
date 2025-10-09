@@ -877,6 +877,34 @@ class Reader {
     return this.#doc.body.textContent
   }
 
+  getChapterContentByHref = async (target, options = {}) => {
+    if (!target) return ''
+    if (!this.view?.book?.sections) return ''
+
+    const resolved = this.view.resolveNavigation?.(target)
+    if (!resolved || resolved.index == null) return ''
+
+    const section = this.view.book.sections[resolved.index]
+    if (!section?.createDocument) return ''
+
+    const doc = await section.createDocument()
+    let content = doc?.body?.textContent ?? ''
+
+    if (!content) return ''
+
+    const rawMax = options?.maxChars
+    const numericMax = rawMax == null ? null : Number(rawMax)
+    const maxChars = Number.isFinite(numericMax) && numericMax > 0
+      ? Math.floor(numericMax)
+      : null
+
+    if (maxChars != null && content.length > maxChars) {
+      content = content.slice(0, maxChars)
+    }
+
+    return content
+  }
+
   getPreviousContent = (count = 2000) => {
     let currentContainer = this.view.lastLocation?.range?.endContainer?.parentElement;
     if (!currentContainer) return '';
@@ -1318,6 +1346,9 @@ window.renderAnnotations = (annotations) => reader.renderAnnotation(annotations)
 window.theChapterContent = () => reader.getChapterContent()
 
 window.previousContent = (count = 2000) => reader.getPreviousContent(count)
+
+window.getChapterContentByHref = async (href, opts) =>
+  reader.getChapterContentByHref(href, opts)
 
 // window.convertChinese = (mode) => reader.convertChinese(mode)
 
