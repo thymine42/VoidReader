@@ -11,7 +11,6 @@ import 'package:anx_reader/models/book.dart';
 import 'package:anx_reader/models/read_theme.dart';
 import 'package:anx_reader/page/book_detail.dart';
 import 'package:anx_reader/page/book_player/epub_player.dart';
-import 'package:anx_reader/providers/ai_chat.dart';
 import 'package:anx_reader/providers/sync.dart';
 import 'package:anx_reader/service/ai/index.dart';
 import 'package:anx_reader/service/ai/prompt_generate.dart';
@@ -316,14 +315,6 @@ class ReadingPageState extends ConsumerState<ReadingPage>
     }
   }
 
-  String _extractPromptText(PromptTemplatePayload payload) {
-    final messages = payload.buildMessages();
-    if (messages.isEmpty) {
-      return '';
-    }
-    return messages.last.contentAsString;
-  }
-
   void updateState() {
     if (mounted) {
       setState(() {
@@ -345,15 +336,7 @@ class ReadingPageState extends ConsumerState<ReadingPage>
         }
 
         showOrHideAppBarAndBottomBar(false);
-        final String chapterContent =
-            await epubPlayerKey.currentState!.theChapterContent();
-        final sendImmediate = (ref.read(aiChatProvider).value?.isEmpty ?? true);
-        final promptPayload = generatePromptSummaryTheChapter(chapterContent);
-        final promptText = _extractPromptText(promptPayload);
-        showAiChat(
-          content: sendImmediate ? promptText : null,
-          sendImmediate: sendImmediate,
-        );
+        showAiChat();
       },
     );
     Offstage controller = Offstage(
