@@ -21,12 +21,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:langchain_core/chat_models.dart';
 
+import 'package:anx_reader/models/ai_quick_prompt_chip.dart';
+
 class AiChatStream extends ConsumerStatefulWidget {
-  const AiChatStream(
-      {super.key, this.initialMessage, this.sendImmediate = false});
+  const AiChatStream({
+    super.key,
+    this.initialMessage,
+    this.sendImmediate = false,
+    this.quickPromptChips = const [],
+  });
 
   final String? initialMessage;
   final bool sendImmediate;
+  final List<AiQuickPromptChip> quickPromptChips;
 
   @override
   ConsumerState<AiChatStream> createState() => AiChatStreamState();
@@ -595,33 +602,73 @@ class AiChatStreamState extends ConsumerState<AiChatStream> {
 
     Widget buildEmptyState() {
       final theme = Theme.of(context);
-      return Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              L10n.of(context).tryAQuickPrompt,
-              style: theme.textTheme.titleMedium,
+
+      Widget buildQuickChipColumn() {
+        if (widget.quickPromptChips.isEmpty) {
+          return const SizedBox.shrink();
+        }
+
+        final chips = <Widget>[];
+        for (var i = 0; i < widget.quickPromptChips.length; i++) {
+          final chip = widget.quickPromptChips[i];
+          chips.add(
+            Padding(
+              padding: EdgeInsets.only(top: i == 0 ? 0 : 8.0),
+              child: ActionChip(
+                avatar: Icon(chip.icon, size: 18),
+                label: Text(chip.label),
+                onPressed: () {
+                  inputController.text = chip.prompt;
+                  _sendMessage();
+                },
+              ),
             ),
-            const SizedBox(height: 12),
-            Wrap(
-              alignment: WrapAlignment.center,
-              spacing: 8,
-              runSpacing: 8,
-              children: _suggestedPrompts
-                  .map(
-                    (prompt) => ActionChip(
-                      label: Text(prompt),
-                      onPressed: () {
-                        inputController.text = prompt;
-                        _sendMessage();
-                      },
-                    ),
-                  )
-                  .toList(growable: false),
+          );
+        }
+
+        return Positioned(
+          right: 16,
+          bottom: 16,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: chips,
+          ),
+        );
+      }
+
+      return Stack(
+        children: [
+          Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  L10n.of(context).tryAQuickPrompt,
+                  style: theme.textTheme.titleMedium,
+                ),
+                const SizedBox(height: 12),
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: _suggestedPrompts
+                      .map(
+                        (prompt) => ActionChip(
+                          label: Text(prompt),
+                          onPressed: () {
+                            inputController.text = prompt;
+                            _sendMessage();
+                          },
+                        ),
+                      )
+                      .toList(growable: false),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+          buildQuickChipColumn(),
+        ],
       );
     }
 
