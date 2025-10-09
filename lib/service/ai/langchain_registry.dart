@@ -10,7 +10,9 @@ import 'langchain_ai_config.dart';
 import 'tools/bookshelf_lookup_tool.dart';
 import 'tools/bookshelf_organize_tool.dart';
 import 'tools/calculator_tool.dart';
+import 'tools/chapter_content_by_href_tool.dart';
 import 'tools/current_book_toc_tool.dart';
+import 'tools/current_chapter_content_tool.dart';
 import 'tools/current_reading_metadata_tool.dart';
 import 'tools/current_time_tool.dart';
 import 'tools/notes_search_tool.dart';
@@ -118,6 +120,8 @@ class LangchainAiRegistry {
       if (isReading && ref != null) ...[
         currentReadingMetadataTool(ref),
         currentBookTocTool(ref),
+        currentChapterContentTool(ref),
+        chapterContentByHrefTool(ref),
       ],
     ];
   }
@@ -125,7 +129,9 @@ class LangchainAiRegistry {
   ChatMessage _buildAgentSystemMessage(bool isReading) {
     const isReadingToolsote = '''
 - Use `current_reading_metadata` to inspect the reader's active book, chapter, and progress before giving guidance about the current session.
-- Use `current_book_toc` to understand the table of contents.
+- Use `current_book_toc` to understand the table of contents and plan navigation.
+- Use `current_chapter_content` to retrieve the text of the chapter the reader currently has open.
+- Use `chapter_content_by_href` to fetch the text of another chapter by its href when additional context is required.
 ''';
 
     final guidance =
