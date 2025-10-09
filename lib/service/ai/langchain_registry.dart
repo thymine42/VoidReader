@@ -1,3 +1,5 @@
+import 'package:anx_reader/providers/current_reading.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:langchain_anthropic/langchain_anthropic.dart';
 import 'package:langchain_core/chat_models.dart';
 import 'package:langchain_core/tools.dart';
@@ -18,7 +20,8 @@ import 'tools/reading_history_tool.dart';
 
 /// Factory responsible for building chat models based on user preferences.
 class LangchainAiRegistry {
-  const LangchainAiRegistry();
+  const LangchainAiRegistry(this.ref);
+  final WidgetRef? ref;
 
   LangchainPipeline resolve(
     LangchainAiConfig config, {
@@ -81,8 +84,15 @@ class LangchainAiRegistry {
     BaseChatModel model, {
     required bool useAgent,
   }) {
-    final tools = useAgent ? _buildTools(config) : const <Tool>[];
-    final systemMessage = useAgent ? _buildAgentSystemMessage() : null;
+    if (useAgent) {
+      assert(ref != null, 'ref must be provided when useAgent is true');
+    }
+
+    final isReading =
+        ref != null && ref!.read(currentReadingProvider).isReading;
+
+    final tools = useAgent ? _buildTools(config, isReading, ref) : const <Tool>[];
+    final systemMessage = useAgent ? _buildAgentSystemMessage(isReading) : null;
     return LangchainPipeline(
       model: model,
       tools: tools,
@@ -90,7 +100,7 @@ class LangchainAiRegistry {
     );
   }
 
-  List<Tool> _buildTools(LangchainAiConfig config) {
+  List<Tool> _buildTools(LangchainAiConfig config, bool isReading, WidgetRef? ref) {
     final notesRepository = NotesRepository();
     final booksRepository = BooksRepository();
     final groupsRepository = GroupsRepository();
@@ -103,11 +113,17 @@ class LangchainAiRegistry {
       BookshelfOrganizeTool(booksRepository, groupsRepository).tool,
       currentTimeTool,
       ReadingHistoryTool(historyRepository).tool,
+      if (isReading) ...[
+        // Add any reading-specific tools here in the future.
+      ],
     ];
   }
 
-  ChatMessage _buildAgentSystemMessage() {
-    const guidance =
+  ChatMessage _buildAgentSystemMessage(bool isReading) {
+    const isReadingToolsote = '''
+''';
+
+    final guidance =
         '''You are the Anx Reader assistant. When users ask for help:
 - Use `notes_search` to retrieve highlights or annotations. Include book title, chapter, and a concise snippet when summarising results.
 - Use `bookshelf_lookup` to inspect the user's library (title, author, progress). Combine with other knowledge to answer queries about available books.
@@ -115,6 +131,7 @@ class LangchainAiRegistry {
 - Use `calculator` only for arithmetic operations.
 - Use `current_time` when the user needs the current date or time. Prefer local time but mention UTC when relevant.
 - Use `reading_history` to summarise or retrieve reading sessions; mention total minutes and relevant books.
+${isReading ? isReadingToolsote : ''}
 If a tool returns no data, explain that to the user and suggest next steps.''';
 
     return ChatMessage.system(guidance);

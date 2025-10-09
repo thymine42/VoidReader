@@ -25,7 +25,7 @@ Stream<String> aiGenerateStream(
   if (useAgent){
     assert(ref != null, 'ref must be provided when useAgent is true');
   }
-  LangchainAiRegistry registry = LangchainAiRegistry();
+  LangchainAiRegistry registry = LangchainAiRegistry(ref);
 
   return _generateStream(
     messages: messages,
