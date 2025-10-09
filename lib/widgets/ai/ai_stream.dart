@@ -45,11 +45,12 @@ class AiStreamState extends ConsumerState<AiStream> {
   Stream<String> _createStream(bool regenerate) {
     final messages = widget.prompt.buildMessages();
     return aiGenerateStream(
-      messages,
+       messages,
       identifier: widget.identifier,
       config: widget.config,
       regenerate: regenerate,
       useAgent: widget.useAgent,
+      ref: ref,
     );
   }
 
