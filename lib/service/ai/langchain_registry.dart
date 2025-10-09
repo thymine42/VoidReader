@@ -7,16 +7,17 @@ import 'package:langchain_google/langchain_google.dart';
 import 'package:langchain_openai/langchain_openai.dart';
 
 import 'langchain_ai_config.dart';
-import 'tools/repository/books_repository.dart';
-import 'tools/repository/groups_repository.dart';
-import 'tools/repository/notes_repository.dart';
-import 'tools/repository/reading_history_repository.dart';
 import 'tools/bookshelf_lookup_tool.dart';
 import 'tools/bookshelf_organize_tool.dart';
 import 'tools/calculator_tool.dart';
 import 'tools/current_time_tool.dart';
+import 'tools/current_reading_metadata_tool.dart';
 import 'tools/notes_search_tool.dart';
 import 'tools/reading_history_tool.dart';
+import 'tools/repository/books_repository.dart';
+import 'tools/repository/groups_repository.dart';
+import 'tools/repository/notes_repository.dart';
+import 'tools/repository/reading_history_repository.dart';
 
 /// Factory responsible for building chat models based on user preferences.
 class LangchainAiRegistry {
@@ -113,14 +114,15 @@ class LangchainAiRegistry {
       BookshelfOrganizeTool(booksRepository, groupsRepository).tool,
       currentTimeTool,
       ReadingHistoryTool(historyRepository).tool,
-      if (isReading) ...[
-        // Add any reading-specific tools here in the future.
+      if (isReading && ref != null) ...[
+        currentReadingMetadataTool(ref),
       ],
     ];
   }
 
   ChatMessage _buildAgentSystemMessage(bool isReading) {
     const isReadingToolsote = '''
+- Use `current_reading_metadata` to inspect the reader's active book, chapter, and progress before giving guidance about the current session.
 ''';
 
     final guidance =
