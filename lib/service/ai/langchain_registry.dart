@@ -10,8 +10,9 @@ import 'langchain_ai_config.dart';
 import 'tools/bookshelf_lookup_tool.dart';
 import 'tools/bookshelf_organize_tool.dart';
 import 'tools/calculator_tool.dart';
-import 'tools/current_time_tool.dart';
+import 'tools/current_book_toc_tool.dart';
 import 'tools/current_reading_metadata_tool.dart';
+import 'tools/current_time_tool.dart';
 import 'tools/notes_search_tool.dart';
 import 'tools/reading_history_tool.dart';
 import 'tools/repository/books_repository.dart';
@@ -116,6 +117,7 @@ class LangchainAiRegistry {
       ReadingHistoryTool(historyRepository).tool,
       if (isReading && ref != null) ...[
         currentReadingMetadataTool(ref),
+        currentBookTocTool(ref),
       ],
     ];
   }
@@ -123,6 +125,7 @@ class LangchainAiRegistry {
   ChatMessage _buildAgentSystemMessage(bool isReading) {
     const isReadingToolsote = '''
 - Use `current_reading_metadata` to inspect the reader's active book, chapter, and progress before giving guidance about the current session.
+- Use `current_book_toc` to understand the table of contents.
 ''';
 
     final guidance =
