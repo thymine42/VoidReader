@@ -13,6 +13,8 @@ class FilledContainer extends BaseRoundedContainer {
     super.margin,
     this.color,
     super.radius,
+    super.animationDuration,
+    super.animationCurve,
   });
 
   final Color? color;
@@ -26,6 +28,8 @@ class FilledContainer extends BaseRoundedContainer {
         padding: padding,
         margin: margin,
         radius: radius,
+        animationDuration: animationDuration,
+        animationCurve: animationCurve,
         child: child,
       );
     }
