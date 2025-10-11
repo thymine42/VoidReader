@@ -149,7 +149,7 @@ class _HeadlessSearchSession {
       initialUrlRequest: URLRequest(url: WebUri(url)),
       initialSettings: InAppWebViewSettings(
         supportZoom: false,
-        transparentBackground: true,
+        // transparentBackground: true,
         isInspectable: kDebugMode,
       ),
       onWebViewCreated: (controller) {

@@ -737,7 +737,7 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
 
   InAppWebViewSettings initialSettings = InAppWebViewSettings(
     supportZoom: false,
-    transparentBackground: true,
+    // transparentBackground: true,
     isInspectable: kDebugMode,
   );
 
