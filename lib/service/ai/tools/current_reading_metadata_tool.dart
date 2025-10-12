@@ -12,7 +12,7 @@ class CurrentReadingMetadataTool
       : super(
           name: 'current_reading_metadata',
           description:
-              'Return metadata about the book currently being read, including chapter and progress details. No input parameters are required.',
+              'Fetch up-to-date metadata about the active reading session. Use when you need book identifiers, progress, chapter details, or to confirm whether the user is currently reading. Returns flags for reading state plus book, progress, and chapter objects when available.',
           inputJsonSchema: const {
             'type': 'object',
             'properties': <String, dynamic>{},

@@ -11,19 +11,20 @@ class MindmapTool extends RepositoryTool<MindmapInput, Map<String, dynamic>> {
         super(
           name: 'mindmap_draw',
           description:
-              'Generate a mindmap structure from a hierarchical bullet-list string. Requires title and outline.',
+              'Transform a hierarchical bullet list into the structured JSON the app uses to render mind maps. Call this after drafting an outline you want to visualise. Returns a root node with nested children ready for display.',
           inputJsonSchema: const {
             'type': 'object',
             'required': ['title', 'hierarchicalList'],
             'properties': {
               'title': {
                 'type': 'string',
-                'description': 'Root title for the mindmap diagram.',
+                'description':
+                    'Required. Text used as the root label of the resulting mind map.',
               },
               'hierarchicalList': {
                 'type': 'string',
                 'description':
-                    'Bullet list representing the node hierarchy. Use indentation to denote nesting.',
+                    'Required. Markdown-like bullet list where indentation expresses nesting and each line represents a node.',
               },
             },
           },

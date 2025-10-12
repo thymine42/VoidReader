@@ -15,19 +15,19 @@ class ChapterContentByHrefTool
   ) : super(
           name: 'chapter_content_by_href',
           description:
-              'Fetch text content for a specific chapter identified by its href. Optionally limit the number of characters returned with maxCharacters.',
+              'Retrieve the plain-text body of a specific chapter when you already know its TOC href. Use this to quote or analyse a particular section without changing the current reading position. Returns the chapter text trimmed to the requested length.',
           inputJsonSchema: const {
             'type': 'object',
             'properties': {
               'href': {
                 'type': 'string',
                 'description':
-                    'Chapter href identifier from the table of contents.',
+                    'Required. Chapter href string obtained from the table of contents tool.',
               },
               'maxCharacters': {
                 'type': 'integer',
                 'description':
-                    'Optional limit for the number of characters returned (500-12000).',
+                    'Optional. Hard cap on the number of characters returned (500-12000). Use lower values to avoid long responses.',
               },
             },
             'required': ['href'],

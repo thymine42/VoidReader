@@ -14,14 +14,15 @@ class BookshelfOrganizeTool
     this._groupsRepository,
   ) : super(
           name: 'bookshelf_organize',
-              description:
-                'Propose bookshelf regrouping plans. Provide target groups with their book IDs and optional names. Returns a plan that requires user confirmation before applying. You can prompt the user to click the apply button in the interface.',
+          description:
+              'Draft a re-organization plan for the user\'s bookshelf without mutating data yourself. Use this after you have discussed a grouping strategy and want to present concrete moves. Supply the desired groups and book IDs to relocate; the tool responds with a human-readable plan that still needs the user to click Apply inside the app.',
           inputJsonSchema: const {
             'type': 'object',
             'properties': {
               'groups': {
                 'type': 'array',
-                'description': 'Desired bookshelf groups with target members.',
+                'description':
+                    'List every group you want to exist after re-organization, including its member books.',
                 'minItems': 1,
                 'items': {
                   'type': 'object',
@@ -29,27 +30,29 @@ class BookshelfOrganizeTool
                     'groupId': {
                       'type': 'integer',
                       'description':
-                          'Target group identifier (use an existing group, or reuse one of the book IDs for a new group).',
+                          'Identifier for the destination group. Use an existing group ID or, for new groups, reuse one of the member book IDs to match app behaviour.',
                     },
                     'bookIds': {
                       'type': 'array',
                       'items': {'type': 'integer'},
                       'description':
-                          'Books that should belong to this group after organizing.',
+                          'One or more book IDs that should end up inside this group once the plan is applied.',
                       'minItems': 1,
                     },
                     'name': {
                       'type': 'string',
-                      'description': 'Desired group name.',
+                      'description':
+                          'Optional. Suggested name for the group when it already exists.',
                     },
                     'renameTo': {
                       'type': 'string',
-                      'description': 'Optional new name for an existing group.',
+                      'description':
+                          'Optional. New title you would like to assign to an existing group.',
                     },
                     'createNew': {
                       'type': 'boolean',
                       'description':
-                          'Set true when creating a brand new group.',
+                          'Optional. Set true when this group does not already exist and should be created.',
                     },
                   },
                 },
@@ -58,19 +61,20 @@ class BookshelfOrganizeTool
                 'type': 'array',
                 'items': {'type': 'integer'},
                 'description':
-                    'Books that should be removed from any group (become ungrouped).',
+                    'Optional. Any book IDs that should end up outside of all groups (i.e. moved to the Ungrouped list).',
                 'minItems': 1,
               },
               'cleanupGroupIds': {
                 'type': 'array',
                 'items': {'type': 'integer'},
                 'description':
-                    'Groups to delete after the re-organization (e.g. empty folders).',
+                    'Optional. IDs of groups to delete after the move (use for empty folders you want to remove).',
                 'minItems': 1,
               },
               'summary': {
                 'type': 'string',
-                'description': 'Optional human readable summary of the plan.',
+                'description':
+                    'Optional. Short explanation of the overall plan to display to the user.',
               },
             },
           },

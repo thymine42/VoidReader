@@ -14,7 +14,7 @@ class CurrentBookTocTool
       : super(
           name: 'current_book_toc',
           description:
-              'Return the table of contents of the currently opened book, along with the current reading position. No input parameters are required.',
+              'Gather the table of contents for the book the user is reading right now, including their current position. Use this when you need chapter structure or to navigate to a different section. Returns an isReading flag, the current location details, and the full hierarchical TOC with percentages.',
           inputJsonSchema: const {
             'type': 'object',
             'properties': <String, dynamic>{},

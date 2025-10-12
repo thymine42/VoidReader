@@ -13,33 +13,34 @@ class BookContentSearchTool
   ) : super(
           name: 'book_content_search',
           description:
-              'Search for keyword matches within a book by bookId and keyword. Optionally control maxResults, maxSnippets, and maxCharacters.',
+              'Locate passages inside a specific book you already know the numeric id for. Supply a keyword or phrase to retrieve chapters containing matching text along with highlighted snippets. Ideal when you need supporting quotations or to confirm context while discussing the book. Returns matched chapters with chapter metadata, snippet previews, and match counts.',
           inputJsonSchema: const {
             'type': 'object',
             'properties': {
               'bookId': {
                 'type': 'integer',
-                'description': 'Numeric identifier of the target book.',
+                'description':
+                    'Required. ID of the book to search, typically obtained from bookshelf tools.',
               },
               'keyword': {
                 'type': 'string',
                 'description':
-                    'Keyword or phrase to search within the book content.',
+                    'Required. Case-insensitive keyword or phrase to look for in the selected book.',
               },
               'maxResults': {
                 'type': 'integer',
                 'description':
-                    'Maximum number of chapter-level results to return (1-10).',
+                    'Optional. Caps how many chapter-level matches are returned (range 1-10, default set by backend).',
               },
               'maxSnippets': {
                 'type': 'integer',
                 'description':
-                    'Maximum number of snippets per chapter result (1-10).',
+                    'Optional. Max number of snippet excerpts per chapter (range 1-10). Lower this when you only need a quick preview.',
               },
               'maxCharacters': {
                 'type': 'integer',
                 'description':
-                    'Optional limit for snippet length in characters (100-2000).',
+                    'Optional. Truncates each snippet to the specified character budget (100-2000) for concise responses.',
               },
             },
             'required': ['bookId', 'keyword'],

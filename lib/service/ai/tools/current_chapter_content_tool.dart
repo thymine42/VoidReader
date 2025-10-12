@@ -14,7 +14,7 @@ class CurrentChapterContentTool
   ) : super(
           name: 'current_chapter_content',
           description:
-              'Fetch the text content of the chapter currently being read. No parameters required.',
+              'Pull the plain-text content of whichever chapter the user is actively reading. Use this when you need to quote the current section or summarise it without specifying a href. Returns a single content string.',
           inputJsonSchema: const {
             'type': 'object',
             'properties': <String, dynamic>{},
