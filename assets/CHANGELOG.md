@@ -10,6 +10,7 @@
 - Feat: Optimize the interface design of the thinking model
 - Feat: On touch devices, a long press is required to open images
 - Feat: Optimize the interface design of chapter summaries
+- Feat: Adjustable width for AI chat panel
 - Fix: Fix the issue of some AI services loading indefinitely
 - Fix: The bottom details on the bookshelf page sometimes do not work when clicked
 - Fix: Gemini model cannot be used
@@ -25,6 +26,7 @@
 - Feat: 优化思考模型的界面设计
 - Feat: 在触摸设备上需要长按才能打开图片
 - Feat: 优化章节总结的界面设计
+- Feat: 可以调节 AI 对话面板的宽度
 - Fix: 修复部分 AI 服务无限加载的问题
 - Fix: 书架页面底部详情有时点击后不起作用的问题
 - Fix: Gemini 模型无法使用的问题
