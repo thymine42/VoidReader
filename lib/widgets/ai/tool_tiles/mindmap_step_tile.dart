@@ -77,6 +77,13 @@ class _MindmapStepTileState extends State<MindmapStepTile> {
         throw const FormatException('Mindmap payload missing data object');
       }
 
+      // If there's only one child under root, the root node is redundant
+      // because it duplicates the title. Promote the child as new root.
+      if (data['root']['children'].length == 1) {
+        data['root'] = data['root']['children'][0];
+        
+      }
+
       final payload = MindmapPayload.fromJson(data);
       setState(() {
         _bundle = MindmapGraphBundle.fromPayload(payload);
@@ -154,6 +161,11 @@ class _MindmapStepTileState extends State<MindmapStepTile> {
                     child: GraphView.builder(
                       graph: bundle.graph,
                       algorithm: bundle.algorithm,
+                      paint: Paint()
+                        ..color = theme.colorScheme.onSurface
+                        ..strokeWidth = 2
+                        ..style = PaintingStyle.stroke,
+                        autoZoomToFit: true,
                       builder: (node) {
                         final id = node.key?.value?.toString() ?? '';
                         final data = bundle.lookup[id];
