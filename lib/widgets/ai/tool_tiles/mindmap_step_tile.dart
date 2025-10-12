@@ -91,13 +91,15 @@ class _MindmapStepTileState extends State<MindmapStepTile> {
   }
 
   Widget _buildContent(BuildContext context) {
+    final theme = Theme.of(context);
     if (_error != null) {
-      return Text(_error!, style: Theme.of(context).textTheme.bodyMedium);
+      return Text(_error!, style: theme.textTheme.bodyMedium);
     }
+
     final bundle = _bundle;
     if (bundle == null) {
       return Text('Mindmap is generating...',
-          style: Theme.of(context).textTheme.bodyMedium); // TODO: l10n
+          style: theme.textTheme.bodyMedium); // TODO: l10n
     }
 
     return Column(
@@ -105,15 +107,14 @@ class _MindmapStepTileState extends State<MindmapStepTile> {
       children: [
         FilledContainer(
           width: double.infinity,
-          height: 500,
+          height: 360,
           padding: const EdgeInsets.all(8),
-          color: Theme.of(context).colorScheme.surfaceContainer,
+          color: theme.colorScheme.surfaceContainer,
           radius: 12,
           child: LayoutBuilder(
             builder: (context, constraints) {
-              final width = constraints.maxWidth.isFinite
-                  ? constraints.maxWidth
-                  : 320.0;
+              final width =
+                  constraints.maxWidth.isFinite ? constraints.maxWidth : 320.0;
               final height = constraints.maxHeight.isFinite
                   ? constraints.maxHeight
                   : 320.0;
@@ -129,7 +130,13 @@ class _MindmapStepTileState extends State<MindmapStepTile> {
                     builder: (node) {
                       final id = node.key?.value?.toString() ?? '';
                       final data = bundle.lookup[id];
-                      return _MindmapNodeCard(label: data?.label ?? id);
+                      final level = bundle.levels[id] ?? 0;
+                      final style = _resolveLevelStyle(theme, level);
+                      return _MindmapNodeCard(
+                        label: data?.label ?? id,
+                        backgroundColor: style.background,
+                        foregroundColor: style.foreground,
+                      );
                     },
                   ),
                 ),
@@ -142,7 +149,7 @@ class _MindmapStepTileState extends State<MindmapStepTile> {
             padding: const EdgeInsets.only(top: 8.0),
             child: Text(
               'Nodes: ${bundle.stats!.nodeCount}, Depth: ${bundle.stats!.depth}', // TODO: l10n
-              style: Theme.of(context).textTheme.bodySmall,
+              style: theme.textTheme.bodySmall,
             ),
           ),
       ],
@@ -151,29 +158,53 @@ class _MindmapStepTileState extends State<MindmapStepTile> {
 }
 
 class _MindmapNodeCard extends StatelessWidget {
-  const _MindmapNodeCard({required this.label});
+  const _MindmapNodeCard({
+    required this.label,
+    required this.backgroundColor,
+    required this.foregroundColor,
+  });
 
   final String label;
+  final Color backgroundColor;
+  final Color foregroundColor;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Card(
       margin: EdgeInsets.zero,
-      color: theme.colorScheme.primaryContainer,
+      color: backgroundColor,
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         child: Text(
           label,
-          style: theme.textTheme.bodyMedium?.copyWith(
-            color: theme.colorScheme.onPrimaryContainer,
-          ),
+          style: Theme.of(context)
+              .textTheme
+              .bodyMedium
+              ?.copyWith(color: foregroundColor),
         ),
       ),
     );
   }
+}
+
+class _LevelStyle {
+  const _LevelStyle({required this.background, required this.foreground});
+
+  final Color background;
+  final Color foreground;
+}
+
+_LevelStyle _resolveLevelStyle(ThemeData theme, int level) {
+  final base = HSVColor.fromColor(theme.colorScheme.primary);
+  final hue = (base.hue + (level * 32)) % 360;
+  final saturation = (0.35 + (level % 5) * 0.08).clamp(0.2, 0.85);
+  final value = (0.9 - (level % 6) * 0.06).clamp(0.3, 0.95);
+  final background = HSVColor.fromAHSV(1, hue, saturation, value).toColor();
+  final foreground =
+      background.computeLuminance() > 0.55 ? Colors.black : Colors.white;
+  return _LevelStyle(background: background, foreground: foreground);
 }
 
 class MindmapGraphBundle {
@@ -182,29 +213,32 @@ class MindmapGraphBundle {
     required this.algorithm,
     required this.lookup,
     required this.stats,
+    required this.levels,
   });
 
   factory MindmapGraphBundle.fromPayload(MindmapPayload payload) {
     final graph = Graph()..isTree = true;
     final lookup = <String, MindmapNodeData>{};
     final nodeCache = <String, Node>{};
+    final levels = <String, int>{};
 
     Node ensureNode(MindmapNodeData data) {
       lookup[data.id] = data;
       return nodeCache.putIfAbsent(data.id, () => Node.Id(data.id));
     }
 
-    void visit(MindmapNodeData node) {
+    void visit(MindmapNodeData node, int level) {
       final parentNode = ensureNode(node);
       graph.addNode(parentNode);
+      levels[node.id] = level;
       for (final child in node.children) {
         final childNode = ensureNode(child);
         graph.addEdge(parentNode, childNode);
-        visit(child);
+        visit(child, level + 1);
       }
     }
 
-    visit(payload.root);
+    visit(payload.root, 0);
 
     final config = BuchheimWalkerConfiguration()
       ..siblingSeparation = 10
@@ -222,6 +256,7 @@ class MindmapGraphBundle {
       algorithm: algorithm,
       lookup: lookup,
       stats: payload.stats,
+      levels: levels,
     );
   }
 
@@ -229,6 +264,7 @@ class MindmapGraphBundle {
   final Algorithm algorithm;
   final Map<String, MindmapNodeData> lookup;
   final MindmapStats? stats;
+  final Map<String, int> levels;
 }
 
 class MindmapPayload {
