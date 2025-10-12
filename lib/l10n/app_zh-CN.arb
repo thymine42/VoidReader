@@ -594,5 +594,13 @@
   "groupsToRemove": "要删除的分组",
   "groupId": "分组 ID {id}",
   "bookshelfUpdated": "书架已更新。",
-  "failedToApplyPlan": "应用计划失败：{error}"
+  "failedToApplyPlan": "应用计划失败：{error}",
+  "mindmapWaitingForOutput": "等待思维导图输出",
+  "mindmapToolError": "思维导图工具返回错误",
+  "mindmapParseFailed": "解析思维导图失败：{error}",
+  "mindmapGenerating": "思维导图生成中...",
+  "mindmapStats": "节点数：{nodeCount}，深度：{depth}",
+  "mindmapDefaultTitle": "思维导图",
+  "mindmapDefaultNodeId": "节点",
+  "mindmapDefaultNodeLabel": "节点"
 }

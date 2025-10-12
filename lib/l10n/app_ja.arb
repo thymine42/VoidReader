@@ -594,5 +594,13 @@
   "groupsToRemove": "削除するグループ",
   "groupId": "グループ ID {id}",
   "bookshelfUpdated": "本棚が更新されました。",
-  "failedToApplyPlan": "計画の適用に失敗しました：{error}"
+  "failedToApplyPlan": "計画の適用に失敗しました：{error}",
+  "mindmapWaitingForOutput": "マインドマップの出力を待っています",
+  "mindmapToolError": "マインドマップツールがエラーを返しました",
+  "mindmapParseFailed": "マインドマップの解析に失敗しました：{error}",
+  "mindmapGenerating": "マインドマップを生成中...",
+  "mindmapStats": "ノード数：{nodeCount}、深さ：{depth}",
+  "mindmapDefaultTitle": "マインドマップ",
+  "mindmapDefaultNodeId": "ノード",
+  "mindmapDefaultNodeLabel": "ノード"
 }

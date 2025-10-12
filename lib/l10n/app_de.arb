@@ -594,5 +594,13 @@
   "groupsToRemove": "Zu entfernende Gruppen",
   "groupId": "Gruppen-ID {id}",
   "bookshelfUpdated": "Bücherregal aktualisiert.",
-  "failedToApplyPlan": "Plan konnte nicht angewendet werden: {error}"
+  "failedToApplyPlan": "Plan konnte nicht angewendet werden: {error}",
+  "mindmapWaitingForOutput": "Warten auf Mindmap-Ausgabe",
+  "mindmapToolError": "Mindmap-Tool hat einen Fehler zurückgegeben",
+  "mindmapParseFailed": "Mindmap konnte nicht analysiert werden: {error}",
+  "mindmapGenerating": "Mindmap wird erstellt...",
+  "mindmapStats": "Knoten: {nodeCount}, Tiefe: {depth}",
+  "mindmapDefaultTitle": "Mindmap",
+  "mindmapDefaultNodeId": "knoten",
+  "mindmapDefaultNodeLabel": "Knoten"
 }

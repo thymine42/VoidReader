@@ -594,5 +594,13 @@
   "groupsToRemove": "Kaldırılacak gruplar",
   "groupId": "Grup ID {id}",
   "bookshelfUpdated": "Kitaplık güncellendi.",
-  "failedToApplyPlan": "Plan uygulanamadı: {error}"
+  "failedToApplyPlan": "Plan uygulanamadı: {error}",
+  "mindmapWaitingForOutput": "Zihin haritası çıktısı bekleniyor",
+  "mindmapToolError": "Zihin haritası aracı bir hata döndürdü",
+  "mindmapParseFailed": "Zihin haritası ayrıştırılamadı: {error}",
+  "mindmapGenerating": "Zihin haritası oluşturuluyor...",
+  "mindmapStats": "Düğümler: {nodeCount}, Derinlik: {depth}",
+  "mindmapDefaultTitle": "Zihin Haritası",
+  "mindmapDefaultNodeId": "düğüm",
+  "mindmapDefaultNodeLabel": "Düğüm"
 }

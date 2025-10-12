@@ -594,5 +594,13 @@
   "groupsToRemove": "مجموعات للإزالة",
   "groupId": "معرف المجموعة {id}",
   "bookshelfUpdated": "تم تحديث الرف.",
-  "failedToApplyPlan": "فشل في تطبيق الخطة: {error}"
+  "failedToApplyPlan": "فشل في تطبيق الخطة: {error}",
+  "mindmapWaitingForOutput": "في انتظار إخراج الخريطة الذهنية",
+  "mindmapToolError": "أرجعت أداة الخريطة الذهنية خطأ",
+  "mindmapParseFailed": "فشل تحليل الخريطة الذهنية: {error}",
+  "mindmapGenerating": "جاري إنشاء الخريطة الذهنية...",
+  "mindmapStats": "العقد: {nodeCount}، العمق: {depth}",
+  "mindmapDefaultTitle": "خريطة ذهنية",
+  "mindmapDefaultNodeId": "عقدة",
+  "mindmapDefaultNodeLabel": "عقدة"
 }

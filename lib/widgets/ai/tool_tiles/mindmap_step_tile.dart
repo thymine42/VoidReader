@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:anx_reader/l10n/generated/l10n.dart';
 import 'package:anx_reader/utils/ai_reasoning_parser.dart';
 import 'package:anx_reader/widgets/ai/tool_tiles/tool_tile_base.dart';
 import 'package:anx_reader/widgets/common/container/filled_container.dart';
@@ -54,7 +55,7 @@ class _MindmapStepTileState extends State<MindmapStepTile> {
     if (output == null || output.trim().isEmpty) {
       setState(() {
         _bundle = null;
-        _error = 'Waiting for mindmap output'; // TODO: l10n
+        _error = L10n.of(context).mindmapWaitingForOutput;
       });
       return;
     }
@@ -68,7 +69,7 @@ class _MindmapStepTileState extends State<MindmapStepTile> {
       final status = decoded['status'];
       if (status != 'ok') {
         final message = decoded['message']?.toString() ??
-            'Mindmap tool returned an error'; // TODO: l10n
+            L10n.of(context).mindmapToolError;
         throw FormatException(message);
       }
 
@@ -83,7 +84,7 @@ class _MindmapStepTileState extends State<MindmapStepTile> {
         data['root'] = data['root']['children'][0];
       }
 
-      final payload = MindmapPayload.fromJson(data);
+      final payload = MindmapPayload.fromJson(data, context);
       setState(() {
         _bundle = MindmapGraphBundle.fromPayload(payload);
         _error = null;
@@ -92,7 +93,7 @@ class _MindmapStepTileState extends State<MindmapStepTile> {
     } catch (error) {
       setState(() {
         _bundle = null;
-        _error = 'Failed to parse mindmap: $error'; // TODO: l10n
+        _error = L10n.of(context).mindmapParseFailed(error.toString());
       });
     }
   }
@@ -118,8 +119,8 @@ class _MindmapStepTileState extends State<MindmapStepTile> {
 
     final bundle = _bundle;
     if (bundle == null) {
-      return Text('Mindmap is generating...',
-          style: theme.textTheme.bodyMedium); // TODO: l10n
+      return Text(L10n.of(context).mindmapGenerating,
+          style: theme.textTheme.bodyMedium);
     }
 
     return Column(
@@ -185,7 +186,10 @@ class _MindmapStepTileState extends State<MindmapStepTile> {
           Padding(
             padding: const EdgeInsets.only(top: 8.0),
             child: Text(
-              'Nodes: ${bundle.stats!.nodeCount}, Depth: ${bundle.stats!.depth}', // TODO: l10n
+              L10n.of(context).mindmapStats(
+                bundle.stats!.nodeCount,
+                bundle.stats!.depth,
+              ),
               style: theme.textTheme.bodySmall,
             ),
           ),
@@ -343,16 +347,17 @@ class MindmapPayload {
     this.stats,
   });
 
-  factory MindmapPayload.fromJson(Map<String, dynamic> json) {
+  factory MindmapPayload.fromJson(
+      Map<String, dynamic> json, BuildContext context) {
     final rootJson = json['root'];
     if (rootJson is! Map<String, dynamic>) {
       throw const FormatException('Mindmap payload is missing root node');
     }
 
     return MindmapPayload(
-      title: json['title']?.toString() ?? 'Mindmap', // TODO: l10n
+      title: json['title']?.toString() ?? L10n.of(context).mindmapDefaultTitle,
       outline: json['outline']?.toString() ?? '',
-      root: MindmapNodeData.fromJson(rootJson),
+      root: MindmapNodeData.fromJson(rootJson, context),
       stats: json['stats'] is Map<String, dynamic>
           ? MindmapStats.fromJson(json['stats'] as Map<String, dynamic>)
           : null,
@@ -372,15 +377,16 @@ class MindmapNodeData {
     required this.children,
   });
 
-  factory MindmapNodeData.fromJson(Map<String, dynamic> json) {
+  factory MindmapNodeData.fromJson(
+      Map<String, dynamic> json, BuildContext context) {
     final children = (json['children'] as List? ?? const [])
         .whereType<Map<String, dynamic>>()
-        .map(MindmapNodeData.fromJson)
+        .map((child) => MindmapNodeData.fromJson(child, context))
         .toList(growable: false);
 
     return MindmapNodeData(
-      id: json['id']?.toString() ?? 'node', // TODO: l10n
-      label: json['label']?.toString() ?? 'Node', // TODO: l10n
+      id: json['id']?.toString() ?? L10n.of(context).mindmapDefaultNodeId,
+      label: json['label']?.toString() ?? L10n.of(context).mindmapDefaultNodeLabel,
       children: children,
     );
   }

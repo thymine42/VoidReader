@@ -594,5 +594,13 @@
   "groupsToRemove": "Groupes à supprimer",
   "groupId": "ID du groupe {id}",
   "bookshelfUpdated": "Bibliothèque mise à jour.",
-  "failedToApplyPlan": "Échec de l'application du plan : {error}"
+  "failedToApplyPlan": "Échec de l'application du plan : {error}",
+  "mindmapWaitingForOutput": "En attente de la sortie de la carte mentale",
+  "mindmapToolError": "L'outil de carte mentale a renvoyé une erreur",
+  "mindmapParseFailed": "Échec de l'analyse de la carte mentale : {error}",
+  "mindmapGenerating": "Génération de la carte mentale...",
+  "mindmapStats": "Nœuds : {nodeCount}, Profondeur : {depth}",
+  "mindmapDefaultTitle": "Carte Mentale",
+  "mindmapDefaultNodeId": "nœud",
+  "mindmapDefaultNodeLabel": "Nœud"
 }

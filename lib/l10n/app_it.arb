@@ -594,5 +594,13 @@
   "groupsToRemove": "Gruppi da rimuovere",
   "groupId": "ID gruppo {id}",
   "bookshelfUpdated": "Libreria aggiornata.",
-  "failedToApplyPlan": "Impossibile applicare il piano: {error}"
+  "failedToApplyPlan": "Impossibile applicare il piano: {error}",
+  "mindmapWaitingForOutput": "In attesa dell'output della mappa mentale",
+  "mindmapToolError": "Lo strumento mappa mentale ha restituito un errore",
+  "mindmapParseFailed": "Impossibile analizzare la mappa mentale: {error}",
+  "mindmapGenerating": "Generazione della mappa mentale...",
+  "mindmapStats": "Nodi: {nodeCount}, Profondità: {depth}",
+  "mindmapDefaultTitle": "Mappa Mentale",
+  "mindmapDefaultNodeId": "nodo",
+  "mindmapDefaultNodeLabel": "Nodo"
 }

@@ -594,5 +594,13 @@
   "groupsToRemove": "Группы для удаления",
   "groupId": "ID группы {id}",
   "bookshelfUpdated": "Книжная полка обновлена.",
-  "failedToApplyPlan": "Не удалось применить план: {error}"
+  "failedToApplyPlan": "Не удалось применить план: {error}",
+  "mindmapWaitingForOutput": "Ожидание вывода ментальной карты",
+  "mindmapToolError": "Инструмент ментальной карты вернул ошибку",
+  "mindmapParseFailed": "Не удалось разобрать ментальную карту: {error}",
+  "mindmapGenerating": "Создание ментальной карты...",
+  "mindmapStats": "Узлов: {nodeCount}, Глубина: {depth}",
+  "mindmapDefaultTitle": "Ментальная карта",
+  "mindmapDefaultNodeId": "узел",
+  "mindmapDefaultNodeLabel": "Узел"
 }

@@ -594,5 +594,13 @@
   "groupsToRemove": "제거할 그룹",
   "groupId": "그룹 ID {id}",
   "bookshelfUpdated": "책장이 업데이트되었습니다.",
-  "failedToApplyPlan": "계획 적용 실패: {error}"
+  "failedToApplyPlan": "계획 적용 실패: {error}",
+  "mindmapWaitingForOutput": "마인드맵 출력 대기 중",
+  "mindmapToolError": "마인드맵 도구에서 오류가 반환되었습니다",
+  "mindmapParseFailed": "마인드맵 구문 분석 실패: {error}",
+  "mindmapGenerating": "마인드맵 생성 중...",
+  "mindmapStats": "노드 수: {nodeCount}, 깊이: {depth}",
+  "mindmapDefaultTitle": "마인드맵",
+  "mindmapDefaultNodeId": "노드",
+  "mindmapDefaultNodeLabel": "노드"
 }

@@ -594,5 +594,13 @@
   "groupsToRemove": "Groups to remove",
   "groupId": "Group ID {id}",
   "bookshelfUpdated": "Bookshelf updated.",
-  "failedToApplyPlan": "Failed to apply plan: {error}"
+  "failedToApplyPlan": "Failed to apply plan: {error}",
+  "mindmapWaitingForOutput": "Waiting for mindmap output",
+  "mindmapToolError": "Mindmap tool returned an error",
+  "mindmapParseFailed": "Failed to parse mindmap: {error}",
+  "mindmapGenerating": "Mindmap is generating...",
+  "mindmapStats": "Nodes: {nodeCount}, Depth: {depth}",
+  "mindmapDefaultTitle": "Mindmap",
+  "mindmapDefaultNodeId": "node",
+  "mindmapDefaultNodeLabel": "Node"
 }
