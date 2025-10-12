@@ -81,7 +81,6 @@ class _MindmapStepTileState extends State<MindmapStepTile> {
       // because it duplicates the title. Promote the child as new root.
       if (data['root']['children'].length == 1) {
         data['root'] = data['root']['children'][0];
-        
       }
 
       final payload = MindmapPayload.fromJson(data);
@@ -129,8 +128,6 @@ class _MindmapStepTileState extends State<MindmapStepTile> {
         FilledContainer(
           width: double.infinity,
           height: 360,
-          padding: const EdgeInsets.all(8),
-          color: theme.colorScheme.surfaceContainer,
           radius: 12,
           child: LayoutBuilder(
             builder: (context, constraints) {
@@ -165,7 +162,7 @@ class _MindmapStepTileState extends State<MindmapStepTile> {
                         ..color = theme.colorScheme.onSurface
                         ..strokeWidth = 2
                         ..style = PaintingStyle.stroke,
-                        autoZoomToFit: true,
+                      autoZoomToFit: true,
                       builder: (node) {
                         final id = node.key?.value?.toString() ?? '';
                         final data = bundle.lookup[id];
@@ -245,6 +242,7 @@ class _MindmapNodeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FilledContainer(
+      fill: true,
       margin: EdgeInsets.zero,
       color: backgroundColor,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
