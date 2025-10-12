@@ -263,6 +263,7 @@
   "settingsAiPromptSummaryTheChapter": "챕터 요약",
   "settingsAiPromptSummaryTheBook": "책 요약",
   "settingsAiPromptSummaryThePreviousContent": "이전 내용 요약",
+  "settingsAiPromptMindmap": "마인드맵으로 시각화",
   "settingsAiCache": "AI 캐시",
   "settingsAiCacheSize": "최대 캐시 크기",
   "settingsAiCacheCurrentSize": "현재 {count, plural, other{{count}개의 캐시}}",

@@ -263,6 +263,7 @@
   "settingsAiPromptSummaryTheChapter": "Резюме главы",
   "settingsAiPromptSummaryTheBook": "Резюме книги",
   "settingsAiPromptSummaryThePreviousContent": "Помощь в запоминании предыдущего текста",
+  "settingsAiPromptMindmap": "Визуализировать с помощью ментальной карты",
   "settingsAiCache": "Кэш ИИ",
   "settingsAiCacheSize": "Размер кэша",
   "settingsAiCacheCurrentSize": "Текущий кэш: {count} записей",

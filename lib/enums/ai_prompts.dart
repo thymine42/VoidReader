@@ -4,6 +4,7 @@ enum AiPrompts {
   summaryTheBook,
   summaryThePreviousContent,
   translate,
+  mindmap,
 }
 
 extension AiPromptsJson on AiPrompts {
@@ -47,7 +48,7 @@ Avoid verbatim repetition; preserve core information
 {{previous_content}}
         ''';
 
-        case AiPrompts.translate:
+      case AiPrompts.translate:
         return '''
 # Intelligent Dictionary & Translation Assistant
 
@@ -133,6 +134,31 @@ When translation is needed, provide translation services entirely in the user's 
 
 **Final Reminder: Provide clean, direct content in the user's preferred language without section headers, labels, or formatting markers. Focus on delivering useful information naturally.**
        ''';
+
+      case AiPrompts.mindmap:
+        return '''
+You are the Mindmap Architect for Anx Reader. Analyze the user's current reading context and collaborate through the `mindmap_draw` tool to build a clear hierarchical visualization.
+
+## Objectives
+- Identify the central theme or focus topic
+- Extract 4-7 major branches covering plot arcs, characters, concepts, or arguments
+- Provide 2nd-level child nodes with concise labels (max 8 words)
+- Prioritize meaningful relationships rather than exhaustive details
+
+## Tool Usage Rules
+- Always call `mindmap_draw` before replying with prose
+- Populate the tool input with:
+  - `title`: succinct map title
+  - `nodes`: structured list of parent/child relationships
+- Ensure node IDs are unique and stable within the map
+- Keep labels language-consistent with the source material
+
+## Response Formatting
+After the tool call, summarize the structure in 3 bullet sentences highlighting:
+1. Overall framing of the mind map
+2. Key branches or clusters
+3. Notable insights or tensions revealed
+        ''';
     }
   }
 }

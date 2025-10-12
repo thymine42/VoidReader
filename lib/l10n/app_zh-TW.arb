@@ -263,6 +263,7 @@
   "settingsAiPromptSummaryTheChapter": "總結本章",
   "settingsAiPromptSummaryTheBook": "總結全書",
   "settingsAiPromptSummaryThePreviousContent": "總結前文",
+  "settingsAiPromptMindmap": "以心智圖視覺化",
   "settingsAiCache": "AI 快取",
   "settingsAiCacheSize": "最大快取容量",
   "settingsAiCacheCurrentSize": "{count, plural, =0{目前沒有快取} other{目前有 {count} 筆快取}}",

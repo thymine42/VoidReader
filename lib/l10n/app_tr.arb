@@ -263,6 +263,7 @@
   "settingsAiPromptSummaryTheChapter": "Bölümü Özetle",
   "settingsAiPromptSummaryTheBook": "Kitabı Özetle",
   "settingsAiPromptSummaryThePreviousContent": "Önceki İçeriği Özetle",
+  "settingsAiPromptMindmap": "Zihin haritasıyla görselleştir",
   "settingsAiCache": "YZ Önbelleği",
   "settingsAiCacheSize": "Maksimum Önbellek Boyutu",
   "settingsAiCacheCurrentSize": "Mevcut {count, plural, other{{count} önbellek}}",

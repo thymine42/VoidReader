@@ -278,6 +278,11 @@ class ReadingPageState extends ConsumerState<ReadingPage>
         label: L10n.of(context).settingsAiPromptSummaryTheBook,
         prompt: generatePromptSummaryTheBook().buildString(),
       ),
+      AiQuickPromptChip(
+        icon: Icons.account_tree_outlined,
+        label: L10n.of(context).settingsAiPromptMindmap,
+        prompt: generatePromptMindmap().buildString(),
+      ),
     ];
     if (MediaQuery.of(navigatorKey.currentContext!).size.width < 600) {
       showModalBottomSheet(

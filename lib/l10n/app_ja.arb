@@ -263,6 +263,7 @@
   "settingsAiPromptSummaryTheChapter": "章を要約",
   "settingsAiPromptSummaryTheBook": "本を要約",
   "settingsAiPromptSummaryThePreviousContent": "前の内容を要約",
+  "settingsAiPromptMindmap": "マインドマップで可視化",
   "settingsAiCache": "AIキャッシュ",
   "settingsAiCacheSize": "最大キャッシュサイズ",
   "settingsAiCacheCurrentSize": "現在{count, plural, other{{count}個のキャッシュ}}",

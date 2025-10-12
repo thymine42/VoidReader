@@ -263,6 +263,7 @@
   "settingsAiPromptSummaryTheChapter": "Summary the chapter",
   "settingsAiPromptSummaryTheBook": "Summary the book",
   "settingsAiPromptSummaryThePreviousContent": "Summary the previous content",
+  "settingsAiPromptMindmap": "Visualize with mind map",
   "settingsAiCache": "AI Cache",
   "settingsAiCacheSize": "Max Cache Size",
   "settingsAiCacheCurrentSize": "Current {count, plural, other{{count} caches}}",

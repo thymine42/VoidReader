@@ -263,6 +263,7 @@
   "settingsAiPromptSummaryTheChapter": "تلخيص الفصل",
   "settingsAiPromptSummaryTheBook": "تلخيص الكتاب",
   "settingsAiPromptSummaryThePreviousContent": "تلخيص المحتوى السابق",
+  "settingsAiPromptMindmap": "إنشاء خريطة ذهنية",
   "settingsAiCache": "ذاكرة التخزين المؤقت للذكاء الاصطناعي",
   "settingsAiCacheSize": "حجم ذاكرة التخزين المؤقت القصوى",
   "settingsAiCacheCurrentSize": "{count, plural, other{حاليا {count} ذاكرة تخزين مؤقت}}",

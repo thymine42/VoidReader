@@ -75,6 +75,19 @@ PromptTemplatePayload generatePromptSummaryTheBook() {
   );
 }
 
+PromptTemplatePayload generatePromptMindmap() {
+  final prompt = Prefs().getAiPrompt(AiPrompts.mindmap);
+  final normalized = _normalizePrompt(prompt);
+  final template = ChatPromptTemplate.fromPromptMessages([
+    HumanChatMessagePromptTemplate.fromTemplate(normalized),
+  ]);
+  return PromptTemplatePayload(
+    template: template,
+    variables: {},
+    identifier: AiPrompts.mindmap,
+  );
+}
+
 PromptTemplatePayload generatePromptSummaryThePreviousContent(
     String previousContent) {
   final prompt = Prefs().getAiPrompt(AiPrompts.summaryThePreviousContent);

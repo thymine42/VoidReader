@@ -263,6 +263,7 @@
   "settingsAiPromptSummaryTheChapter": "總結本章內容",
   "settingsAiPromptSummaryTheBook": "總結整冊書",
   "settingsAiPromptSummaryThePreviousContent": "開卷時幫助回憶前文內容",
+  "settingsAiPromptMindmap": "繪思維圖",
   "settingsAiCache": "AI 緩存",
   "settingsAiCacheSize": "緩存大小",
   "settingsAiCacheCurrentSize": "當前共 {count, plural, other{{count} 條緩存}}",

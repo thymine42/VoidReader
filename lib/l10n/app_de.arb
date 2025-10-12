@@ -263,6 +263,7 @@
   "settingsAiPromptSummaryTheChapter": "Kapitel zusammenfassen",
   "settingsAiPromptSummaryTheBook": "Buch zusammenfassen",
   "settingsAiPromptSummaryThePreviousContent": "Vorherigen Inhalt zusammenfassen",
+  "settingsAiPromptMindmap": "Mit Mindmap visualisieren",
   "settingsAiCache": "KI-Cache",
   "settingsAiCacheSize": "Maximale Cache-Größe",
   "settingsAiCacheCurrentSize": "Aktuell {count, plural, other{{count} Caches}}",
