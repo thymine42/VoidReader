@@ -245,17 +245,20 @@ class _MindmapNodeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FilledContainer(
-      fill: true,
-      margin: EdgeInsets.zero,
-      color: backgroundColor,
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      child: Text(
-        label,
-        style: Theme.of(context)
-            .textTheme
-            .bodyMedium
-            ?.copyWith(color: foregroundColor),
+    return Container(
+      constraints: const BoxConstraints(maxWidth: 200),
+      child: FilledContainer(
+        fill: true,
+        margin: EdgeInsets.zero,
+        color: backgroundColor,
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        child: Text(
+          label,
+          style: Theme.of(context)
+              .textTheme
+              .bodyMedium
+              ?.copyWith(color: foregroundColor),
+        ),
       ),
     );
   }
