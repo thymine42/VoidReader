@@ -81,15 +81,14 @@ class BookNoteTile extends StatelessWidget {
                         IntrinsicHeight(
                           child: Row(
                             children: [
-                              VerticalDivider(
+                              const VerticalDivider(
                                 thickness: 3,
-                                color: Colors.grey.shade300,
                               ),
                               Expanded(
                                 child: Text(
                                   note.readerNote!,
                                   style: infoStyle.copyWith(
-                                    color: Colors.grey.shade300,
+                                    color: Colors.grey.shade600,
                                   ),
                                 ),
                               ),
