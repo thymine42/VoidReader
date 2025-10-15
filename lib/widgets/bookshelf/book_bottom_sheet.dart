@@ -9,6 +9,7 @@ import 'package:anx_reader/page/book_detail.dart';
 import 'package:anx_reader/providers/sync.dart';
 import 'package:anx_reader/providers/book_list.dart';
 import 'package:anx_reader/providers/sync_status.dart';
+import 'package:anx_reader/utils/share_file.dart';
 import 'package:anx_reader/widgets/bookshelf/book_cover.dart';
 import 'package:anx_reader/widgets/delete_confirm.dart';
 import 'package:anx_reader/widgets/icon_and_text.dart';
@@ -116,12 +117,10 @@ class BookBottomSheet extends ConsumerWidget {
     }
 
     Future<void> handleShare() async {
-      showLoading();
-      await SharePlus.instance.share(ShareParams(
+      await shareFile(
         title: '${book.title}.${book.filePath.split('.').last}',
-        files: [XFile(book.fileFullPath)],
-      ));
-      SmartDialog.dismiss();
+        filePath: book.fileFullPath,
+      );
     }
 
     final actions = [

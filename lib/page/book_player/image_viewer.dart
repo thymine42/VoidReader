@@ -5,6 +5,7 @@ import 'package:anx_reader/utils/save_img.dart';
 import 'package:anx_reader/utils/get_path/get_temp_dir.dart';
 import 'package:anx_reader/utils/log/common.dart';
 import 'package:anx_reader/utils/save_image_to_path.dart';
+import 'package:anx_reader/utils/share_file.dart';
 import 'package:anx_reader/widgets/show_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -80,11 +81,7 @@ class ImageViewer extends StatelessWidget {
                             "AnxReader_$bookName",
                           );
 
-                          showLoading();
-                          await SharePlus.instance.share(
-                            ShareParams(files: [XFile(path)]),
-                          );
-                          SmartDialog.dismiss();
+                          await shareFile(filePath: path);
                         },
                         icon: const Icon(Icons.share, color: Colors.white),
                       ),

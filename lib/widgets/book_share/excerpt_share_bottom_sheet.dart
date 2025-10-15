@@ -9,6 +9,7 @@ import 'package:anx_reader/providers/font_list.dart';
 import 'package:anx_reader/utils/get_path/get_temp_dir.dart';
 import 'package:anx_reader/utils/log/common.dart';
 import 'package:anx_reader/utils/save_img.dart';
+import 'package:anx_reader/utils/share_file.dart';
 import 'package:anx_reader/utils/toast/common.dart';
 import 'package:anx_reader/widgets/book_share/excerpt_share_card.dart';
 import 'package:anx_reader/widgets/icon_and_text.dart';
@@ -118,8 +119,6 @@ class _ExcerptShareBottomSheetState
   }
 
   Future<void> _shareAsImage() async {
-    showLoading();
-
     final imageData = await _captureCard();
     if (imageData == null) {
       SmartDialog.dismiss();
@@ -130,10 +129,7 @@ class _ExcerptShareBottomSheetState
     final file = File('$tempDir/anx_excerpt_share.png');
     await file.writeAsBytes(imageData);
 
-    await SharePlus.instance.share(
-      ShareParams(files: [XFile(file.path)]),
-    );
-    SmartDialog.dismiss();
+    await shareFile(file: file);
   }
 
   Future<void> _saveAsImage() async {
