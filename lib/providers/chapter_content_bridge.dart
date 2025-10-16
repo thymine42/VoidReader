@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-typedef CurrentChapterContentFetcher = Future<String> Function({int? maxCharacters});
+typedef CurrentChapterContentFetcher = Future<String> Function(
+    {int? maxCharacters});
 typedef ChapterContentByHrefFetcher = Future<String> Function(
   String href, {
   int? maxCharacters,

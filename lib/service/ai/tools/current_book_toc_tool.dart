@@ -8,8 +8,7 @@ import 'package:langchain_core/tools.dart';
 
 import 'base_tool.dart';
 
-class CurrentBookTocTool
-    extends RepositoryTool<JsonMap, Map<String, dynamic>> {
+class CurrentBookTocTool extends RepositoryTool<JsonMap, Map<String, dynamic>> {
   CurrentBookTocTool(this._ref)
       : super(
           name: 'current_book_toc',

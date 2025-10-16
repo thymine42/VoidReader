@@ -22,19 +22,18 @@ Stream<String> aiGenerateStream(
   bool useAgent = false,
   WidgetRef? ref,
 }) {
-  if (useAgent){
+  if (useAgent) {
     assert(ref != null, 'ref must be provided when useAgent is true');
   }
   LangchainAiRegistry registry = LangchainAiRegistry(ref);
 
   return _generateStream(
-    messages: messages,
-    identifier: identifier,
-    overrideConfig: config,
-    regenerate: regenerate,
-    useAgent: useAgent,
-    registry: registry
-  );
+      messages: messages,
+      identifier: identifier,
+      overrideConfig: config,
+      regenerate: regenerate,
+      useAgent: useAgent,
+      registry: registry);
 }
 
 void cancelActiveAiRequest() {
@@ -112,7 +111,6 @@ Stream<String> _generateStream({
       buffer = chunk;
       yield buffer;
     }
-
   } catch (error, stack) {
     final mapped = _mapError(error);
     AnxLog.severe('AI error: $mapped\n$stack');

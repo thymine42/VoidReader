@@ -137,9 +137,9 @@ class LangchainAiRegistry {
   }
 
   ChatMessage _buildAgentSystemMessage(bool isReading) {
+    final currentLanguageCode =
+        Prefs().locale?.languageCode ?? Platform.localeName;
 
-    final currentLanguageCode = Prefs().locale?.languageCode ?? Platform.localeName;
-    
     // Map language code to language name
     final languageMap = {
       'zh': '简体中文',
@@ -157,10 +157,10 @@ class LangchainAiRegistry {
       'ar': 'العربية',
       'tr': 'Türkçe',
     };
-    
-    final languageName = languageMap[currentLanguageCode] ?? 
-                         languageMap[currentLanguageCode.split('_').first] ?? 
-                         currentLanguageCode;
+
+    final languageName = languageMap[currentLanguageCode] ??
+        languageMap[currentLanguageCode.split('_').first] ??
+        currentLanguageCode;
 
     final readingStateContext = isReading
         ? '📖 User is currently reading - You are a focused reading companion, providing instant comprehension help, translation, and note-taking assistance.'

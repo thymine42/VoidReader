@@ -68,8 +68,8 @@ class _MindmapStepTileState extends State<MindmapStepTile> {
 
       final status = decoded['status'];
       if (status != 'ok') {
-        final message = decoded['message']?.toString() ??
-            L10n.of(context).mindmapToolError;
+        final message =
+            decoded['message']?.toString() ?? L10n.of(context).mindmapToolError;
         throw FormatException(message);
       }
 
@@ -389,7 +389,8 @@ class MindmapNodeData {
 
     return MindmapNodeData(
       id: json['id']?.toString() ?? L10n.of(context).mindmapDefaultNodeId,
-      label: json['label']?.toString() ?? L10n.of(context).mindmapDefaultNodeLabel,
+      label:
+          json['label']?.toString() ?? L10n.of(context).mindmapDefaultNodeLabel,
       children: children,
     );
   }
