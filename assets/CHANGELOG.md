@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.8.2
+## 1.9.0
 - Feat: Add AI page in navigation bar
 - Feat: AI can draw mind maps and organize bookshelf
 - Feat: View AI chat history
