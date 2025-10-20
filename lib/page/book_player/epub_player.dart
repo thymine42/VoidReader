@@ -567,6 +567,11 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
           showContextMenu(context, x, y, dir, text, cfi, null, footnote);
         });
     controller.addJavaScriptHandler(
+        handlerName: 'onSelectionCleared',
+        callback: (args) {
+          removeOverlay();
+        });
+    controller.addJavaScriptHandler(
         handlerName: 'onAnnotationClick',
         callback: (args) {
           Map<String, dynamic> annotation = args[0];

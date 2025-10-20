@@ -116,13 +116,60 @@ const handleSelection = (view, doc, index) => {
 };
 
 const setSelectionHandler = (view, doc, index) => {
+  let hasActiveSelection = false;
+  let lastPointerUpRange = null;
+  doc.__anxSelectionClearedAt = 0;
+  doc.__anxSuppressClick = false;
+
+  // Notify Flutter when the selection collapses so it can hide the context menu.
+  const handleSelectionStateChange = () => {
+    const selectionRange = getSelectionRange(doc.getSelection());
+    if (selectionRange) {
+      hasActiveSelection = true;
+      doc.__anxSelectionClearedAt = 0;
+      doc.__anxSuppressClick = false;
+      return;
+    }
+
+    if (!hasActiveSelection) return;
+    hasActiveSelection = false;
+    lastPointerUpRange = null;
+    doc.__anxSelectionClearedAt = Date.now();
+    doc.__anxSuppressClick = true;
+    callFlutter('onSelectionCleared');
+  };
+
+  doc.addEventListener('selectionchange', handleSelectionStateChange);
+
+  const rangesEqual = (a, b) => (
+    a.startContainer === b.startContainer
+    && a.startOffset === b.startOffset
+    && a.endContainer === b.endContainer
+    && a.endOffset === b.endOffset
+  );
+
+  const shouldSkipPointerUp = () => {
+    const selectionRange = getSelectionRange(doc.getSelection());
+    if (!selectionRange) return false;
+
+    if (lastPointerUpRange && rangesEqual(lastPointerUpRange, selectionRange)) {
+      return true;
+    }
+
+    lastPointerUpRange = selectionRange.cloneRange();
+    return false;
+  };
+
   //    doc.addEventListener('pointerdown', () => isSelecting = true);
   // if macos or iOS
   if (navigator.platform.includes('Mac')
     || navigator.platform.includes('iPhone')
     || navigator.platform.includes('iPad')
   ) {
-    doc.addEventListener('pointerup', () => handleSelection(view, doc, index));
+    doc.addEventListener('pointerup', () => {
+      if (shouldSkipPointerUp()) return;
+      handleSelection(view, doc, index);
+    });
   }
   else if (navigator.platform.includes('Win')) {
     if (navigator.maxTouchPoints > 0) {
@@ -139,8 +186,9 @@ const setSelectionHandler = (view, doc, index) => {
       // for mouse pointerup, handle selection directly
       doc.addEventListener('pointerup', (e) => {
         if (e.pointerType === 'touch') return;
-        handleSelection(view, doc, index); }
-      );
+        if (shouldSkipPointerUp()) return;
+        handleSelection(view, doc, index);
+      });
 
       // filter out selectionchange event cause by mouse
       var isMouseSelecting = false;
@@ -168,7 +216,10 @@ const setSelectionHandler = (view, doc, index) => {
       });
 
     } else {
-      doc.addEventListener('pointerup', () => handleSelection(view, doc, index));
+      doc.addEventListener('pointerup', () => {
+        if (shouldSkipPointerUp()) return;
+        handleSelection(view, doc, index);
+      });
     }
   }
 
@@ -836,6 +887,22 @@ class Reader {
   }
 
   #onClickView({ detail: { x, y } }) {
+    const selection = this.#doc?.getSelection?.()
+    if (selection && getSelectionRange(selection)) {
+      return
+    }
+
+    if (this.#doc?.__anxSuppressClick) {
+      this.#doc.__anxSuppressClick = false;
+      return
+    }
+
+    // debounce for 200ms after selection cleared
+    const lastClearedAt = this.#doc?.__anxSelectionClearedAt ?? 0
+    if (lastClearedAt && Date.now() - lastClearedAt < 200) {
+      return
+    }
+
     const coordinatesX = x / window.innerWidth
     const coordinatesY = y / window.innerHeight
     onClickView(coordinatesX, coordinatesY)
