@@ -26,6 +26,7 @@ import 'package:anx_reader/providers/bookmark.dart';
 import 'package:anx_reader/providers/chapter_content_bridge.dart';
 import 'package:anx_reader/providers/current_reading.dart';
 import 'package:anx_reader/service/book_player/book_player_server.dart';
+import 'package:anx_reader/service/tts/models/tts_sentence.dart';
 import 'package:anx_reader/utils/coordinates_to_part.dart';
 import 'package:anx_reader/utils/js/convert_dart_color_to_js.dart';
 import 'package:anx_reader/models/book_note.dart';
@@ -292,6 +293,55 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
 
   Future<String> ttsPrepare() async =>
       (await webViewController.evaluateJavascript(source: "ttsPrepare()"));
+
+  TtsSentence? _parseTtsSentence(dynamic value) {
+    if (value is Map<dynamic, dynamic>) {
+      try {
+        return TtsSentence.fromMap(value);
+      } catch (_) {
+        return null;
+      }
+    }
+    return null;
+  }
+
+  List<TtsSentence> _parseTtsSentences(dynamic value) {
+    if (value is! List) return const [];
+
+    final sentences = <TtsSentence>[];
+    for (final item in value) {
+      final sentence = _parseTtsSentence(item);
+      if (sentence != null) {
+        sentences.add(sentence);
+      }
+    }
+    return sentences;
+  }
+
+  Future<TtsSentence?> ttsCurrentDetail() async {
+    final result = await webViewController.callAsyncJavaScript(
+      functionBody: 'return ttsCurrentDetail()',
+    );
+    return _parseTtsSentence(result?.value);
+  }
+
+  Future<List<TtsSentence>> ttsCollectDetails({
+    required int count,
+    bool includeCurrent = false,
+    int offset = 1,
+  }) async {
+    final result = await webViewController.callAsyncJavaScript(
+      functionBody:
+          'return ttsCollectDetails($count, ${includeCurrent ? 'true' : 'false'}, $offset)',
+    );
+    return _parseTtsSentences(result?.value);
+  }
+
+  Future<void> ttsHighlightByCfi(String cfi) async {
+    await webViewController.callAsyncJavaScript(
+      functionBody: 'return ttsHighlightByCfi(${jsonEncode(cfi)})',
+    );
+  }
 
   Future<bool> isFootNoteOpen() async => (await webViewController
       .evaluateJavascript(source: "window.isFootNoteOpen()"));

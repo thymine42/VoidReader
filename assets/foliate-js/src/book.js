@@ -1361,6 +1361,21 @@ window.ttsHere = () => {
   return reader.view.tts.from(reader.view.lastLocation.range)
 }
 
+window.ttsCurrentDetail = () => {
+  initTts()
+  return reader.view.tts.currentDetail()
+}
+
+window.ttsCollectDetails = (count = 1, includeCurrent = false, offset = 1) => {
+  initTts()
+  return reader.view.tts.collectDetails(count, { includeCurrent, offset })
+}
+
+window.ttsHighlightByCfi = cfi => {
+  initTts()
+  return reader.view.tts.highlightCfi(cfi)
+}
+
 window.ttsNextSection = async () => {
   await nextSection()
   initTts()

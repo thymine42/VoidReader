@@ -160,6 +160,7 @@ $ssml
     channel.sink.add(ssmlRequest);
 
     bool audioReceived = false;
+    bool turnEndReceived = false;
 
     await for (dynamic message in channel.stream) {
       if (message is String) {
@@ -170,6 +171,7 @@ $ssml
             getHeadersFromBinaryData(encodedData, headerEnd);
         String path = parameters['Path'] ?? '';
         if (path == 'turn.end') {
+          turnEndReceived = true;
           break;
         }
       } else if (message is List<int>) {
@@ -193,6 +195,10 @@ $ssml
     }
 
     channel.sink.close();
+
+    if (!turnEndReceived) {
+      throw Exception('Edge TTS stream ended before turn.end');
+    }
 
     if (!audioReceived) {
       throw Exception('No audio received. Please check your parameters.');
@@ -230,9 +236,12 @@ $ssml
             audioData.addAll(chunk['data'] as List<int>);
           }
         }
+        debugPrint(
+            '[EdgeTTSApi] Synth success len=${audioData.length} retries=$currentRetry');
         // If we get here, the request was successful
         return Uint8List.fromList(audioData);
       } catch (e) {
+        debugPrint('[EdgeTTSApi] Synth error attempt $currentRetry: $e');
         if (e
             .toString()
             .contains("No audio received. Please check your parameters.")) {

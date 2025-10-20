@@ -565,19 +565,26 @@ export class View extends HTMLElement {
 
     const doc = this.renderer.getContents()[0].doc;
     if (this.tts && this.tts.doc === doc) return;
-    this.tts = new TTS(doc, textWalker, (range) => {
-      const obj = this.#getOverlayer(this.#index);
-      if (obj) {
-        const { overlayer } = obj;
-        if (this.oldValue) {
-          overlayer.remove(this.oldValue);
+    this.tts = new TTS(
+      doc,
+      textWalker,
+      (range) => {
+        const obj = this.#getOverlayer(this.#index);
+        let value = null;
+        if (obj) {
+          const { overlayer } = obj;
+          if (this.oldValue) {
+            overlayer.remove(this.oldValue);
+          }
+          value = this.getCFI(this.#index, range);
+          overlayer.add(value, range, Overlayer.highlight, { color: '#39c5bc83' });
+          this.oldValue = value;
         }
-        const value = this.getCFI(this.#index, range);
-        overlayer.add(value, range, Overlayer.highlight, { color: '#39c5bc83' });
-        this.oldValue = value;
-      }
-      this.renderer.scrollToAnchor(range);
-    });
+        this.renderer.scrollToAnchor(range);
+        return value;
+      },
+      (range) => this.getCFI(this.#index, range),
+    );
   }
   startMediaOverlay() {
     const { index } = this.renderer.getContents()[0]

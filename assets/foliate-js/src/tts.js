@@ -188,6 +188,15 @@ class ListIterator {
             }
         }
     }
+    #ensure(index) {
+        while (this.#arr[index] == null) {
+            const { done, value } = this.#iter.next()
+            if (done) break
+            this.#arr.push(value)
+            if (this.#arr.length - 1 >= index) break
+        }
+        return this.#arr[index]
+    }
     prepare() {
         const newIndex = this.#index + 1
         if (this.#arr[newIndex]) return this.#f(this.#arr[newIndex])
@@ -197,6 +206,18 @@ class ListIterator {
             this.#arr.push(value)
             if (this.#arr[newIndex]) return this.#f(this.#arr[newIndex])
         }
+    }
+    peek(count = 1, offset = 1) {
+        if (count <= 0) return []
+        const startIndex = Math.max(this.#index + offset, 0)
+        const results = []
+        const endIndex = startIndex + count
+        for (let idx = startIndex; idx < endIndex; idx++) {
+            const value = this.#arr[idx] ?? this.#ensure(idx)
+            if (!value) break
+            results.push(this.#f(value))
+        }
+        return results
     }
     find(f) {
         const index = this.#arr.findIndex(x => f(x))
@@ -219,9 +240,11 @@ class ListIterator {
 export class TTS {
     #list
     #lastMark
-    constructor(doc, textWalker, highlight) {
+    #getCfi
+    constructor(doc, textWalker, highlight, getCfi) {
         this.doc = doc
         this.highlight = highlight
+        this.#getCfi = getCfi
         this.#list = new ListIterator(getBlocks(doc), range => {
             return [getRangeText(range), range]
         })
@@ -241,53 +264,105 @@ export class TTS {
         return tempElement.textContent
     }
 
+    #ensureCurrentEntry() {
+        const current = this.#list.current()
+        if (current) return current
+        return this.#list.first() ?? this.#list.next()
+    }
+
+    #resultFrom(entry, { highlight = false } = {}) {
+        if (!entry) return null
+        const [text, range] = entry
+        if (!text || !range) return null
+        const plainText = this.#getText(text)
+        let cfi = null
+        if (highlight && this.highlight && range.cloneRange) {
+            cfi = this.highlight(range.cloneRange()) ?? null
+        }
+        if (!cfi && this.#getCfi && range.cloneRange) {
+            cfi = this.#getCfi(range.cloneRange())
+        }
+        return { text: plainText, cfi }
+    }
+
     start() {
         this.#lastMark = null
-        const [text, range] = this.#list.first() ?? []
-        if (!text) return this.next()
-        this.highlight(range.cloneRange())
-        return this.#getText(text)
+        const entry = this.#list.first()
+        if (!entry) return this.next()
+        return this.#resultFrom(entry, { highlight: true })?.text
     }
 
     end() {
         this.#lastMark = null
-        const [text, range] = this.#list.last() ?? []
-        if (!text) return this.next()
-        this.highlight(range.cloneRange())
-        return this.#getText(text)
+        const entry = this.#list.last()
+        if (!entry) return this.next()
+        return this.#resultFrom(entry, { highlight: true })?.text
     }
 
     resume() {
-        const [text] = this.#list.current() ?? []
-        if (!text) return this.next()
-        return this.#getText(text)
+        const entry = this.#list.current()
+        if (!entry) return this.next()
+        return this.#resultFrom(entry)?.text
     }
 
     prev(paused) {
         this.#lastMark = null
-        const [text, range] = this.#list.prev() ?? []
-        if (paused && range) this.highlight(range.cloneRange())
-        return this.#getText(text)
+        const entry = this.#list.prev()
+        if (paused && entry?.[1]) this.highlight(entry[1].cloneRange())
+        return this.#resultFrom(entry)?.text
     }
 
     next(paused) {
         this.#lastMark = null
-        const [text, range] = this.#list.next() ?? []
-        if (paused && range) this.highlight(range.cloneRange())
-        return this.#getText(text)
+        const entry = this.#list.next()
+        if (paused && entry?.[1]) this.highlight(entry[1].cloneRange())
+        return this.#resultFrom(entry)?.text
     }
 
     // get next text without moving the iterator
     prepare() {
-        const [text] = this.#list.prepare() ?? []
-        return this.#getText(text)
+        const entry = this.#list.prepare()
+        return this.#resultFrom(entry)?.text
     }
 
     from(range) {
         this.#lastMark = null
-        const [text, newRange] = this.#list.find(range_ =>
+        const entry = this.#list.find(range_ =>
             range.compareBoundaryPoints(Range.END_TO_START, range_) <= 0)
-        if (newRange) this.highlight(newRange.cloneRange())
-        return this.#getText(text)
+        if (entry?.[1]) this.highlight(entry[1].cloneRange())
+        return this.#resultFrom(entry)?.text
+    }
+
+    currentDetail() {
+        const entry = this.#ensureCurrentEntry()
+        return this.#resultFrom(entry)
+    }
+
+    collectDetails(count = 1, { includeCurrent = false, offset = 1 } = {}) {
+        if (!Number.isFinite(count) || count <= 0) return []
+        const details = []
+        if (includeCurrent) {
+            const entry = this.#ensureCurrentEntry()
+            const detail = this.#resultFrom(entry)
+            if (detail) details.push(detail)
+        }
+        const needed = count - details.length
+        if (needed <= 0) return details
+        const entries = this.#list.peek(needed, offset)
+        for (const entry of entries) {
+            const detail = this.#resultFrom(entry)
+            if (detail) details.push(detail)
+        }
+        return details
+    }
+
+    highlightCfi(cfi) {
+        if (!cfi) return null
+        const entry = this.#list.find(range => {
+            const candidate = this.#getCfi?.(range.cloneRange?.())
+            return candidate === cfi
+        })
+        if (!entry) return null
+        return this.#resultFrom(entry, { highlight: true })
     }
 }
