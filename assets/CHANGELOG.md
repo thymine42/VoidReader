@@ -5,11 +5,13 @@
 - Fix: Fix the issue where external links could not be opened
 - Fix: Fix the issue of abnormal indentation
 - Fix: The issue of being unable to adjust paragraph spacing in some files
+- Fix: Optimize the timing of context menu popup and close
 - UI: Optimize part of the interface design
 
 - Fix: 修复外链无法打开的问题
 - Fix: 修复缩进异常的问题
 - Fix: 部分文件无法调节段间距的问题
+- Fix: 优化上下文菜单弹出和关闭的时机
 - UI: 优化部分界面设计
 
 
