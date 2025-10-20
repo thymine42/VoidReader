@@ -221,7 +221,6 @@ $ssml
   }
 
   static Future<Uint8List> getAudio(String text) async {
-    debugPrint(text);
     EdgeTTSApi.voice = Prefs().ttsVoiceModel;
     EdgeTTSApi.text = text;
     List<int> audioData = [];
@@ -236,12 +235,9 @@ $ssml
             audioData.addAll(chunk['data'] as List<int>);
           }
         }
-        debugPrint(
-            '[EdgeTTSApi] Synth success len=${audioData.length} retries=$currentRetry');
         // If we get here, the request was successful
         return Uint8List.fromList(audioData);
       } catch (e) {
-        debugPrint('[EdgeTTSApi] Synth error attempt $currentRetry: $e');
         if (e
             .toString()
             .contains("No audio received. Please check your parameters.")) {

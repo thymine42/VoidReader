@@ -99,10 +99,9 @@ class EdgeTts extends BaseTts {
   Future<void> _syncWithLastLocation() async {
     if (!_needsLocationSync) return;
     try {
-      _log('Syncing with lastLocation');
       await getHereFunction();
-    } catch (e) {
-      _log('Sync with lastLocation failed: $e');
+    } catch (_) {
+      // ignore
     } finally {
       _needsLocationSync = false;
     }
@@ -116,10 +115,8 @@ class EdgeTts extends BaseTts {
     await player!.setPlayerMode(PlayerMode.mediaPlayer);
     _playerCompleteSubscription = player!.onPlayerComplete
         .listen((_) => unawaited(_onPlaybackComplete()));
-    _playerStateSubscription = player!.onPlayerStateChanged
-        .listen((state) => _log('Player state $state'));
+    _playerStateSubscription = player!.onPlayerStateChanged.listen((_) {});
     await player!.setVolume(volume);
-    _log('Created AudioPlayer id=${player!.playerId}');
     return player!;
   }
 
@@ -138,10 +135,9 @@ class EdgeTts extends BaseTts {
     final cfi = segment.sentence.cfi;
     if (state == null || cfi == null || cfi.isEmpty) return;
     try {
-      _log('Highlighting CFI $cfi for silent segment');
       await state.ttsHighlightByCfi(cfi);
-    } catch (e) {
-      _log('Highlight failed for $cfi: $e');
+    } catch (_) {
+      // ignore
     }
   }
 
@@ -150,10 +146,6 @@ class EdgeTts extends BaseTts {
     _currentSegment = null;
     _currentVoiceText = null;
     audioToPlay = null;
-  }
-
-  void _log(String message) {
-    debugPrint('[EdgeTts] $message');
   }
 
   int _totalBufferedSegments() =>
@@ -200,8 +192,6 @@ class EdgeTts extends BaseTts {
         if (segment.isReady) continue;
         final success = await _ensureSegmentAudio(segment);
         if (!success) {
-          _log(
-              'Removing segment without audio len=${segment.sentence.text.length}');
           _segmentQueue.remove(segment);
         }
       }
@@ -214,16 +204,12 @@ class EdgeTts extends BaseTts {
     if (segment.isReady) return true;
     if (_shouldStop) return false;
 
-    _log(
-        'Fetching audio textLen=${segment.sentence.text.length} cfi=${segment.sentence.cfi}');
-
     EdgeTTSApi.pitch = pitch;
     EdgeTTSApi.rate = rate;
     EdgeTTSApi.volume = volume;
 
     try {
       final bytes = await EdgeTTSApi.getAudio(segment.sentence.text);
-      _log('Audio fetched length=${bytes.length}');
       if (bytes.isEmpty) {
         segment.audio = Uint8List(0);
         segment.isSilent = true;
@@ -231,8 +217,7 @@ class EdgeTts extends BaseTts {
       }
       segment.audio = bytes;
       return true;
-    } catch (e) {
-      _log('Audio fetch failed: $e');
+    } catch (_) {
       return false;
     }
   }
@@ -257,19 +242,13 @@ class EdgeTts extends BaseTts {
             includeCurrent: includeCurrent || _currentSegment == null,
           );
 
-          _log(
-              'Fetched sentences count=${sentences.length} includeCurrent=$includeCurrent queue=${_segmentQueue.length}');
-
           final added = _mergeSentences(sentences);
-          _log(
-              'Merged sentences added=$added totalBuffered=${_totalBufferedSegments()}');
           if (added == 0) {
             if (advanced || _currentSegment != null) break;
             final dynamic result = await getNextTextFunction();
             if (result is! String || result.isEmpty) {
               break;
             }
-            _log('Requested ttsNext due to empty batch');
             includeCurrent = true;
             advanced = true;
             continue;
@@ -278,10 +257,7 @@ class EdgeTts extends BaseTts {
           includeCurrent = false;
         }
 
-        if (!_shouldStop) {
-          _log('Trigger async audio fetch');
-          unawaited(_fetchAudioForQueue());
-        }
+        if (!_shouldStop) unawaited(_fetchAudioForQueue());
       } catch (e) {
         debugPrint('EdgeTts queue fill error: $e');
       } finally {
@@ -306,8 +282,6 @@ class EdgeTts extends BaseTts {
 
     while (_segmentQueue.isNotEmpty && !_shouldStop) {
       final segment = _segmentQueue.removeFirst();
-      _log(
-          'Dequeued segment textLen=${segment.sentence.text.length} ready=${segment.isReady} silent=${segment.isSilent}');
       final hasAudio = await _ensureSegmentAudio(segment);
       if (!hasAudio) continue;
 
@@ -328,20 +302,14 @@ class EdgeTts extends BaseTts {
       if (_shouldStop) return;
 
       final source = BytesSource(segment.audio!, mimeType: 'audio/mp3');
-      _log(
-          'Invoking play id=${audioPlayer.playerId} state=${audioPlayer.state} len=${segment.audio?.length ?? 0}');
-
       Future<bool> playWith(AudioPlayer target, {required bool isRetry}) async {
         try {
           await target.play(source).timeout(const Duration(seconds: 10));
-          _log('Playback started len=${segment.audio!.length} retry=$isRetry');
           return true;
         } on TimeoutException catch (e, stackTrace) {
-          _log('Playback ${isRetry ? 'retry ' : ''}timeout: $e\n$stackTrace');
           await target.stop();
           return false;
         } catch (e, stackTrace) {
-          _log('Playback ${isRetry ? 'retry ' : ''}failed: $e\n$stackTrace');
           await target.stop();
           return false;
         }
@@ -349,24 +317,18 @@ class EdgeTts extends BaseTts {
 
       var played = await playWith(audioPlayer, isRetry: false);
       if (!played && !_shouldStop) {
-        _log('Recreating audio player for retry');
         await _disposePlayer();
         if (_shouldStop) return;
         final retryPlayer = await _ensurePlayer();
         await retryPlayer.setVolume(volume);
-        _log(
-            'Retry play id=${retryPlayer.playerId} state=${retryPlayer.state} len=${segment.audio?.length ?? 0}');
         played = await playWith(retryPlayer, isRetry: true);
       }
 
       if (!played) {
-        _log('Skipping segment after failed playback');
         _currentSegment = null;
         audioToPlay = null;
         continue;
       }
-
-      _log('Scheduled async refill after playback start');
       unawaited(_fillQueueIfNeeded(includeCurrent: false));
       return;
     }
@@ -380,7 +342,6 @@ class EdgeTts extends BaseTts {
   Future<void> _onPlaybackComplete() async {
     if (_shouldStop) return;
 
-    _log('Playback complete received');
     _currentSegment = null;
     audioToPlay = null;
 
@@ -398,7 +359,7 @@ class EdgeTts extends BaseTts {
     await _syncWithLastLocation();
 
     if (_currentSegment == null && _segmentQueue.isEmpty) {
-      _log('Initial queue fill');
+      // queue will be filled below
     }
 
     await _fillQueueIfNeeded(includeCurrent: true);
