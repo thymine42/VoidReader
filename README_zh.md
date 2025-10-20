@@ -68,6 +68,9 @@ Anx Reader，一款为热爱阅读的你精心打造的电子书阅读器。集�
       <a href="https://github.com/Anxcye/anx-reader/releases/latest" target="_blank">
         <img src="https://github.com/user-attachments/assets/cf61e197-d756-4606-a8ad-fb591f79fdfc" alt="GitHub" height="45"/>
       </a>
+      <a href="https://f-droid.org/packages/com.anxcye.anx_reader" target="_blank">
+        <img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="65" style="display:inline-block; margin:-10px;" />
+      </a>
     </td>
   </tr>
 </table>
