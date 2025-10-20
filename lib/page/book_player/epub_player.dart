@@ -6,6 +6,7 @@ import 'package:anx_reader/dao/book.dart';
 import 'package:anx_reader/dao/book_note.dart';
 import 'package:anx_reader/enums/reading_info.dart';
 import 'package:anx_reader/enums/translation_mode.dart';
+import 'package:anx_reader/l10n/generated/L10n.dart';
 import 'package:anx_reader/service/translate/index.dart';
 import 'package:anx_reader/main.dart';
 import 'package:anx_reader/models/book.dart';
@@ -44,6 +45,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'minute_clock.dart';
 
@@ -364,6 +366,74 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
     );
   }
 
+  Future<void> _handleExternalLink(dynamic rawLink) async {
+    String? normalizeExternalLink(dynamic raw) {
+      if (raw == null) {
+        return null;
+      }
+      if (raw is String && raw.trim().isNotEmpty) {
+        return raw.trim();
+      }
+      if (raw is Map && raw['href'] is String) {
+        final href = raw['href'].toString().trim();
+        return href.isEmpty ? null : href;
+      }
+      return null;
+    }
+
+    final link = normalizeExternalLink(rawLink);
+    if (!mounted || link == null) {
+      return;
+    }
+
+    final uri = Uri.tryParse(link);
+    if (uri == null || uri.scheme.isEmpty || uri.scheme == 'javascript') {
+      AnxLog.warning('Ignored invalid external link: $link');
+      return;
+    }
+
+    final shouldOpen = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        final l10n = L10n.of(dialogContext);
+        return AlertDialog(
+          title: Text(l10n.readingPageOpenExternalLinkTitle),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(l10n.readingPageOpenExternalLinkMessage),
+              const SizedBox(height: 8),
+              SelectableText(link),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: Text(l10n.commonCancel),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              child: Text(l10n.readingPageOpenExternalLinkAction),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (shouldOpen != true) {
+      return;
+    }
+
+    final opened = await launchUrl(
+      uri,
+      mode: LaunchMode.externalApplication,
+    );
+    if (!opened) {
+      AnxLog.warning('Failed to open external link: $link');
+    }
+  }
+
   void onClick(Map<String, dynamic> location) {
     readingPageKey.currentState?.resetAwakeTimer();
     if (contextMenuEntry != null) {
@@ -469,6 +539,13 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
           Map<String, dynamic> location = args[0];
           onClick(location);
         });
+    controller.addJavaScriptHandler(
+      handlerName: 'onExternalLink',
+      callback: (args) async {
+        final payload = args.isNotEmpty ? args.first : null;
+        await _handleExternalLink(payload);
+      },
+    );
     controller.addJavaScriptHandler(
         handlerName: 'onSetToc',
         callback: (args) {

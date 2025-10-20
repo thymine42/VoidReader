@@ -1191,7 +1191,7 @@ const onAnnotationClick = (annotation) => callFlutter('onAnnotationClick', annot
 
 const onClickView = (x, y) => callFlutter('onClick', { x, y })
 
-const onExternalLink = (link) => console.log(link)
+const onExternalLink = (link) => callFlutter('onExternalLink', link)
 
 const onSetToc = () => callFlutter('onSetToc', reader.toc)
 
