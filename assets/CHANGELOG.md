@@ -1,5 +1,16 @@
 # Changelog
 
+
+## 1.9.2
+- Fix: Fix the issue where external links could not be opened
+- Fix: Fix the issue of abnormal indentation
+- UI: Optimize part of the interface design
+
+- Fix: 修复外链无法打开的问题
+- Fix: 修复缩进异常的问题
+- UI: 优化部分界面设计
+
+
 ## 1.9.1
 
 - Feat: On touch devices, a long press is required to open images
