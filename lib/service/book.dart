@@ -411,8 +411,9 @@ Future<void> pushToReadingPage(
           cfi: cfi,
           initialThemes: initialThemes,
         ),
-      )).then((_) {
+      )).then((_) async {
     AnxLog.info('ReadingPage: poped ${book.title}');
+    await Future.delayed(const Duration(seconds: 1));
     ref.read(currentReadingProvider.notifier).finish();
     ref.read(chapterContentBridgeProvider.notifier).state = null;
   });
