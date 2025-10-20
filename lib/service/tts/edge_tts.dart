@@ -114,10 +114,10 @@ class EdgeTts extends BaseTts {
     player = AudioPlayer();
     await player!.setReleaseMode(ReleaseMode.stop);
     await player!.setPlayerMode(PlayerMode.mediaPlayer);
-    _playerCompleteSubscription =
-        player!.onPlayerComplete.listen((_) => unawaited(_onPlaybackComplete()));
-    _playerStateSubscription =
-        player!.onPlayerStateChanged.listen((state) => _log('Player state $state'));
+    _playerCompleteSubscription = player!.onPlayerComplete
+        .listen((_) => unawaited(_onPlaybackComplete()));
+    _playerStateSubscription = player!.onPlayerStateChanged
+        .listen((state) => _log('Player state $state'));
     await player!.setVolume(volume);
     _log('Created AudioPlayer id=${player!.playerId}');
     return player!;
@@ -200,7 +200,8 @@ class EdgeTts extends BaseTts {
         if (segment.isReady) continue;
         final success = await _ensureSegmentAudio(segment);
         if (!success) {
-          _log('Removing segment without audio len=${segment.sentence.text.length}');
+          _log(
+              'Removing segment without audio len=${segment.sentence.text.length}');
           _segmentQueue.remove(segment);
         }
       }
@@ -213,7 +214,8 @@ class EdgeTts extends BaseTts {
     if (segment.isReady) return true;
     if (_shouldStop) return false;
 
-    _log('Fetching audio textLen=${segment.sentence.text.length} cfi=${segment.sentence.cfi}');
+    _log(
+        'Fetching audio textLen=${segment.sentence.text.length} cfi=${segment.sentence.cfi}');
 
     EdgeTTSApi.pitch = pitch;
     EdgeTTSApi.rate = rate;
@@ -255,10 +257,12 @@ class EdgeTts extends BaseTts {
             includeCurrent: includeCurrent || _currentSegment == null,
           );
 
-          _log('Fetched sentences count=${sentences.length} includeCurrent=$includeCurrent queue=${_segmentQueue.length}');
+          _log(
+              'Fetched sentences count=${sentences.length} includeCurrent=$includeCurrent queue=${_segmentQueue.length}');
 
           final added = _mergeSentences(sentences);
-          _log('Merged sentences added=$added totalBuffered=${_totalBufferedSegments()}');
+          _log(
+              'Merged sentences added=$added totalBuffered=${_totalBufferedSegments()}');
           if (added == 0) {
             if (advanced || _currentSegment != null) break;
             final dynamic result = await getNextTextFunction();
@@ -329,9 +333,7 @@ class EdgeTts extends BaseTts {
 
       Future<bool> playWith(AudioPlayer target, {required bool isRetry}) async {
         try {
-          await target
-              .play(source)
-              .timeout(const Duration(seconds: 10));
+          await target.play(source).timeout(const Duration(seconds: 10));
           _log('Playback started len=${segment.audio!.length} retry=$isRetry');
           return true;
         } on TimeoutException catch (e, stackTrace) {
