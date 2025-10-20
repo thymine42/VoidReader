@@ -62,55 +62,58 @@ class _StatisticPageState extends State<StatisticPage> {
       // ),
       body: SafeArea(
         bottom: false,
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            if (constraints.maxWidth > 600) {
-              return Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const TotalReadTime(),
-                        const SizedBox(height: 20),
-                        baseStatistic(context),
-                        const StatisticCard(),
-                      ],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              if (constraints.maxWidth > 600) {
+                return Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const TotalReadTime(),
+                          const SizedBox(height: 20),
+                          baseStatistic(context),
+                          const StatisticCard(),
+                        ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 20),
-                  Expanded(
-                    child: ListView(
-                      controller: _scrollController,
-                      children: const [
-                        DateBooks(),
-                      ],
-                    ),
-                  ),
-                ],
-              );
-            } else {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SafeArea(bottom: false, child: const TotalReadTime()),
-                  const SizedBox(height: 20),
-                  baseStatistic(context),
-                  const SizedBox(height: 30),
-                  Expanded(
-                    child: ListView(
-                        padding: const EdgeInsets.only(bottom: 80),
+                    const SizedBox(width: 20),
+                    Expanded(
+                      child: ListView(
                         controller: _scrollController,
                         children: const [
-                          StatisticCard(),
-                          SizedBox(height: 20),
                           DateBooks(),
-                        ]),
-                  ),
-                ],
-              );
-            }
-          },
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              } else {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SafeArea(bottom: false, child: const TotalReadTime()),
+                    const SizedBox(height: 20),
+                    baseStatistic(context),
+                    const SizedBox(height: 30),
+                    Expanded(
+                      child: ListView(
+                          padding: const EdgeInsets.only(bottom: 80),
+                          controller: _scrollController,
+                          children: const [
+                            StatisticCard(),
+                            SizedBox(height: 20),
+                            DateBooks(),
+                          ]),
+                    ),
+                  ],
+                );
+              }
+            },
+          ),
         ),
       ),
     );
