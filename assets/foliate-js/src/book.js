@@ -393,6 +393,7 @@ const getCSS = ({ fontSize,
     body {
         background: none !important;
         background-color: transparent;
+        padding: 0 !important;
     }
 
     img, svg {
@@ -417,7 +418,7 @@ const getCSS = ({ fontSize,
         line-height: ${spacing} !important;
         font-weight: ${fontWeight} !important;
         text-align: ${textAlign === 'auto' ? (justify ? 'justify' : 'start') : textAlign};
-        text-indent: ${textIndent}em !important;
+        ${textIndent < 0 ? '' : 'text-indent: ' + textIndent + 'em !important;'}
         -webkit-hyphens: ${hyphenate ? 'auto' : 'manual'};
         hyphens: ${hyphenate ? 'auto' : 'manual'};
         -webkit-hyphenate-limit-before: 3;
