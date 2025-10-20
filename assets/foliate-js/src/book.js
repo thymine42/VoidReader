@@ -425,11 +425,8 @@ const getCSS = ({ fontSize,
         -webkit-hyphenate-limit-lines: 2;
         hanging-punctuation: allow-end last;
         widows: 2;
-    }
-        
-    p {
-        margin-block-start: ${paragraphSpacing}em !important;
-        margin-block-end: ${paragraphSpacing}em !important;
+        margin-block-start: ${paragraphSpacing / 2}em !important;
+        margin-block-end: ${paragraphSpacing / 2}em !important;
     }
 
     /*  Paragraphs containing only an image — don't change */
