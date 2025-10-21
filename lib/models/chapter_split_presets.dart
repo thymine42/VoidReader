@@ -7,7 +7,7 @@ final List<ChapterSplitRule> builtinChapterSplitRules = [
     id: kDefaultChapterSplitRuleId,
     name: 'Default (mixed languages)',
     pattern:
-        r'^(?:(.+ +)|())(第[一二三四五六七八九十零〇百千万两0123456789]+[章卷]|卷[一二三四五六七八九十零〇百千万两0123456789]+|chap(?:ter)\.?|vol(?:ume)?\.?|book|bk)(?:(?: +.+)?|(?:\S.*)?)$',
+        r'^(?:(.+[ 　]+)|())(第[一二三四五六七八九十零〇百千万两0123456789]+[章卷]|卷[一二三四五六七八九十零〇百千万两0123456789]+|chap(?:ter)\.?|vol(?:ume)?\.?|book|bk)(?:[ 　]+(?:\S.*)?)?[ 　]*$',
     samples: [
       '第一章 起始之地',
       '第十二卷 风云再起',

@@ -7,6 +7,7 @@ import 'package:anx_reader/service/convert_to_epub/create_epub.dart';
 import 'package:anx_reader/service/convert_to_epub/section.dart';
 import 'package:anx_reader/utils/log/common.dart';
 import 'package:charset/charset.dart';
+import 'package:meta/meta.dart';
 
 String readFileWithEncoding(File file) {
   bool checkGarbled(String content) {
@@ -55,7 +56,7 @@ int _inferSectionLevel(String title) {
   final simplified = title.replaceAll(RegExp(r'[\s\u3000]+'), ' ').trim();
 
   final hasVolumeKeyword = RegExp(
-    r'(卷|部|篇|册|合集|季|part|volume|vol\.?|book\b)',
+    r'(卷|册|合集|季|part|volume|vol\.?|book\b)',
     caseSensitive: false,
   ).hasMatch(simplified);
 
@@ -79,6 +80,9 @@ int _inferSectionLevel(String title) {
 
   return 2;
 }
+
+@visibleForTesting
+int inferSectionLevelForTest(String title) => _inferSectionLevel(title);
 
 List<Section> _buildSectionsFromMatches({
   required String content,
