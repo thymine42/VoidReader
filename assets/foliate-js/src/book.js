@@ -453,6 +453,9 @@ const getCSS = ({ fontSize,
         object-fit: contain !important;
         break-inside: avoid !important;
         box-sizing: border-box !important;
+        font-size: initial !important;
+        height: initial !important;
+        width: initial !important;
     }
 
     a:link {
@@ -485,8 +488,15 @@ const getCSS = ({ fontSize,
     p:has(> img:only-child),
     p:has(> span:only-child > img:only-child),
     p:has(> img:not(.has-text-siblings)),
-    p:has(> a:first-child + img:last-child) {
+    p:has(> a:first-child + img:last-child),
+    div:has(> img:only-child),
+    div:has(> span:only-child > img:only-child),
+    div:has(> img:not(.has-text-siblings)),
+    div:has(> a:first-child + img:last-child)  {
         text-indent: initial !important;
+        font-size: initial !important;
+        height: initial !important;
+        width: initial !important;
     }
 
     /*  Paragraphs inside list items — prevent double indentation */

@@ -703,7 +703,7 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
         Map<String, dynamic> detail = args[0]['detail'];
         bool remove = args[0]['remove'];
         String cfi = detail['cfi'] ?? '';
-        double percentage = detail['percentage'];
+        double percentage = double.parse(detail['percentage'].toString());
         String content = detail['content'];
 
         if (remove) {
