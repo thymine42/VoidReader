@@ -301,6 +301,7 @@
   "settingsAdvancedLogClearLog": "Vider le Journal",
   "settingsAdvancedLogExportLog": "Exporter le Journal",
   "settingsAdvancedClearLogWhenStart": "Vider le journal au démarrage",
+  "settingsAdvancedUseOriginalCoverRatio": "Utiliser le ratio d’origine de la couverture",
   "aboutCheckForUpdates": "Vérifier les mises à jour",
   "updateNewVersion": "Nouvelle version : ",
   "updateCurrentVersion": "Version actuelle : ",

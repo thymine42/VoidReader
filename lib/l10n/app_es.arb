@@ -301,6 +301,7 @@
   "settingsAdvancedLogClearLog": "Limpiar Registro",
   "settingsAdvancedLogExportLog": "Exportar Registro",
   "settingsAdvancedClearLogWhenStart": "Limpiar registro al iniciar",
+  "settingsAdvancedUseOriginalCoverRatio": "Usar la relación de aspecto original de la portada",
   "aboutCheckForUpdates": "Buscar actualizaciones",
   "updateNewVersion": "Nueva versión: ",
   "updateCurrentVersion": "Versión actual: ",

@@ -301,6 +301,7 @@
   "settingsAdvancedLogClearLog": "清空日誌",
   "settingsAdvancedLogExportLog": "匯出日誌",
   "settingsAdvancedClearLogWhenStart": "啟動時清空日誌",
+  "settingsAdvancedUseOriginalCoverRatio": "依封面原比例",
   "aboutCheckForUpdates": "檢查更新",
   "updateNewVersion": "新版本：",
   "updateCurrentVersion": "當前版本：",

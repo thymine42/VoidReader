@@ -301,6 +301,7 @@
   "settingsAdvancedLogClearLog": "Günlüğü Temizle",
   "settingsAdvancedLogExportLog": "Günlüğü Dışa Aktar",
   "settingsAdvancedClearLogWhenStart": "Başlangıçta günlüğü temizle",
+  "settingsAdvancedUseOriginalCoverRatio": "Orijinal kapak en-boy oranını kullan",
   "aboutCheckForUpdates": "Güncellemeleri kontrol et",
   "updateNewVersion": "Yeni sürüm: ",
   "updateCurrentVersion": "Mevcut sürüm: ",

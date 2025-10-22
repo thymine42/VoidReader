@@ -301,6 +301,7 @@
   "settingsAdvancedLogClearLog": "ログクリア",
   "settingsAdvancedLogExportLog": "ログエクスポート",
   "settingsAdvancedClearLogWhenStart": "開始時にログクリア",
+  "settingsAdvancedUseOriginalCoverRatio": "オリジナルのカバー縦横比を使用",
   "aboutCheckForUpdates": "アップデート確認",
   "updateNewVersion": "新バージョン: ",
   "updateCurrentVersion": "現在のバージョン: ",

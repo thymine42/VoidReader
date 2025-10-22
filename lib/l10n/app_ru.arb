@@ -301,6 +301,7 @@
   "settingsAdvancedLogClearLog": "Очистить логи",
   "settingsAdvancedLogExportLog": "Экспортировать логи",
   "settingsAdvancedClearLogWhenStart": "Очищать логи при запуске",
+  "settingsAdvancedUseOriginalCoverRatio": "Использовать исходное соотношение сторон обложки",
   "aboutCheckForUpdates": "Проверить обновления",
   "updateNewVersion": "Новая версия: ",
   "updateCurrentVersion": "Текущая версия: ",

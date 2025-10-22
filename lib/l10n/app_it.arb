@@ -301,6 +301,7 @@
   "settingsAdvancedLogClearLog": "Pulisci Log",
   "settingsAdvancedLogExportLog": "Esporta Log",
   "settingsAdvancedClearLogWhenStart": "Pulisci log all'avvio",
+  "settingsAdvancedUseOriginalCoverRatio": "Usa le proporzioni originali della copertina",
   "aboutCheckForUpdates": "Controlla aggiornamenti",
   "updateNewVersion": "Nuova versione: ",
   "updateCurrentVersion": "Versione corrente: ",

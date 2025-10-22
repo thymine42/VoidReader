@@ -301,6 +301,7 @@
   "settingsAdvancedLogClearLog": "Protokoll löschen",
   "settingsAdvancedLogExportLog": "Protokoll exportieren",
   "settingsAdvancedClearLogWhenStart": "Protokoll beim Start löschen",
+  "settingsAdvancedUseOriginalCoverRatio": "Originales Seitenverhältnis des Covers verwenden",
   "aboutCheckForUpdates": "Nach Updates suchen",
   "updateNewVersion": "Neue Version: ",
   "updateCurrentVersion": "Aktuelle Version: ",

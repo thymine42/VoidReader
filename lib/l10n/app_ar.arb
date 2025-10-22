@@ -301,6 +301,7 @@
   "settingsAdvancedLogClearLog": "مسح السجل",
   "settingsAdvancedLogExportLog": "تصدير السجل",
   "settingsAdvancedClearLogWhenStart": "مسح السجل عند البدء",
+  "settingsAdvancedUseOriginalCoverRatio": "استخدم نسبة أبعاد الغلاف الأصلية",
   "aboutCheckForUpdates": "التحقق من وجود تحديثات",
   "updateNewVersion": "الإصدار الجديد: ",
   "updateCurrentVersion": "الإصدار الحالي: ",

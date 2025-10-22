@@ -202,6 +202,15 @@ class Prefs extends ChangeNotifier {
     return prefs.getBool('clearLogWhenStart') ?? true;
   }
 
+  bool get useOriginalCoverRatio {
+    return prefs.getBool('useOriginalCoverRatio') ?? false;
+  }
+
+  set useOriginalCoverRatio(bool value) {
+    prefs.setBool('useOriginalCoverRatio', value);
+    notifyListeners();
+  }
+
   void saveHideStatusBar(bool status) {
     prefs.setBool('hideStatusBar', status);
     notifyListeners();

@@ -301,6 +301,7 @@
   "settingsAdvancedLogClearLog": "清除記錄檔",
   "settingsAdvancedLogExportLog": "匯出記錄檔",
   "settingsAdvancedClearLogWhenStart": "啟動時清除記錄檔",
+  "settingsAdvancedUseOriginalCoverRatio": "使用原始封面比例",
   "aboutCheckForUpdates": "檢查更新",
   "updateNewVersion": "新版本：",
   "updateCurrentVersion": "目前版本：",

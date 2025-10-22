@@ -301,6 +301,7 @@
   "settingsAdvancedLogClearLog": "로그 지우기",
   "settingsAdvancedLogExportLog": "로그 내보내기",
   "settingsAdvancedClearLogWhenStart": "시작 시 로그 지우기",
+  "settingsAdvancedUseOriginalCoverRatio": "원본 표지 비율 사용",
   "aboutCheckForUpdates": "업데이트 확인",
   "updateNewVersion": "새 버전: ",
   "updateCurrentVersion": "현재 버전: ",

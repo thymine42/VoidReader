@@ -301,6 +301,7 @@
   "settingsAdvancedLogClearLog": "Clear Log",
   "settingsAdvancedLogExportLog": "Export Log",
   "settingsAdvancedClearLogWhenStart": "Clear log when start",
+  "settingsAdvancedUseOriginalCoverRatio": "Use original cover aspect ratio",
   "aboutCheckForUpdates": "Check for updates",
   "updateNewVersion": "New version: ",
   "updateCurrentVersion": "Current version: ",

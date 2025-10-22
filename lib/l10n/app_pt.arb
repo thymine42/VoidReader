@@ -301,6 +301,7 @@
   "settingsAdvancedLogClearLog": "Limpar Log",
   "settingsAdvancedLogExportLog": "Exportar Log",
   "settingsAdvancedClearLogWhenStart": "Limpar log ao iniciar",
+  "settingsAdvancedUseOriginalCoverRatio": "Usar proporção original da capa",
   "aboutCheckForUpdates": "Verificar atualizações",
   "updateNewVersion": "Nova versão: ",
   "updateCurrentVersion": "Versão atual: ",
