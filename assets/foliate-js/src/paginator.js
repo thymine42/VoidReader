@@ -899,9 +899,14 @@ export class Paginator extends HTMLElement {
       const offset = this.#getRectMapper()(rect).left - this.#margin
       return this.#scrollTo(offset, reason)
     }
-    const offset = this.#getRectMapper()(rect).left
-      + this.#margin / 2
-    return this.#scrollToPage(Math.floor(offset / this.size) + (this.#rtl ? -1 : 1), reason)
+    const mappedRect = this.#getRectMapper()(rect)
+    const left = mappedRect.left
+    const pageIndex = Math.floor(left / this.size)
+    const pageStart = pageIndex * this.size
+    const pageEnd = pageStart + this.size
+    const nudgedLeft = Math.min(left + this.#margin / 2, pageEnd - 1)
+    const normalizedLeft = Math.max(pageStart, nudgedLeft)
+    return this.#scrollToPage(Math.floor(normalizedLeft / this.size) + (this.#rtl ? -1 : 1), reason)
   }
   async #scrollTo(offset, reason, smooth) {
     const element = this.#container
