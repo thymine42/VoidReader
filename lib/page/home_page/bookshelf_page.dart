@@ -35,10 +35,14 @@ class BookshelfPage extends ConsumerStatefulWidget {
   ConsumerState<BookshelfPage> createState() => BookshelfPageState();
 }
 
-class BookshelfPageState extends ConsumerState<BookshelfPage> {
+class BookshelfPageState extends ConsumerState<BookshelfPage>
+    with AutomaticKeepAliveClientMixin {
   late final _scrollController = widget.controller ?? ScrollController();
   final _gridViewKey = GlobalKey();
   bool _dragging = false;
+
+  @override
+  bool get wantKeepAlive => true;
 
   Future<void> _importBook() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -72,6 +76,7 @@ class BookshelfPageState extends ConsumerState<BookshelfPage> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     void handleBottomSheet(BuildContext context, Book book) {
       showBottomSheet(
         context: context,
@@ -122,13 +127,17 @@ class BookshelfPageState extends ConsumerState<BookshelfPage> {
                     children: [
                       ...books.map(
                         (book) {
+                          final topLevelKey = ValueKey<String>(
+                            book.first.id.toString(),
+                          );
                           return book.length == 1
                               ? CustomDraggable(
-                                  key: Key(book.first.id.toString()),
+                                  key: topLevelKey,
                                   data: book.first,
-                                  child: BookFolder(books: book))
+                                  child: BookFolder(books: book),
+                                )
                               : BookFolder(
-                                  key: Key(book.first.id.toString()),
+                                  key: topLevelKey,
                                   books: book,
                                 );
                         },

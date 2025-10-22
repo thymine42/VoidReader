@@ -80,68 +80,73 @@ class _BookFolderState extends ConsumerState<BookFolder> {
             ) ??
         '???';
 
-    return widget.books.length == 1
-        ? DragTarget<Book>(
-            onAcceptWithDetails: (book) => onAcceptBook(book),
-            onWillAcceptWithDetails: (data) => onWillAcceptBook(data),
-            onLeave: (data) => onLeaveBook(data),
-            builder: (context, candidateData, rejectedData) {
-              return scaleTransition(BookItem(book: widget.books[0]));
-            },
-          )
-        : DragTarget<Book>(
-            onAcceptWithDetails: (book) => onAcceptBook(book),
-            onWillAcceptWithDetails: (data) => onWillAcceptBook(data),
-            onLeave: (data) => onLeaveBook(data),
-            builder: (context, candidateData, rejectedData) {
-              double topPosition = -10;
-              return scaleTransition(
-                Column(
-                  children: [
-                    Expanded(
-                      child: InkWell(
-                        onTap: () => openFolder(groupName),
-                        child: Stack(
-                          children: [
-                            ...(widget.books.length >= 4
-                                    ? widget.books.sublist(0, 3)
-                                    : widget.books)
-                                .reversed
-                                .map((book) {
-                              topPosition += 10;
-                              return Positioned.fill(
-                                right: 0,
-                                top: topPosition,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    border: Border.all(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .outlineVariant,
-                                      width: 1,
-                                    ),
-                                  ),
-                                  child: bookCover(context, book),
-                                ),
-                              );
-                            }),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Text(
-                      groupName,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
+    final singleBookTarget = DragTarget<Book>(
+      onAcceptWithDetails: (book) => onAcceptBook(book),
+      onWillAcceptWithDetails: (data) => onWillAcceptBook(data),
+      onLeave: (data) => onLeaveBook(data),
+      builder: (context, candidateData, rejectedData) {
+        return scaleTransition(
+          BookItem(book: widget.books[0]),
+        );
+      },
+    );
+
+    final groupTarget = DragTarget<Book>(
+      onAcceptWithDetails: (book) => onAcceptBook(book),
+      onWillAcceptWithDetails: (data) => onWillAcceptBook(data),
+      onLeave: (data) => onLeaveBook(data),
+      builder: (context, candidateData, rejectedData) {
+        double topPosition = -10;
+        return scaleTransition(
+          Column(
+            children: [
+              Expanded(
+                child: InkWell(
+                  onTap: () => openFolder(groupName),
+                  child: Stack(
+                    children: [
+                      ...(widget.books.length >= 4
+                              ? widget.books.sublist(0, 3)
+                              : widget.books)
+                          .reversed
+                          .map((book) {
+                        topPosition += 10;
+                        return Positioned.fill(
+                          right: 0,
+                          top: topPosition,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                color:
+                                    Theme.of(context).colorScheme.outlineVariant,
+                                width: 1,
+                              ),
+                            ),
+                            child: bookCover(context, book),
+                          ),
+                        );
+                      }),
+                    ],
+                  ),
                 ),
-              );
-            },
-          );
+              ),
+              Text(
+                groupName,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        );
+      },
+    );
+
+    return RepaintBoundary(
+      child: widget.books.length == 1 ? singleBookTarget : groupTarget,
+    );
   }
 }
