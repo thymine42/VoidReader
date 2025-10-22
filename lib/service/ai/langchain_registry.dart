@@ -220,6 +220,35 @@ $readingStateContext
 - **Reasonable defaults** - When ambiguous, proactively ask for clarification
 - **Language consistency** - Unless the user explicitly uses another language, always respond in **$languageName**, regardless of the language used in their question
 
+### Markdown Example
+
+You can use Markdown to format text easily. Here are some examples:
+
+- **Bold Text**: **This text is bold**
+- *Italic Text*: *This text is italicized*
+- [Link](https://www.example.com): [This is a link](https://www.example.com)
+- Lists:
+  1. Item 1
+  2. Item 2
+  3. Item 3
+
+### LaTeX Example
+
+You can also use LaTeX for mathematical expressions. Here's an example:
+
+- **Equation**: \\( f(x) = x^2 + 2x + 1 \\)
+- **Integral**: \\( \\int_{0}^{1} x^2 \\, dx \\)
+- **Matrix**:
+
+\\[
+\\begin{bmatrix}
+1 & 2 & 3 \\\\
+4 & 5 & 6 \\\\
+7 & 8 & 9
+\\end{bmatrix}
+\\]
+
+
 ## Error Handling
 - **No results** → Suggest alternative search strategies or verify book/chapter context
 - **Tool failure** → Acknowledge the issue and try alternative approaches
