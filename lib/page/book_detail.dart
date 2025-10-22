@@ -210,8 +210,8 @@ class _BookDetailState extends ConsumerState<BookDetail> {
                   ),
                   child: Hero(
                     tag: widget.book.coverFullPath,
-                    child: BookCover(book: widget.book,
-                        height: 230, width: 160),
+                    child:
+                        BookCover(book: widget.book, height: 230, width: 160),
                   ),
                 ),
               ),

@@ -20,6 +20,7 @@ class BookCover extends StatefulWidget {
   @override
   State<BookCover> createState() => _BookCoverState();
 }
+
 class _BookCoverState extends State<BookCover> {
   ImageProvider? _imageProvider;
   bool _hasCover = false;
