@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 /// A custom Markdown widget with theme-aware styling.
 /// This widget provides better contrast and readability in both light and dark modes,
@@ -23,6 +25,10 @@ class StyledMarkdown extends StatelessWidget {
       data: data,
       selectable: selectable,
       styleSheet: _buildStyleSheet(theme, isDark),
+      onTapLink: (text, href, title) => {
+        if (href != null)
+          {launchUrlString(href, mode: LaunchMode.externalApplication)}
+      },
     );
   }
 
