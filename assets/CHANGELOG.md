@@ -13,6 +13,7 @@
 - Fix: Optimize image size display
 - Fix: Optimize txt file chaptering rules to improve chapter title recognition rate
 - Fix: The issue where some files could not be paginated correctly
+- Fix: The issue where the page turn position may be inaccurate during TTS
 - UI: Optimize part of the interface design
 
 - Feat: 目录界面以抽屉形式从侧面显示
@@ -26,6 +27,7 @@
 - Fix: 优化图片大小的显示效果
 - Fix: 优化 txt 文件分章规则，提升章节标题的识别率
 - Fix: 部分文件无法正确分页的问题
+- Fix: TTS 时翻页位置可能不准确的问题
 - UI: 优化部分界面设计
 
 
