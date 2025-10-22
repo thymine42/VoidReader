@@ -62,9 +62,8 @@ class _BookNotesPageState extends State<BookNotesPage> {
               const SizedBox(width: 30),
               Hero(
                   tag: book.coverFullPath,
-                  child: bookCover(
-                    context,
-                    book,
+                  child: BookCover(
+                    book: book,
                     height: 180,
                     width: 120,
                   )),
@@ -94,9 +93,8 @@ class _BookNotesPageState extends State<BookNotesPage> {
                   const SizedBox(width: 30),
                   Hero(
                       tag: book.coverFullPath,
-                      child: bookCover(
-                        context,
-                        book,
+                      child: BookCover(
+                        book: book,
                         height: 180,
                         width: 120,
                       )),

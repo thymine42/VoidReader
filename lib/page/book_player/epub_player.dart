@@ -1067,9 +1067,9 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
                           ignoring: true,
                           child: FadeTransition(
                               opacity: _animation!,
-                              child: bookCover(context, widget.book)),
+                              child: BookCover(book: widget.book)),
                         )
-                      : bookCover(context, widget.book),
+                      : BookCover(book: widget.book),
                 ),
             ],
           ),

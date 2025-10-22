@@ -63,9 +63,8 @@ class _BookDetailState extends ConsumerState<BookDetail> {
           );
         },
         blendMode: BlendMode.dstATop,
-        child: bookCover(
-          context,
-          _book,
+        child: BookCover(
+          book: _book,
           height: MediaQuery.of(context).size.height * 0.8,
           width: MediaQuery.of(context).size.width,
         ),
@@ -211,7 +210,7 @@ class _BookDetailState extends ConsumerState<BookDetail> {
                   ),
                   child: Hero(
                     tag: widget.book.coverFullPath,
-                    child: bookCover(context, widget.book,
+                    child: BookCover(book: widget.book,
                         height: 230, width: 160),
                   ),
                 ),

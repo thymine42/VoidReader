@@ -417,9 +417,8 @@ class BookStatisticItem extends StatelessWidget {
                 children: [
                   Hero(
                       tag: snapshot.data!.coverFullPath,
-                      child: bookCover(
-                        context,
-                        snapshot.data!,
+                      child: BookCover(
+                        book: snapshot.data!,
                         height: 130,
                         width: 90,
                         radius: 20,

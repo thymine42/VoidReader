@@ -220,9 +220,8 @@ class _NotesPageState extends ConsumerState<NotesPage> {
               tag: isMobile
                   ? book.coverFullPath
                   : '${book.coverFullPath}notMobile',
-              child: bookCover(
-                context,
-                book,
+              child: BookCover(
+                book: book,
                 height: 130,
                 width: 90,
                 radius: 20,

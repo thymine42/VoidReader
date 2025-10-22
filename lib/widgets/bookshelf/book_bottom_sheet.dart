@@ -146,7 +146,7 @@ class BookBottomSheet extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          bookCover(context, book, width: 40),
+          BookCover(book: book, width: 40),
           const SizedBox(width: 10),
           Expanded(
             child: SingleChildScrollView(
