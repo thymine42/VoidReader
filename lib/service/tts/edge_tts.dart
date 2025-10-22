@@ -306,10 +306,10 @@ class EdgeTts extends BaseTts {
         try {
           await target.play(source).timeout(const Duration(seconds: 10));
           return true;
-        } on TimeoutException catch (e, stackTrace) {
+        } on TimeoutException {
           await target.stop();
           return false;
-        } catch (e, stackTrace) {
+        } catch (e) {
           await target.stop();
           return false;
         }
