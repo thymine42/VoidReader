@@ -18,7 +18,7 @@ class StyledMarkdown extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    
+
     return MarkdownBody(
       data: data,
       selectable: selectable,
@@ -28,16 +28,16 @@ class StyledMarkdown extends StatelessWidget {
 
   MarkdownStyleSheet _buildStyleSheet(ThemeData theme, bool isDark) {
     final textColor = theme.colorScheme.onSurface;
-    
+
     // For blockquotes, we need better contrast in dark mode
-    final blockquoteBgColor = isDark 
+    final blockquoteBgColor = isDark
         ? theme.colorScheme.surfaceContainer.withValues(alpha: 0.5)
         : theme.colorScheme.surfaceContainer.withValues(alpha: 0.3);
-    
+
     final blockquoteBorderColor = isDark
         ? theme.colorScheme.primary.withValues(alpha: 0.5)
         : theme.colorScheme.primary;
-    
+
     final codeBlockBgColor = isDark
         ? theme.colorScheme.surfaceContainer
         : theme.colorScheme.surfaceContainer.withValues(alpha: 0.5);
@@ -51,7 +51,7 @@ class StyledMarkdown extends StatelessWidget {
       h4: theme.textTheme.titleLarge?.copyWith(color: textColor),
       h5: theme.textTheme.titleMedium?.copyWith(color: textColor),
       h6: theme.textTheme.titleSmall?.copyWith(color: textColor),
-      
+
       // Blockquote styling - this is the key fix for dark mode readability
       blockquote: theme.textTheme.bodyMedium?.copyWith(
         color: textColor,
@@ -67,7 +67,7 @@ class StyledMarkdown extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(4.0),
       ),
-      
+
       // Code styling
       code: theme.textTheme.bodyMedium?.copyWith(
         fontFamily: 'monospace',
@@ -78,16 +78,16 @@ class StyledMarkdown extends StatelessWidget {
         color: codeBlockBgColor,
         borderRadius: BorderRadius.circular(4.0),
       ),
-      
+
       // List styling
       listBullet: theme.textTheme.bodyMedium?.copyWith(color: textColor),
-      
+
       // Link styling
       a: theme.textTheme.bodyMedium?.copyWith(
         color: theme.colorScheme.primary,
         decoration: TextDecoration.underline,
       ),
-      
+
       // Other text styles
       em: theme.textTheme.bodyMedium?.copyWith(
         color: textColor,
