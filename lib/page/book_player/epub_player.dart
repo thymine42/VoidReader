@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:anx_reader/config/shared_preference_provider.dart';
 import 'package:anx_reader/dao/book.dart';
@@ -46,6 +47,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'minute_clock.dart';
@@ -108,6 +110,10 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
       _searchResultController.stream;
 
   FocusNode focusNode = FocusNode();
+
+  // to know anytime if we are on top of navigation stack
+  bool get _isTopOfNavigationStack =>
+      ModalRoute.of(context)?.isCurrent ?? false;
 
   void prevPage() {
     webViewController.evaluateJavascript(source: 'prevPage()');
@@ -995,6 +1001,46 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
     );
   }
 
+  Widget buildWebviewWithIOSWorkaround(
+      BuildContext context, String url, String initialCfi) {
+    final webView = InAppWebView(
+      webViewEnvironment: webViewEnvironment,
+      initialUrlRequest: URLRequest(
+        url: WebUri(
+          generateUrl(
+            url,
+            initialCfi,
+            backgroundColor: backgroundColor,
+            textColor: textColor,
+          ),
+        ),
+      ),
+      initialSettings: initialSettings,
+      contextMenu: contextMenu,
+      onLoadStop: (controller, uri) => onWebViewCreated(controller),
+      onConsoleMessage: webviewConsoleMessage,
+    );
+
+    if (!Platform.isIOS) {
+      return SizedBox.expand(child: webView);
+    }
+
+    return SizedBox.expand(
+      child: Stack(
+        children: [
+          webView,
+          Positioned.fill(
+            child: PointerInterceptor(
+              intercepting: !_isTopOfNavigationStack,
+              debug: false,
+              child: const SizedBox.expand(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     String uri = Uri.encodeComponent(widget.book.fileFullPath);
@@ -1012,25 +1058,7 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
           resizeToAvoidBottomInset: false,
           body: Stack(
             children: [
-              SizedBox.expand(
-                child: InAppWebView(
-                  webViewEnvironment: webViewEnvironment,
-                  initialUrlRequest: URLRequest(
-                    url: WebUri(
-                      generateUrl(
-                        url,
-                        initialCfi,
-                        backgroundColor: backgroundColor,
-                        textColor: textColor,
-                      ),
-                    ),
-                  ),
-                  initialSettings: initialSettings,
-                  contextMenu: contextMenu,
-                  onLoadStop: (controller, url) => onWebViewCreated(controller),
-                  onConsoleMessage: webviewConsoleMessage,
-                ),
-              ),
+              buildWebviewWithIOSWorkaround(context, url, initialCfi),
               readingInfoWidget(),
               if (showHistory)
                 Positioned(
