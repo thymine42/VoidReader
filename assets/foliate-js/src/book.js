@@ -466,12 +466,16 @@ const getCSS = ({ fontSize,
     a:link {
         color:rgb(167, 96, 52) !important;
     }
+    
+    a > img {
+        font-size: ${fontSize}em !important;
+    }
 
     * {
         // line-height: ${spacing}em !important;
         ${fontFamily}
-      }
-      
+    }
+
     p, li, blockquote, dd, div:not(:has(*:not(b, a, em, i, strong, u, span))), font {
         color: ${fontColor} !important;
         line-height: ${spacing} !important;
