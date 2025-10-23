@@ -1,6 +1,5 @@
-import 'package:anx_reader/widgets/settings/settings_app_bar.dart';
 import 'package:anx_reader/widgets/settings/settings_title.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 class SettingsPageBuilder extends StatelessWidget {
   const SettingsPageBuilder(
@@ -61,9 +60,19 @@ class SettingsPageBody extends StatefulWidget {
 class _SettingsPageBodyState extends State<SettingsPageBody> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: widget.isMobile ? settingsAppBar(widget.title, context) : null,
-      body: widget.sections,
+    return CupertinoPageScaffold(
+      child: NestedScrollView(
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return widget.isMobile
+              ? <Widget>[
+                  CupertinoSliverNavigationBar(
+                    largeTitle: Text(widget.title),
+                  )
+                ]
+              : <Widget>[];
+        },
+        body: widget.sections,
+      ),
     );
   }
 }
