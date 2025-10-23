@@ -444,7 +444,7 @@ const getCSS = ({ fontSize,
     body {
         background: none !important;
         background-color: transparent;
-        padding: 0 !important;
+        padding: 0;
     }
 
     body > div:only-of-type,
