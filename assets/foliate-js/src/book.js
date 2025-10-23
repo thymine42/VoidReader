@@ -453,14 +453,14 @@ const getCSS = ({ fontSize,
     }
 
     img, svg {
-        height: auto !important;
-        width: auto !important;
+        // height: auto !important;
+        // width: auto !important;
         object-fit: contain !important;
         break-inside: avoid !important;
         box-sizing: border-box !important;
         font-size: initial !important;
         height: initial !important;
-        width: initial !important;
+        // width: initial !important;
     }
 
     a:link {
