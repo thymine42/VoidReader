@@ -17,6 +17,7 @@
 - Fix: The issue where the page turn position may be inaccurate during TTS
 - Fix: Optimize the display effect of boundaries
 - Fix: Optimize the display effect of images as footnotes
+- Fix: Optimize timer logic to improve the accuracy of reading progress recording
 - UI: Optimize part of the interface design
 
 - Feat: 目录界面以抽屉形式从侧面显示
@@ -34,6 +35,7 @@
 - Fix: TTS 时翻页位置可能不准确的问题
 - Fix: 优化边界的显示效果
 - Fix: 优化图片作为脚注的显示效果
+- Fix: 优化计时器逻辑，提升阅读进度记录的准确性
 - UI: 优化部分界面设计
 
 
