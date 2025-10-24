@@ -1,5 +1,6 @@
 import 'package:anx_reader/widgets/settings/settings_title.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class SettingsPageBuilder extends StatelessWidget {
   const SettingsPageBuilder(
@@ -67,6 +68,7 @@ class _SettingsPageBodyState extends State<SettingsPageBody> {
               ? <Widget>[
                   CupertinoSliverNavigationBar(
                     largeTitle: Text(widget.title),
+                    backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
                   )
                 ]
               : <Widget>[];
