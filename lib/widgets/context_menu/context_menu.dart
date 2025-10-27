@@ -22,7 +22,7 @@ void showContextMenu(
   double screenHeight = MediaQuery.of(context).size.height;
 
   double menuWidth = 370 > screenWidth ? screenWidth - 20 : 350;
-  double menuHeight =  (footnote ? 350 : 550);
+  double menuHeight = (footnote ? 350 : 550);
   x *= screenWidth;
   y *= screenHeight;
 
