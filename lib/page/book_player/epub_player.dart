@@ -27,6 +27,7 @@ import 'package:anx_reader/providers/bookmark.dart';
 import 'package:anx_reader/providers/chapter_content_bridge.dart';
 import 'package:anx_reader/providers/current_reading.dart';
 import 'package:anx_reader/service/book_player/book_player_server.dart';
+import 'package:anx_reader/providers/toc_search.dart';
 import 'package:anx_reader/service/tts/models/tts_sentence.dart';
 import 'package:anx_reader/utils/coordinates_to_part.dart';
 import 'package:anx_reader/utils/js/convert_dart_color_to_js.dart';
@@ -85,8 +86,6 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
   OverlayEntry? contextMenuEntry;
   AnimationController? _animationController;
   Animation<double>? _animation;
-  double searchProcess = 0.0;
-  List<SearchResultModel> searchResult = [];
   bool showHistory = false;
   bool canGoBack = false;
   bool canGoForward = false;
@@ -96,17 +95,6 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
   Timer? styleTimer;
   String bookmarkCfi = '';
   bool bookmarkExists = false;
-
-  final StreamController<double> _searchProgressController =
-      StreamController<double>.broadcast();
-
-  Stream<double> get searchProgressStream => _searchProgressController.stream;
-
-  final StreamController<List<SearchResultModel>> _searchResultController =
-      StreamController<List<SearchResultModel>>.broadcast();
-
-  Stream<List<SearchResultModel>> get searchResultStream =>
-      _searchResultController.stream;
 
   // to know anytime if we are on top of navigation stack
   bool get _isTopOfNavigationStack =>
@@ -256,21 +244,30 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
       webViewController.evaluateJavascript(source: "removeAnnotation('$cfi')");
 
   void clearSearch() {
-    webViewController.evaluateJavascript(source: "clearSearch()");
-    searchResult.clear();
-    _searchResultController.add(searchResult);
+    ref.read(tocSearchProvider.notifier).clear();
+    _clearSearchHighlights();
   }
 
   void search(String text) {
-    clearSearch();
+    final sanitized = text.trim();
+    if (sanitized.isEmpty) {
+      clearSearch();
+      return;
+    }
+    _clearSearchHighlights();
+    ref.read(tocSearchProvider.notifier).start(sanitized);
     webViewController.evaluateJavascript(source: '''
-      search('$text', {
+      search('$sanitized', {
         'scope': 'book',
         'matchCase': false,
         'matchDiacritics': false,
         'matchWholeWords': false,
       })
     ''');
+  }
+
+  void _clearSearchHighlights() {
+    webViewController.evaluateJavascript(source: "clearSearch()");
   }
 
   Future<void> initTts() async =>
@@ -641,12 +638,12 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
       callback: (args) {
         Map<String, dynamic> search = args[0];
         setState(() {
+          final tocSearch = ref.read(tocSearchProvider.notifier);
           if (search['process'] != null) {
-            searchProcess = search['process'].toDouble();
-            _searchProgressController.add(searchProcess);
+            final progress = search['process'].toDouble();
+            tocSearch.updateProgress(progress);
           } else {
-            searchResult.add(SearchResultModel.fromJson(search));
-            _searchResultController.add(searchResult);
+            tocSearch.addResult(SearchResultModel.fromJson(search));
           }
         });
       },

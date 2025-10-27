@@ -15,6 +15,7 @@ import 'package:anx_reader/providers/chapter_content_bridge.dart';
 import 'package:anx_reader/providers/current_reading.dart';
 import 'package:anx_reader/providers/sync.dart';
 import 'package:anx_reader/providers/book_list.dart';
+import 'package:anx_reader/providers/toc_search.dart';
 import 'package:anx_reader/service/convert_to_epub/txt/convert_from_txt.dart';
 import 'package:anx_reader/service/iap_service.dart';
 import 'package:anx_reader/service/md5_service.dart';
@@ -405,6 +406,7 @@ Future<void> pushToReadingPage(
 
   final currentReading = ref.read(currentReadingProvider.notifier);
   final chapterContentBridge = ref.read(chapterContentBridgeProvider.notifier);
+  final tocSearch = ref.read(tocSearchProvider.notifier);
 
   await Navigator.push(
     navigatorKey.currentContext!,
@@ -420,6 +422,7 @@ Future<void> pushToReadingPage(
     AnxLog.info('ReadingPage: poped: ${book.title}');
     currentReading.finish();
     chapterContentBridge.state = null;
+    tocSearch.clear();
   });
 }
 
