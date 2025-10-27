@@ -561,14 +561,29 @@ class _BookNotesListState extends ConsumerState<BookNotesList> {
       const Spacer(),
       DeleteConfirm(
         delete: () {
-          for (int i = 0; i < selectedNotes.length; i++) {
-            deleteBookNoteById(selectedNotes[i].id!);
+          final notesToDelete = List<BookNote>.from(selectedNotes);
+          for (final note in notesToDelete) {
+            deleteBookNoteById(note.id!);
           }
+
           Sync().syncData(SyncDirection.upload, ref, trigger: SyncTrigger.auto);
+
+          if (widget.reading) {
+            final player = epubPlayerKey.currentState;
+            if (player != null) {
+              for (final note in notesToDelete) {
+                if (note.cfi.isNotEmpty) {
+                  player.removeAnnotation(note.cfi);
+                }
+              }
+            }
+          }
+
           setState(() {
             selectedNotes.clear();
             _loadBookNotes();
           });
+
           ref
               .read(BookmarkProvider(widget.book.id).notifier)
               .refreshBookmarks();
