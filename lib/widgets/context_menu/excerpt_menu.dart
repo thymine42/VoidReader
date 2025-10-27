@@ -5,6 +5,7 @@ import 'package:anx_reader/models/book_note.dart';
 import 'package:anx_reader/page/reading_page.dart';
 import 'package:anx_reader/utils/toast/common.dart';
 import 'package:anx_reader/widgets/book_share/excerpt_share_service.dart';
+import 'package:anx_reader/widgets/common/axis_flex.dart';
 import 'package:anx_reader/widgets/context_menu/reader_note_menu.dart';
 import 'package:anx_reader/widgets/icon_and_text.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,7 @@ class ExcerptMenu extends StatefulWidget {
   final bool footnote;
   final BoxDecoration decoration;
   final Function() toggleTranslationMenu;
+  final Axis axis;
 
   const ExcerptMenu({
     super.key,
@@ -42,6 +44,7 @@ class ExcerptMenu extends StatefulWidget {
     required this.footnote,
     required this.decoration,
     required this.toggleTranslationMenu,
+    required this.axis,
   });
 
   @override
@@ -235,9 +238,10 @@ class ExcerptMenuState extends State<ExcerptMenu> {
   @override
   Widget build(BuildContext context) {
     Widget annotationMenu = Container(
-      height: 48,
+      padding: const EdgeInsets.all(6),
       decoration: widget.decoration,
-      child: Row(
+      child: AxisFlex(
+        axis: flipAxis(widget.axis),
         mainAxisSize: MainAxisSize.min,
         children: [
           iconButton(
@@ -252,9 +256,10 @@ class ExcerptMenuState extends State<ExcerptMenu> {
     );
 
     Widget operatorMenu = Container(
-      height: 48,
+      // width: 48,
       decoration: widget.decoration,
-      child: Row(
+      child: AxisFlex(
+        axis: flipAxis(widget.axis),
         mainAxisSize: MainAxisSize.min,
         children: [
           // copy
@@ -347,27 +352,30 @@ class ExcerptMenuState extends State<ExcerptMenu> {
     );
 
     return Expanded(
-      child: Column(
+      child: AxisFlex(
+        axis: widget.axis,
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(
+          AxisFlex(
+            axis: widget.axis,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SingleChildScrollView(
-                  scrollDirection: Axis.horizontal, child: operatorMenu),
-              const SizedBox(height: 10),
+                  scrollDirection: flipAxis(widget.axis), child: operatorMenu),
+              const SizedBox.square(dimension: 10),
               if (!widget.footnote)
                 SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
+                  scrollDirection: flipAxis(widget.axis),
                   child: annotationMenu,
                 ),
             ],
           ),
-          const SizedBox(height: 10),
-          Row(
+          const SizedBox.square(dimension: 10),
+          AxisFlex(
+            axis: flipAxis(widget.axis),
             children: [
               ReaderNoteMenu(
                 key: readerNoteMenuKey,

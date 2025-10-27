@@ -1,5 +1,6 @@
 import 'package:anx_reader/config/shared_preference_provider.dart';
 import 'package:anx_reader/page/reading_page.dart';
+import 'package:anx_reader/widgets/common/axis_flex.dart';
 import 'package:anx_reader/widgets/context_menu/excerpt_menu.dart';
 import 'package:anx_reader/widgets/context_menu/translation_menu.dart';
 import 'package:flutter/material.dart';
@@ -13,13 +14,15 @@ void showContextMenu(
   String annoContent,
   String annoCfi,
   int? annoId,
-  bool footnote,
-) {
+  bool footnote, {
+  Axis axis = Axis.horizontal,
+}) {
   final playerKey = epubPlayerKey.currentState!;
   double screenWidth = MediaQuery.of(context).size.width;
   double screenHeight = MediaQuery.of(context).size.height;
 
   double menuWidth = 370 > screenWidth ? screenWidth - 20 : 350;
+  double menuHeight =  (footnote ? 350 : 550);
   x *= screenWidth;
   y *= screenHeight;
 
@@ -69,7 +72,7 @@ void showContextMenu(
       top: dir != "up" ? topPosition : null,
       child: Container(
         width: menuWidth,
-        // height: menuHeight,
+        height: menuHeight,
         color: Colors.transparent,
         child: StatefulBuilder(builder: (context, setState) {
           void toggleTranslationMenu() {
@@ -79,7 +82,8 @@ void showContextMenu(
           }
 
           return PointerInterceptor(
-            child: Column(
+            child: AxisFlex(
+              axis: axis,
               mainAxisSize: MainAxisSize.min,
               children: [
                 LayoutBuilder(builder: (context, constraints) {
@@ -88,9 +92,11 @@ void showContextMenu(
                           ? 0
                           : MediaQuery.of(context).viewInsets.bottom -
                               bottomPosition;
-                  return Column(
+                  return AxisFlex(
+                    axis: axis,
                     children: [
-                      Row(
+                      AxisFlex(
+                        axis: flipAxis(axis),
                         children: [
                           ExcerptMenu(
                             annoCfi: annoCfi,
@@ -100,16 +106,18 @@ void showContextMenu(
                             footnote: footnote,
                             decoration: decoration,
                             toggleTranslationMenu: toggleTranslationMenu,
+                            axis: axis,
                           ),
                         ],
                       ),
-                      SizedBox(height: bottom),
+                      // SizedBox(height: bottom),
                     ],
                   );
                 }),
                 const SizedBox(height: 10),
                 if (showTranslationMenu)
-                  Row(
+                  AxisFlex(
+                    axis: flipAxis(axis),
                     children: [
                       TranslationMenu(
                         content: annoContent,
