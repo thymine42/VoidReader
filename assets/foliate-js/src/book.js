@@ -663,6 +663,7 @@ const replaceFootnote = (view) => {
     hyphenate: true,
     customCSS: style.customCSS,
     customCSSEnabled: style.customCSSEnabled,
+    writingMode: style.writingMode,
   }
   renderer.setStyles(getCSS(footNoteStyle))
   // set background color of dialog
