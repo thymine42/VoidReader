@@ -1,14 +1,21 @@
 import 'package:anx_reader/dao/book_note.dart';
 import 'package:anx_reader/l10n/generated/L10n.dart';
 import 'package:anx_reader/models/book_note.dart';
+import 'package:anx_reader/widgets/common/axis_flex.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
 
 class ReaderNoteMenu extends StatefulWidget {
-  const ReaderNoteMenu({super.key, this.noteId, required this.decoration});
+  const ReaderNoteMenu({
+    super.key,
+    this.noteId,
+    required this.decoration,
+    required this.axis,
+  });
 
   final int? noteId;
   final BoxDecoration decoration;
+  final Axis axis;
 
   @override
   State<ReaderNoteMenu> createState() => ReaderNoteMenuState();
@@ -50,8 +57,9 @@ class ReaderNoteMenuState extends State<ReaderNoteMenu> {
       }
     } finally {
       isLoading = false;
-      if (!mounted) return;
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     }
   }
 
@@ -72,47 +80,56 @@ class ReaderNoteMenuState extends State<ReaderNoteMenu> {
   Widget build(BuildContext context) {
     return Expanded(
         child: AnimatedSize(
-      duration: const Duration(milliseconds: 400),
+      duration: const Duration(milliseconds: 200),
       curve: Curves.easeOut,
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxHeight: 200),
+        constraints: BoxConstraints(
+          maxHeight: widget.axis == Axis.vertical ? double.infinity : 200,
+          maxWidth: widget.axis == Axis.horizontal ? double.infinity : 100,
+        ),
         child: !_showNoteDialog
             ? null
             : Container(
                 decoration: widget.decoration,
                 padding: const EdgeInsets.all(8),
-                child: SingleChildScrollView(
-                  child: TextField(
-                    controller: textFieldController,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: L10n.of(context).contextMenuAddNoteTips,
-                      suffixIcon: !showSaveButton
-                          ? null
-                          : IconButton(
-                              icon: const Icon(
-                                  EvaIcons.checkmark_circle_2_outline),
-                              onPressed: () {
-                                saveNote();
-                                // remove focus
-                                FocusScope.of(context).unfocus();
-                                setState(() {
-                                  showSaveButton = false;
-                                });
-                              },
-                            ),
+                child: AxisFlex(
+                  axis: widget.axis,
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        scrollDirection: widget.axis,
+                        child: TextField(
+                          controller: textFieldController,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: L10n.of(context).contextMenuAddNoteTips,
+                          ),
+                          maxLines: double.maxFinite.toInt(),
+                          minLines: 1,
+                          onSubmitted: (String value) {
+                            saveNote();
+                          },
+                          onChanged: (String value) {
+                            setState(() {
+                              showSaveButton = true;
+                            });
+                          },
+                        ),
+                      ),
                     ),
-                    maxLines: 5,
-                    minLines: 1,
-                    onSubmitted: (String value) {
-                      saveNote();
-                    },
-                    onChanged: (String value) {
-                      setState(() {
-                        showSaveButton = true;
-                      });
-                    },
-                  ),
+                    if (showSaveButton)
+                      IconButton(
+                        icon: const Icon(EvaIcons.checkmark_circle_2_outline),
+                        onPressed: () {
+                          saveNote();
+                          // remove focus
+                          FocusScope.of(context).unfocus();
+                          setState(() {
+                            showSaveButton = false;
+                          });
+                        },
+                      ),
+                  ],
                 ),
               ),
       ),

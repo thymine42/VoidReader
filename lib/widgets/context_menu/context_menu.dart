@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:anx_reader/config/shared_preference_provider.dart';
 import 'package:anx_reader/page/reading_page.dart';
 import 'package:anx_reader/widgets/common/axis_flex.dart';
@@ -8,26 +10,104 @@ import 'package:pointer_interceptor/pointer_interceptor.dart';
 
 void showContextMenu(
   BuildContext context,
-  double x,
-  double y,
-  String dir,
+  double left,
+  double top,
+  double right,
+  double bottom,
   String annoContent,
   String annoCfi,
   int? annoId,
-  bool footnote, {
-  Axis axis = Axis.horizontal,
-}) {
-  final playerKey = epubPlayerKey.currentState!;
-  double screenWidth = MediaQuery.of(context).size.width;
-  double screenHeight = MediaQuery.of(context).size.height;
+  bool footnote, 
+  Axis axis,
+) {
+  final playerKey = epubPlayerKey.currentState;
+  if (playerKey == null) return;
 
-  double menuWidth = 370 > screenWidth ? screenWidth - 20 : 350;
-  double menuHeight = (footnote ? 350 : 550);
-  x *= screenWidth;
-  y *= screenHeight;
+  RenderBox? renderBox =
+      epubPlayerKey.currentContext?.findRenderObject() as RenderBox?;
+  Size? renderBoxSize = renderBox?.size;
 
-  double widgetLeft =
-      x + menuWidth > screenWidth ? screenWidth - menuWidth - 20 : x;
+  double screenHeight =
+      renderBoxSize?.height ?? MediaQuery.of(context).size.height;
+  double screenWidth =
+      renderBoxSize?.width ?? MediaQuery.of(context).size.width;
+
+  Offset localToGlobal = renderBox?.localToGlobal(Offset.zero) ?? Offset.zero;
+
+  final viewportRect = Rect.fromLTWH(
+    localToGlobal.dx,
+    localToGlobal.dy,
+    screenWidth,
+    screenHeight,
+  );
+
+  final selectionRect = Rect.fromLTRB(
+    localToGlobal.dx + left * screenWidth,
+    localToGlobal.dy + top * screenHeight,
+    localToGlobal.dx + right * screenWidth,
+    localToGlobal.dy + bottom * screenHeight,
+  );
+
+  const double horizontalMargin = 16;
+  const double verticalMargin = 16;
+  const double gap = 12;
+
+  final double menuWidth =
+      math.min(350, math.max(120, screenWidth - horizontalMargin * 2));
+  final double maxHeight = screenHeight - verticalMargin * 2;
+  final double menuHeight = math.min(
+    footnote ? 350 : 550,
+    math.max(200, maxHeight),
+  );
+
+  late double widgetTop;
+  late double widgetLeft;
+
+  if (axis == Axis.horizontal) {
+    final double spaceAbove = selectionRect.top - viewportRect.top;
+    final double spaceBelow = viewportRect.bottom - selectionRect.bottom;
+    final bool placeBelow =
+        (spaceBelow >= menuHeight + gap) || (spaceBelow >= spaceAbove);
+
+    double desiredTop = placeBelow
+        ? selectionRect.bottom + gap
+        : selectionRect.top - menuHeight - gap;
+    desiredTop = desiredTop.clamp(
+      viewportRect.top + verticalMargin,
+      viewportRect.bottom - menuHeight - verticalMargin,
+    );
+
+    double desiredLeft = selectionRect.center.dx - menuWidth / 2;
+    desiredLeft = desiredLeft.clamp(
+      viewportRect.left + horizontalMargin,
+      viewportRect.right - menuWidth - horizontalMargin,
+    );
+
+    widgetTop = desiredTop;
+    widgetLeft = desiredLeft;
+  } else {
+    final double spaceLeft = selectionRect.left - viewportRect.left;
+    final double spaceRight = viewportRect.right - selectionRect.right;
+    final bool placeRight =
+        (spaceRight >= menuWidth + gap) || (spaceRight >= spaceLeft);
+
+    double desiredLeft = placeRight
+        ? selectionRect.right + gap
+        : selectionRect.left - menuWidth - gap;
+    desiredLeft = desiredLeft.clamp(
+      viewportRect.left + horizontalMargin,
+      viewportRect.right - menuWidth - horizontalMargin,
+    );
+
+    double desiredTop = selectionRect.center.dy - menuHeight / 2;
+    desiredTop = desiredTop.clamp(
+      viewportRect.top + verticalMargin,
+      viewportRect.bottom - menuHeight - verticalMargin,
+    );
+
+    widgetTop = desiredTop;
+    widgetLeft = desiredLeft;
+  }
 
   playerKey.removeOverlay();
 
@@ -59,17 +139,10 @@ void showContextMenu(
   );
 
   bool showTranslationMenu = Prefs().autoTranslateSelection;
-
-  double bottomPosition =
-      y > 350 ? (screenHeight - y + 20) : screenHeight - 370;
-
-  double topPosition = screenHeight - y > 350 ? y + 20 : screenHeight - 350;
-
   playerKey.contextMenuEntry = OverlayEntry(builder: (context) {
     return Positioned(
       left: widgetLeft,
-      bottom: dir == "up" ? bottomPosition : null,
-      top: dir != "up" ? topPosition : null,
+      top: widgetTop,
       child: Container(
         width: menuWidth,
         height: menuHeight,
@@ -83,20 +156,15 @@ void showContextMenu(
 
           return PointerInterceptor(
             child: AxisFlex(
-              axis: axis,
+              axis: flipAxis(axis),
               mainAxisSize: MainAxisSize.min,
               children: [
                 LayoutBuilder(builder: (context, constraints) {
-                  double bottom =
-                      bottomPosition > MediaQuery.of(context).viewInsets.bottom
-                          ? 0
-                          : MediaQuery.of(context).viewInsets.bottom -
-                              bottomPosition;
                   return AxisFlex(
-                    axis: axis,
+                    axis: flipAxis(axis),
                     children: [
                       AxisFlex(
-                        axis: flipAxis(axis),
+                        axis: axis,
                         children: [
                           ExcerptMenu(
                             annoCfi: annoCfi,
@@ -116,15 +184,20 @@ void showContextMenu(
                 }),
                 const SizedBox(height: 10),
                 if (showTranslationMenu)
+                ...[
+                  SizedBox.square(
+                    dimension: 10,
+                  ),
                   AxisFlex(
-                    axis: flipAxis(axis),
+                    axis: axis,
                     children: [
                       TranslationMenu(
                         content: annoContent,
                         decoration: decoration,
+                        axis: axis,
                       ),
                     ],
-                  ),
+                  )],
               ],
             ),
           );

@@ -90,8 +90,8 @@ class AiStreamState extends ConsumerState<AiStream> {
               else
                 const SizedBox.shrink(),
               if (widget.canCopy)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                Wrap(
+                  alignment: WrapAlignment.end,
                   children: [
                     TextButton(
                       onPressed: () {

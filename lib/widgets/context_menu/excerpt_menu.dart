@@ -241,7 +241,7 @@ class ExcerptMenuState extends State<ExcerptMenu> {
       padding: const EdgeInsets.all(6),
       decoration: widget.decoration,
       child: AxisFlex(
-        axis: flipAxis(widget.axis),
+        axis: widget.axis,
         mainAxisSize: MainAxisSize.min,
         children: [
           iconButton(
@@ -259,7 +259,7 @@ class ExcerptMenuState extends State<ExcerptMenu> {
       // width: 48,
       decoration: widget.decoration,
       child: AxisFlex(
-        axis: flipAxis(widget.axis),
+        axis: widget.axis,
         mainAxisSize: MainAxisSize.min,
         children: [
           // copy
@@ -353,34 +353,35 @@ class ExcerptMenuState extends State<ExcerptMenu> {
 
     return Expanded(
       child: AxisFlex(
-        axis: widget.axis,
+        axis: flipAxis(widget.axis),
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           AxisFlex(
-            axis: widget.axis,
+            axis: flipAxis(widget.axis),
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SingleChildScrollView(
-                  scrollDirection: flipAxis(widget.axis), child: operatorMenu),
+                  scrollDirection: widget.axis, child: operatorMenu),
               const SizedBox.square(dimension: 10),
               if (!widget.footnote)
                 SingleChildScrollView(
-                  scrollDirection: flipAxis(widget.axis),
+                  scrollDirection: widget.axis,
                   child: annotationMenu,
                 ),
             ],
           ),
           const SizedBox.square(dimension: 10),
           AxisFlex(
-            axis: flipAxis(widget.axis),
+            axis: widget.axis,
             children: [
               ReaderNoteMenu(
                 key: readerNoteMenuKey,
                 noteId: noteId ?? widget.id,
                 decoration: widget.decoration,
+                axis: widget.axis,
               ),
             ],
           ),

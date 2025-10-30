@@ -615,10 +615,22 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
           String cfi = location['cfi'];
           String text = location['text'];
           bool footnote = location['footnote'];
-          double x = location['pos']['point']['x'];
-          double y = location['pos']['point']['y'];
-          String dir = location['pos']['dir'];
-          showContextMenu(context, x, y, dir, text, cfi, null, footnote);
+          double left = location['pos']['left'];
+          double top = location['pos']['top'];
+          double right = location['pos']['right'];
+          double bottom = location['pos']['bottom'];
+          showContextMenu(
+            context,
+            left,
+            top,
+            right,
+            bottom,
+            text,
+            cfi,
+            null,
+            footnote,
+            writingMode.isVertical ? Axis.vertical : Axis.horizontal,
+          );
         });
     controller.addJavaScriptHandler(
         handlerName: 'onSelectionCleared',
@@ -632,10 +644,22 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
           int id = annotation['annotation']['id'];
           String cfi = annotation['annotation']['value'];
           String note = annotation['annotation']['note'];
-          double x = annotation['pos']['point']['x'];
-          double y = annotation['pos']['point']['y'];
-          String dir = annotation['pos']['dir'];
-          showContextMenu(context, x, y, dir, note, cfi, id, false);
+          double left = annotation['pos']['left'];
+          double top = annotation['pos']['top'];
+          double right = annotation['pos']['right'];
+          double bottom = annotation['pos']['bottom'];
+          showContextMenu(
+            context,
+            left,
+            top,
+            right,
+            bottom,
+            note,
+            cfi,
+            id,
+            false,
+            writingMode.isVertical ? Axis.vertical : Axis.horizontal,
+          );
         });
     controller.addJavaScriptHandler(
       handlerName: 'onSearch',
