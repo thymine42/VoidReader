@@ -14,13 +14,7 @@ const { EPUB } = await import('./epub.js')
 var isPdf = false;
 
 const getPosition = (target) => {
-  const pointIsInView = (point) => {
-    const { x, y } = point;
-    return x >= 0 &&
-      y >= 0 &&
-      x <= window.innerWidth &&
-      y <= window.innerHeight;
-  };
+  const clamp01 = value => Math.min(Math.max(value, 0), 1);
 
   const frameRect = (framePos, elementRect, scaleX = 1, scaleY = 1) => {
     return {
@@ -45,40 +39,32 @@ const getPosition = (target) => {
   const frame = frameElement?.getBoundingClientRect() ?? { top: 0, left: 0 };
 
   const rects = Array.from(target.getClientRects());
-  const firstRect = frameRect(frame, rects[0], scaleX, scaleY);
-  const lastRect = frameRect(frame, rects[rects.length - 1], scaleX, scaleY);
+  if (!rects.length) {
+    return {
+      left: 0,
+      top: 0,
+      right: 0,
+      bottom: 0
+    };
+  }
+  const frameRects = rects.map(rect => frameRect(frame, rect, scaleX, scaleY));
+
+  const boundingRect = frameRects.reduce((acc, rect) => ({
+    left: Math.min(acc.left, rect.left),
+    top: Math.min(acc.top, rect.top),
+    right: Math.max(acc.right, rect.right),
+    bottom: Math.max(acc.bottom, rect.bottom)
+  }), { ...frameRects[0] });
 
   const screenWidth = window.innerWidth;
   const screenHeight = window.innerHeight;
 
-  const startPoint = {
-    point: {
-      x: ((firstRect.left + firstRect.right) / 2) / screenWidth,
-      y: firstRect.top / screenHeight
-    },
-    dir: 'up'
+  return {
+    left: clamp01(boundingRect.left / screenWidth),
+    top: clamp01(boundingRect.top / screenHeight),
+    right: clamp01(boundingRect.right / screenWidth),
+    bottom: clamp01(boundingRect.bottom / screenHeight)
   };
-
-  const endPoint = {
-    point: {
-      x: ((lastRect.left + lastRect.right) / 2) / screenWidth,
-      y: lastRect.bottom / screenHeight
-    },
-    dir: 'down'
-  };
-
-  const isStartInView = pointIsInView(startPoint.point);
-  const isEndInView = pointIsInView(endPoint.point);
-
-  if (!isStartInView && !isEndInView) {
-    return { point: { x: 0, y: 0 } };
-  }
-  if (!isStartInView) return endPoint;
-  if (!isEndInView) return startPoint;
-
-  return (startPoint.point.y * screenHeight > screenHeight - endPoint.point.y * screenHeight)
-    ? startPoint
-    : endPoint;
 };
 
 const getSelectionRange = (selection) => {
