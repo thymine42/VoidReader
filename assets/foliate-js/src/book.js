@@ -1291,6 +1291,7 @@ const onRelocated = (currentInfo) => {
     cfi,
     percentage,
     bookmark: currentInfo.bookmark,
+    writingMode: reader.view.renderer.writingMode,
   })
 }
 
