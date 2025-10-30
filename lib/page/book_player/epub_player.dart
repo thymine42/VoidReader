@@ -210,9 +210,8 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
       webViewController.evaluateJavascript(source: "goToCfi('$cfi')");
 
   void addAnnotation(BookNote bookNote) {
-    final noteContent = (bookNote.content)
-        .replaceAll('\n', ' ')
-        .replaceAll("'", "\\'");
+    final noteContent =
+        (bookNote.content).replaceAll('\n', ' ').replaceAll("'", "\\'");
     webViewController.evaluateJavascript(source: '''
       addAnnotation({
         id: ${bookNote.id},
