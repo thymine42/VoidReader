@@ -493,6 +493,14 @@ const getCSS = ({ fontSize,
         margin-block-end: ${paragraphSpacing / 2}em !important;
     }
 
+    .anx-text-center,
+    [align="center"],
+    [style*="text-align: center"],
+    [style*="text-align:center"] {
+        text-indent: 0 !important;
+    }
+
+
     /*  Paragraphs containing only an image — don't change */
     p:has(> img:only-child),
     p:has(> span:only-child > img:only-child),
@@ -574,6 +582,16 @@ const readingFeaturesDocHandler = (doc) => {
   if (readingRules.bionicReadingMode) {
     bionicReadingHandler(doc)
   }
+
+  if (style.textIndent > 0) {
+    const elements = doc.querySelectorAll('p, div, li, blockquote, dd, font')
+    elements.forEach(el => {
+      const computedStyle = window.getComputedStyle(el)
+      if (computedStyle.textAlign === 'center') {
+        el.classList.add('anx-text-center')
+      }
+    })
+  }
 }
 
 
@@ -595,6 +613,7 @@ const replaceFootnote = (view) => {
     setSelectionHandler(view, doc, index)
     // convertChineseHandler(convertChineseMode, doc)
     readingFeaturesDocHandler(doc)
+    doc.__isFootNote = true
 
 
     setTimeout(() => {
@@ -645,6 +664,7 @@ const replaceFootnote = (view) => {
     hyphenate: true,
     customCSS: style.customCSS,
     customCSSEnabled: style.customCSSEnabled,
+    writingMode: style.writingMode,
   }
   renderer.setStyles(getCSS(footNoteStyle))
   // set background color of dialog
@@ -1342,7 +1362,7 @@ window.setNoAnimation = () => {
 }
 
 const onSelectionEnd = (selection) => {
-  if (footnoteDialog.open || isPdf) {
+  if (window.isFootNoteOpen() || isPdf) {
     callFlutter('onSelectionEnd', { ...selection, footnote: true })
   } else {
     callFlutter('onSelectionEnd', { ...selection, footnote: false })
@@ -1350,7 +1370,7 @@ const onSelectionEnd = (selection) => {
 }
 
 window.showContextMenu = () => {
-  if (footnoteDialog.open) {
+  if (window.isFootNoteOpen()) {
     footnoteSelection()
   } else {
     reader.showContextMenu()
