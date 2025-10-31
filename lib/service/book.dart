@@ -423,6 +423,7 @@ Future<void> pushToReadingPage(
     currentReading.finish();
     chapterContentBridge.state = null;
     tocSearch.clear();
+    AnxLog.info('Pop successfully ReadingPage: ${book.title}');
   });
 }
 
