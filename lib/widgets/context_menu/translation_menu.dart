@@ -111,6 +111,7 @@ class _TranslationMenuState extends State<TranslationMenu> {
                     const Divider(),
                     AxisFlex(
                       mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       axis: widget.axis,
                       children: [
                         _langPicker(true),

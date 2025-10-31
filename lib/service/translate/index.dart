@@ -46,7 +46,7 @@ class ConfigItem {
   final String? description;
   final ConfigItemType type;
   final dynamic defaultValue;
-  final List<Map<String, dynamic>>? options; 
+  final List<Map<String, dynamic>>? options;
 
   ConfigItem({
     required this.key,
@@ -87,7 +87,7 @@ abstract class TranslateServiceProvider {
           lastResult = result;
           // Skip intermediate results like "..."
           if (result != '...' && result.trim().isNotEmpty) {
-            return result; 
+            return result;
           }
         }
 
