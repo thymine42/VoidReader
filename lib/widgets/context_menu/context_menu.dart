@@ -56,18 +56,19 @@ void showContextMenu(
       math.min(350, math.max(120, screenWidth - horizontalMargin * 2));
   final double maxHeight = screenHeight - verticalMargin * 2;
   final double menuHeight = math.min(
-    footnote ? 350 : 400,
+    footnote ? 350 : 550,
     math.max(200, maxHeight),
   );
 
   late double widgetTop;
   late double widgetLeft;
+  bool placeBelow = true;
+  bool placeRight = true;
 
   if (axis == Axis.horizontal) {
     final double spaceAbove = selectionRect.top - viewportRect.top;
     final double spaceBelow = viewportRect.bottom - selectionRect.bottom;
-    final bool placeBelow =
-        (spaceBelow >= menuHeight + gap) || (spaceBelow >= spaceAbove);
+    placeBelow = (spaceBelow >= menuHeight + gap) || (spaceBelow >= spaceAbove);
 
     double desiredTop = placeBelow
         ? selectionRect.bottom + gap
@@ -88,8 +89,7 @@ void showContextMenu(
   } else {
     final double spaceLeft = selectionRect.left - viewportRect.left;
     final double spaceRight = viewportRect.right - selectionRect.right;
-    final bool placeRight =
-        (spaceRight >= menuWidth + gap) || (spaceRight >= spaceLeft);
+    placeRight = (spaceRight >= menuWidth + gap) || (spaceRight >= spaceLeft);
 
     double desiredLeft = placeRight
         ? selectionRect.right + gap
@@ -108,6 +108,9 @@ void showContextMenu(
     widgetTop = desiredTop;
     widgetLeft = desiredLeft;
   }
+
+  final bool shouldReverse =
+      axis == Axis.horizontal ? !placeBelow : !placeRight;
 
   playerKey.removeOverlay();
 
@@ -144,13 +147,11 @@ void showContextMenu(
       left: widgetLeft,
       top: widgetTop,
       child: Container(
-        // constraints: BoxConstraints(
-        //   maxHeight: menuHeight,
-        //   maxWidth: menuWidth,
-        // ),
-        width: menuWidth,
-        height: menuHeight,
-        color: Colors.black,
+        color: Colors.transparent,
+        constraints: BoxConstraints(
+          maxWidth: menuWidth,
+          maxHeight: menuHeight,
+        ),
         child: StatefulBuilder(builder: (context, setState) {
           void toggleTranslationMenu() {
             setState(() {
@@ -161,58 +162,56 @@ void showContextMenu(
           return PointerInterceptor(
             child: Stack(
               children: [
-                SizedBox.expand(
-                  child: GestureDetector(
-                    onTap: onClose,
-                    child: Container(
-                      color: Colors.transparent,
-                    ),
-                  ),
-                ),
-                AxisFlex(
-                  axis: flipAxis(axis),
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    LayoutBuilder(builder: (context, constraints) {
-                      return AxisFlex(
-                        axis: flipAxis(axis),
-                        children: [
+                GestureDetector(
+                  onTap: onClose,
+                  child: Container(
+                    color: Colors.transparent,
+                    child: AxisFlex(
+                      axis: flipAxis(axis),
+                      reverse: shouldReverse,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        AxisFlex(
+                          axis: flipAxis(axis),
+                          reverse: shouldReverse,
+                          children: [
+                            AxisFlex(
+                              axis: axis,
+                              children: [
+                                ExcerptMenu(
+                                  annoCfi: annoCfi,
+                                  annoContent: annoContent,
+                                  id: annoId,
+                                  onClose: onClose,
+                                  footnote: footnote,
+                                  decoration: decoration,
+                                  toggleTranslationMenu: toggleTranslationMenu,
+                                  axis: axis,
+                                  reverse: shouldReverse,
+                                ),
+                              ],
+                            ),
+                            // SizedBox(height: bottom),
+                          ],
+                        ),
+                        if (showTranslationMenu) ...[
+                          SizedBox.square(
+                            dimension: 10,
+                          ),
                           AxisFlex(
                             axis: axis,
                             children: [
-                              ExcerptMenu(
-                                annoCfi: annoCfi,
-                                annoContent: annoContent,
-                                id: annoId,
-                                onClose: onClose,
-                                footnote: footnote,
+                              TranslationMenu(
+                                content: annoContent,
                                 decoration: decoration,
-                                toggleTranslationMenu: toggleTranslationMenu,
                                 axis: axis,
                               ),
                             ],
-                          ),
-                          // SizedBox(height: bottom),
+                          )
                         ],
-                      );
-                    }),
-                    const SizedBox(height: 10),
-                    if (showTranslationMenu) ...[
-                      SizedBox.square(
-                        dimension: 10,
-                      ),
-                      AxisFlex(
-                        axis: axis,
-                        children: [
-                          TranslationMenu(
-                            content: annoContent,
-                            decoration: decoration,
-                            axis: axis,
-                          ),
-                        ],
-                      )
-                    ],
-                  ],
+                      ],
+                    ),
+                  ),
                 ),
               ],
             ),

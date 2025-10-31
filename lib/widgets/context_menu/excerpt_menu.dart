@@ -34,6 +34,7 @@ class ExcerptMenu extends StatefulWidget {
   final BoxDecoration decoration;
   final Function() toggleTranslationMenu;
   final Axis axis;
+  final bool reverse;
 
   const ExcerptMenu({
     super.key,
@@ -45,6 +46,7 @@ class ExcerptMenu extends StatefulWidget {
     required this.decoration,
     required this.toggleTranslationMenu,
     required this.axis,
+    required this.reverse,
   });
 
   @override
@@ -353,6 +355,7 @@ class ExcerptMenuState extends State<ExcerptMenu> {
 
     return Expanded(
       child: AxisFlex(
+        reverse: widget.reverse,
         axis: flipAxis(widget.axis),
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -360,6 +363,7 @@ class ExcerptMenuState extends State<ExcerptMenu> {
         children: [
           AxisFlex(
             axis: flipAxis(widget.axis),
+            reverse: widget.reverse,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

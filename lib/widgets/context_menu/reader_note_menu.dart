@@ -93,6 +93,7 @@ class ReaderNoteMenuState extends State<ReaderNoteMenu> {
                 decoration: widget.decoration,
                 padding: const EdgeInsets.all(8),
                 child: AxisFlex(
+                  reverse: false,
                   axis: widget.axis,
                   children: [
                     Expanded(
@@ -131,6 +132,7 @@ class ReaderNoteMenuState extends State<ReaderNoteMenu> {
                           });
                         },
                       ),
+                      const Spacer(),
                   ],
                 ),
               ),
