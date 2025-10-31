@@ -1275,6 +1275,10 @@ const setStyle = (oldStyle) => {
   }
   reader.view.renderer.setStyles?.(getCSS(newStyle))
 
+  if (!oldStyle) {
+    return
+  }
+
   if (oldStyle?.writingMode !== style.writingMode ||
     oldStyle?.pageTurnStyle !== style.pageTurnStyle && [oldStyle?.pageTurnStyle, style.pageTurnStyle].includes('scroll')
   ) {
