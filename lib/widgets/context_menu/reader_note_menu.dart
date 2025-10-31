@@ -104,7 +104,9 @@ class ReaderNoteMenuState extends State<ReaderNoteMenu> {
                             border: InputBorder.none,
                             hintText: L10n.of(context).contextMenuAddNoteTips,
                           ),
-                          maxLines:  widget.axis == Axis.vertical ? double.maxFinite.toInt() : 5,
+                          maxLines: widget.axis == Axis.vertical
+                              ? double.maxFinite.toInt()
+                              : 5,
                           minLines: 1,
                           onSubmitted: (String value) {
                             saveNote();
