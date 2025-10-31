@@ -85,7 +85,7 @@ class ReaderNoteMenuState extends State<ReaderNoteMenu> {
       child: ConstrainedBox(
         constraints: BoxConstraints(
           maxHeight: widget.axis == Axis.vertical ? double.infinity : 200,
-          maxWidth: widget.axis == Axis.horizontal ? double.infinity : 100,
+          maxWidth: widget.axis == Axis.vertical ? 100 : double.infinity,
         ),
         child: !_showNoteDialog
             ? null
@@ -97,14 +97,14 @@ class ReaderNoteMenuState extends State<ReaderNoteMenu> {
                   children: [
                     Expanded(
                       child: SingleChildScrollView(
-                        scrollDirection: widget.axis,
+                        // scrollDirection: widget.axis,
                         child: TextField(
                           controller: textFieldController,
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             hintText: L10n.of(context).contextMenuAddNoteTips,
                           ),
-                          maxLines: double.maxFinite.toInt(),
+                          maxLines:  widget.axis == Axis.vertical ? double.maxFinite.toInt() : 5,
                           minLines: 1,
                           onSubmitted: (String value) {
                             saveNote();

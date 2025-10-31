@@ -56,7 +56,7 @@ void showContextMenu(
       math.min(350, math.max(120, screenWidth - horizontalMargin * 2));
   final double maxHeight = screenHeight - verticalMargin * 2;
   final double menuHeight = math.min(
-    footnote ? 350 : 550,
+    footnote ? 350 : 400,
     math.max(200, maxHeight),
   );
 
@@ -144,9 +144,13 @@ void showContextMenu(
       left: widgetLeft,
       top: widgetTop,
       child: Container(
+        // constraints: BoxConstraints(
+        //   maxHeight: menuHeight,
+        //   maxWidth: menuWidth,
+        // ),
         width: menuWidth,
         height: menuHeight,
-        color: Colors.transparent,
+        color: Colors.black,
         child: StatefulBuilder(builder: (context, setState) {
           void toggleTranslationMenu() {
             setState(() {
@@ -155,49 +159,61 @@ void showContextMenu(
           }
 
           return PointerInterceptor(
-            child: AxisFlex(
-              axis: flipAxis(axis),
-              mainAxisSize: MainAxisSize.min,
+            child: Stack(
               children: [
-                LayoutBuilder(builder: (context, constraints) {
-                  return AxisFlex(
-                    axis: flipAxis(axis),
-                    children: [
+                SizedBox.expand(
+                  child: GestureDetector(
+                    onTap: onClose,
+                    child: Container(
+                      color: Colors.transparent,
+                    ),
+                  ),
+                ),
+                AxisFlex(
+                  axis: flipAxis(axis),
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    LayoutBuilder(builder: (context, constraints) {
+                      return AxisFlex(
+                        axis: flipAxis(axis),
+                        children: [
+                          AxisFlex(
+                            axis: axis,
+                            children: [
+                              ExcerptMenu(
+                                annoCfi: annoCfi,
+                                annoContent: annoContent,
+                                id: annoId,
+                                onClose: onClose,
+                                footnote: footnote,
+                                decoration: decoration,
+                                toggleTranslationMenu: toggleTranslationMenu,
+                                axis: axis,
+                              ),
+                            ],
+                          ),
+                          // SizedBox(height: bottom),
+                        ],
+                      );
+                    }),
+                    const SizedBox(height: 10),
+                    if (showTranslationMenu) ...[
+                      SizedBox.square(
+                        dimension: 10,
+                      ),
                       AxisFlex(
                         axis: axis,
                         children: [
-                          ExcerptMenu(
-                            annoCfi: annoCfi,
-                            annoContent: annoContent,
-                            id: annoId,
-                            onClose: onClose,
-                            footnote: footnote,
+                          TranslationMenu(
+                            content: annoContent,
                             decoration: decoration,
-                            toggleTranslationMenu: toggleTranslationMenu,
                             axis: axis,
                           ),
                         ],
-                      ),
-                      // SizedBox(height: bottom),
+                      )
                     ],
-                  );
-                }),
-                const SizedBox(height: 10),
-                if (showTranslationMenu) ...[
-                  SizedBox.square(
-                    dimension: 10,
-                  ),
-                  AxisFlex(
-                    axis: axis,
-                    children: [
-                      TranslationMenu(
-                        content: annoContent,
-                        decoration: decoration,
-                        axis: axis,
-                      ),
-                    ],
-                  )
-                ],
+                  ],
+                ),
               ],
             ),
           );
