@@ -46,7 +46,7 @@ class ConfigItem {
   final String? description;
   final ConfigItemType type;
   final dynamic defaultValue;
-  final List<Map<String, dynamic>>? options; // 用于select, radio等类型的选项
+  final List<Map<String, dynamic>>? options; 
 
   ConfigItem({
     required this.key,
@@ -87,7 +87,7 @@ abstract class TranslateServiceProvider {
           lastResult = result;
           // Skip intermediate results like "..."
           if (result != '...' && result.trim().isNotEmpty) {
-            return result; // 成功获取翻译结果
+            return result; 
           }
         }
 
