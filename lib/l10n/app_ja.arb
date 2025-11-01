@@ -607,5 +607,6 @@
   "mindmapStats": "ノード数：{nodeCount}、深さ：{depth}",
   "mindmapDefaultTitle": "マインドマップ",
   "mindmapDefaultNodeId": "ノード",
-  "mindmapDefaultNodeLabel": "ノード"
+  "mindmapDefaultNodeLabel": "ノード",
+  "readingPageTranslationModeTip": "この機能は本の読書時のみ利用可能、各本ごとに独立した設定があります"
 }

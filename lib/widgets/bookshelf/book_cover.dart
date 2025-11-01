@@ -28,13 +28,9 @@ class BookCover extends StatelessWidget {
 
     Widget child;
     if (hasCover) {
-      child = DecoratedBox(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: FileImage(file),
-            fit: BoxFit.cover,
-          ),
-        ),
+      child = Image.file(
+        file,
+        fit: BoxFit.cover,
       );
     } else {
       child = Container(

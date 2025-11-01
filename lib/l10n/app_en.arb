@@ -607,5 +607,6 @@
   "mindmapStats": "Nodes: {nodeCount}, Depth: {depth}",
   "mindmapDefaultTitle": "Mindmap",
   "mindmapDefaultNodeId": "node",
-  "mindmapDefaultNodeLabel": "Node"
+  "mindmapDefaultNodeLabel": "Node",
+  "readingPageTranslationModeTip": "This feature is only available when reading books, each book has independent settings"
 }

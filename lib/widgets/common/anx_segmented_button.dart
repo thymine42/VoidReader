@@ -30,6 +30,7 @@ class AnxSegmentedButton<T> extends StatelessWidget {
     this.multiSelectionEnabled = false,
     this.emptySelectionAllowed = false,
     this.showSelectedIcon = true,
+    this.enabled = true,
     this.style,
   });
 
@@ -40,6 +41,7 @@ class AnxSegmentedButton<T> extends StatelessWidget {
   final bool emptySelectionAllowed;
   final bool showSelectedIcon;
   final ButtonStyle? style;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +49,7 @@ class AnxSegmentedButton<T> extends StatelessWidget {
       segments: segments
           .map(
             (segment) => ButtonSegment<T>(
+              enabled: enabled,
               value: segment.value,
               label: Text(
                 segment.label,

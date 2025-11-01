@@ -607,5 +607,6 @@
   "mindmapStats": "Nœuds : {nodeCount}, Profondeur : {depth}",
   "mindmapDefaultTitle": "Carte Mentale",
   "mindmapDefaultNodeId": "nœud",
-  "mindmapDefaultNodeLabel": "Nœud"
+  "mindmapDefaultNodeLabel": "Nœud",
+  "readingPageTranslationModeTip": "Cette fonctionnalité n'est disponible que lors de la lecture de livres, chaque livre a des paramètres indépendants"
 }
