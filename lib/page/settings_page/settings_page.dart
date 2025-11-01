@@ -74,7 +74,11 @@ class _SettingsPageBodyState extends State<SettingsPageBody> {
                 ]
               : <Widget>[];
         },
-        body: widget.sections,
+        body: MediaQuery.removePadding(
+          removeTop: true,
+          context: context,
+          child: widget.sections,
+        ),
       ),
     );
   }
