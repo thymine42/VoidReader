@@ -39,8 +39,7 @@ class BookCover extends StatelessWidget {
     } else {
       child = Container(
         color: Colors
-            .primaries[book.title.hashCode % Colors.primaries.length]
-            .shade200,
+            .primaries[book.title.hashCode % Colors.primaries.length].shade200,
         child: Center(
           child: Icon(
             Icons.book,
