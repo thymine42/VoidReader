@@ -607,5 +607,6 @@
   "mindmapStats": "العقد: {nodeCount}، العمق: {depth}",
   "mindmapDefaultTitle": "خريطة ذهنية",
   "mindmapDefaultNodeId": "عقدة",
-  "mindmapDefaultNodeLabel": "عقدة"
+  "mindmapDefaultNodeLabel": "عقدة",
+  "readingPageTranslationModeTip": "هذه الميزة متاحة فقط عند قراءة الكتب، كل كتاب له إعدادات مستقلة"
 }

@@ -607,5 +607,6 @@
   "mindmapStats": "Nodos: {nodeCount}, Profundidad: {depth}",
   "mindmapDefaultTitle": "Mapa Mental",
   "mindmapDefaultNodeId": "nodo",
-  "mindmapDefaultNodeLabel": "Nodo"
+  "mindmapDefaultNodeLabel": "Nodo",
+  "readingPageTranslationModeTip": "Esta función solo está disponible al leer libros, cada libro tiene configuraciones independientes"
 }

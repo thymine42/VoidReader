@@ -607,5 +607,6 @@
   "mindmapStats": "Knoten: {nodeCount}, Tiefe: {depth}",
   "mindmapDefaultTitle": "Mindmap",
   "mindmapDefaultNodeId": "knoten",
-  "mindmapDefaultNodeLabel": "Knoten"
+  "mindmapDefaultNodeLabel": "Knoten",
+  "readingPageTranslationModeTip": "Diese Funktion ist nur beim Lesen von Büchern verfügbar, jedes Buch hat unabhängige Einstellungen"
 }

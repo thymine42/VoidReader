@@ -607,5 +607,6 @@
   "mindmapStats": "노드 수: {nodeCount}, 깊이: {depth}",
   "mindmapDefaultTitle": "마인드맵",
   "mindmapDefaultNodeId": "노드",
-  "mindmapDefaultNodeLabel": "노드"
+  "mindmapDefaultNodeLabel": "노드",
+  "readingPageTranslationModeTip": "이 기능은 책을 읽을 때만 사용할 수 있으며, 각 책마다 독립적인 설정이 있습니다"
 }

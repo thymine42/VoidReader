@@ -607,5 +607,6 @@
   "mindmapStats": "節點數：{nodeCount}，深度：{depth}",
   "mindmapDefaultTitle": "思維導圖",
   "mindmapDefaultNodeId": "節點",
-  "mindmapDefaultNodeLabel": "節點"
+  "mindmapDefaultNodeLabel": "節點",
+  "readingPageTranslationModeTip": "此功能僅在閱讀書籍時可用,每本書獨立設定"
 }

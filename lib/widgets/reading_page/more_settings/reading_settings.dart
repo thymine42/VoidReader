@@ -18,6 +18,9 @@ class ReadingMoreSettings extends StatefulWidget {
 }
 
 class _ReadingMoreSettingsState extends State<ReadingMoreSettings> {
+  final isReading =
+      epubPlayerKey.currentState != null && epubPlayerKey.currentState!.mounted;
+
   @override
   Widget build(BuildContext context) {
     Widget convertChinese() {
@@ -229,10 +232,17 @@ class _ReadingMoreSettingsState extends State<ReadingMoreSettings> {
           children: [
             Text(L10n.of(context).translationMode,
                 style: Theme.of(context).textTheme.titleMedium),
+            if (!isReading)
+              Text(L10n.of(context).readingPageTranslationModeTip,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall
+                      ?.copyWith(color: Colors.grey)),
             Row(
               children: [
                 Expanded(
                   child: AnxSegmentedButton<TranslationModeEnum>(
+                    enabled: isReading,
                     segments: [
                       SegmentButtonItem(
                         label: L10n.of(context).readingPageOriginal,

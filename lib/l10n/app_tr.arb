@@ -607,5 +607,6 @@
   "mindmapStats": "Düğümler: {nodeCount}, Derinlik: {depth}",
   "mindmapDefaultTitle": "Zihin Haritası",
   "mindmapDefaultNodeId": "düğüm",
-  "mindmapDefaultNodeLabel": "Düğüm"
+  "mindmapDefaultNodeLabel": "Düğüm",
+  "readingPageTranslationModeTip": "Bu özellik sadece kitap okurken kullanılabilir, her kitap bağımsız ayarlara sahiptir"
 }

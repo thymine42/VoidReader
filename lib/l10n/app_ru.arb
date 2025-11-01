@@ -607,5 +607,6 @@
   "mindmapStats": "Узлы: {nodeCount}, Глубина: {depth}",
   "mindmapDefaultTitle": "Ментальная карта",
   "mindmapDefaultNodeId": "узел",
-  "mindmapDefaultNodeLabel": "Узел"
+  "mindmapDefaultNodeLabel": "Узел",
+  "readingPageTranslationModeTip": "Эта функция доступна только при чтении книг, каждая книга имеет независимые настройки"
 }

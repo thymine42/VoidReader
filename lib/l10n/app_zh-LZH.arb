@@ -607,5 +607,6 @@
   "mindmapStats": "節點數：{nodeCount}，深度：{depth}",
   "mindmapDefaultTitle": "思維圖",
   "mindmapDefaultNodeId": "節點",
-  "mindmapDefaultNodeLabel": "節點"
+  "mindmapDefaultNodeLabel": "節點",
+  "readingPageTranslationModeTip": "此功僅閱書時可用,每書獨立設"
 }
