@@ -137,17 +137,17 @@ class _AppearanceSettingState extends State<AppearanceSetting> {
                   ],
                 ),
               )),
-              SettingsTile.switchTile(
-                title: Text(
-                    L10n.of(context).settingsAdvancedUseOriginalCoverRatio),
-                leading: const Icon(Icons.photo_size_select_large_outlined),
-                initialValue: Prefs().useOriginalCoverRatio,
-                onToggle: (bool value) {
-                  setState(() {
-                    Prefs().useOriginalCoverRatio = value;
-                  });
-                },
-              ),
+              // SettingsTile.switchTile(
+              //   title: Text(
+              //       L10n.of(context).settingsAdvancedUseOriginalCoverRatio),
+              //   leading: const Icon(Icons.photo_size_select_large_outlined),
+              //   initialValue: Prefs().useOriginalCoverRatio,
+              //   onToggle: (bool value) {
+              //     setState(() {
+              //       Prefs().useOriginalCoverRatio = value;
+              //     });
+              //   },
+              // ),
             ]),
         SettingsSection(
           title: Text(L10n.of(context).settingsAppearanceBottomNavigatorShow),
