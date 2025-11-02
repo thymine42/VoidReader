@@ -47,24 +47,6 @@ class BookItem extends ConsumerWidget {
             }) ??
             BookSyncStatusEnum.checking;
 
-    var coverWidget = Hero(
-      tag: book.coverFullPath,
-      child: Container(
-        decoration: BoxDecoration(
-          boxShadow: [
-            if (!Prefs().eInkMode)
-              BoxShadow(
-                color: Colors.grey.withAlpha(100),
-                spreadRadius: 5,
-                blurRadius: 10,
-                offset: const Offset(0, 2),
-              ),
-          ],
-        ),
-        child: BookCover(book: book),
-      ),
-    );
-
     return GestureDetector(
       onTap: () {
         pushToReadingPage(ref, context, book);
@@ -77,11 +59,32 @@ class BookItem extends ConsumerWidget {
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Prefs().useOriginalCoverRatio
-              ? coverWidget
-              : Expanded(child: coverWidget),
+          Expanded(
+            child: Hero(
+              tag: book.coverFullPath,
+              child: Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    if (!Prefs().eInkMode)
+                      BoxShadow(
+                        color: Colors.grey.withAlpha(100),
+                        spreadRadius: 5,
+                        blurRadius: 10,
+                        offset: const Offset(0, 2),
+                      ),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: BookCover(book: book),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
           const SizedBox(height: 5),
           SizedBox(
             height: 55,
