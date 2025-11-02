@@ -4,6 +4,7 @@ import 'package:anx_reader/config/shared_preference_provider.dart';
 import 'package:anx_reader/page/reading_page.dart';
 import 'package:anx_reader/widgets/common/axis_flex.dart';
 import 'package:anx_reader/widgets/context_menu/excerpt_menu.dart';
+import 'package:anx_reader/widgets/context_menu/reader_note_menu.dart';
 import 'package:anx_reader/widgets/context_menu/translation_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
@@ -256,13 +257,17 @@ class _ContextMenuOverlay extends StatefulWidget {
 class _ContextMenuOverlayState extends State<_ContextMenuOverlay>
     with WidgetsBindingObserver {
   final GlobalKey _menuKey = GlobalKey();
+  final GlobalKey<ReaderNoteMenuState> _readerNoteMenuKey =
+      GlobalKey<ReaderNoteMenuState>();
 
   late Offset _position;
   late bool _reverse;
   late bool _showTranslationMenu;
+  bool _showReaderNoteMenu = false;
   bool _waitingForFirstMeasurement = true;
   late BoxConstraints _menuConstraints;
   late double _bottomInset;
+  int? _noteId;
 
   @override
   void initState() {
@@ -271,6 +276,7 @@ class _ContextMenuOverlayState extends State<_ContextMenuOverlay>
     _position = widget.initialPlacement.offset;
     _reverse = widget.initialPlacement.shouldReverse;
     _showTranslationMenu = widget.showTranslationDefault;
+    _noteId = widget.annoId;
     _bottomInset = widget.initialBottomInset;
     _menuConstraints = _buildConstraints(widget.initialBottomInset);
     _scheduleRecalculate();
@@ -307,10 +313,17 @@ class _ContextMenuOverlayState extends State<_ContextMenuOverlay>
     );
   }
 
-  void _scheduleRecalculate() {
+  void _scheduleRecalculate({Duration delay = Duration.zero}) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      _updatePlacement();
+      if (delay == Duration.zero) {
+        _updatePlacement();
+      } else {
+        Future.delayed(delay, () {
+          if (!mounted) return;
+          _updatePlacement();
+        });
+      }
     });
   }
 
@@ -385,6 +398,48 @@ class _ContextMenuOverlayState extends State<_ContextMenuOverlay>
     _scheduleRecalculate();
   }
 
+  void _toggleReaderNoteMenu({bool? show}) {
+    setState(() {
+      _showReaderNoteMenu = show ?? !_showReaderNoteMenu;
+    });
+    _scheduleRecalculate(
+      delay: _showReaderNoteMenu
+          ? const Duration(milliseconds: 300)
+          : Duration.zero,
+    );
+  }
+
+  Future<void> _openReaderNoteMenu(int noteId) async {
+    _toggleReaderNoteMenu(show: true);
+    await _readerNoteMenuKey.currentState?.showNoteDialog(noteId);
+    _scheduleRecalculate(delay: const Duration(milliseconds: 300));
+  }
+
+  void _handleNoteCreated(int noteId) {
+    if (_noteId == noteId) {
+      return;
+    }
+    setState(() {
+      _noteId = noteId;
+    });
+  }
+
+  void _handleReaderNoteVisibilityChange(bool visible) {
+    if (_showReaderNoteMenu == visible) {
+      return;
+    }
+    setState(() {
+      _showReaderNoteMenu = visible;
+    });
+    _scheduleRecalculate(
+      delay: visible ? const Duration(milliseconds: 300) : Duration.zero,
+    );
+  }
+
+  void _handleReaderNoteSizeChanged() {
+    _scheduleRecalculate();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Positioned(
@@ -423,6 +478,9 @@ class _ContextMenuOverlayState extends State<_ContextMenuOverlay>
                                   footnote: widget.footnote,
                                   decoration: widget.decoration,
                                   toggleTranslationMenu: _toggleTranslationMenu,
+                                  toggleReaderNoteMenu: _toggleReaderNoteMenu,
+                                  openReaderNoteMenu: _openReaderNoteMenu,
+                                  onNoteCreated: _handleNoteCreated,
                                   axis: widget.axis,
                                   reverse: _reverse,
                                 ),
@@ -430,6 +488,23 @@ class _ContextMenuOverlayState extends State<_ContextMenuOverlay>
                             ),
                           ],
                         ),
+                        if (_showReaderNoteMenu) ...[
+                          const SizedBox.square(dimension: 10),
+                          AxisFlex(
+                            axis: widget.axis,
+                            children: [
+                              ReaderNoteMenu(
+                                key: _readerNoteMenuKey,
+                                noteId: _noteId,
+                                decoration: widget.decoration,
+                                axis: widget.axis,
+                                onVisibilityChange:
+                                    _handleReaderNoteVisibilityChange,
+                                onSizeChanged: _handleReaderNoteSizeChanged,
+                              ),
+                            ],
+                          ),
+                        ],
                         if (_showTranslationMenu) ...[
                           const SizedBox.square(dimension: 10),
                           AxisFlex(

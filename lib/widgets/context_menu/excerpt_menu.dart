@@ -6,7 +6,6 @@ import 'package:anx_reader/page/reading_page.dart';
 import 'package:anx_reader/utils/toast/common.dart';
 import 'package:anx_reader/widgets/book_share/excerpt_share_service.dart';
 import 'package:anx_reader/widgets/common/axis_flex.dart';
-import 'package:anx_reader/widgets/context_menu/reader_note_menu.dart';
 import 'package:anx_reader/widgets/icon_and_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -33,6 +32,9 @@ class ExcerptMenu extends StatefulWidget {
   final bool footnote;
   final BoxDecoration decoration;
   final Function() toggleTranslationMenu;
+  final void Function({bool? show}) toggleReaderNoteMenu;
+  final Future<void> Function(int noteId) openReaderNoteMenu;
+  final void Function(int noteId) onNoteCreated;
   final Axis axis;
   final bool reverse;
 
@@ -45,6 +47,9 @@ class ExcerptMenu extends StatefulWidget {
     required this.footnote,
     required this.decoration,
     required this.toggleTranslationMenu,
+    required this.toggleReaderNoteMenu,
+    required this.openReaderNoteMenu,
+    required this.onNoteCreated,
     required this.axis,
     required this.reverse,
   });
@@ -55,7 +60,6 @@ class ExcerptMenu extends StatefulWidget {
 
 class ExcerptMenuState extends State<ExcerptMenu> {
   bool deleteConfirm = false;
-  late final GlobalKey<ReaderNoteMenuState> readerNoteMenuKey;
   int? noteId;
   BookNote? _currentNote;
   late String annoType;
@@ -64,7 +68,6 @@ class ExcerptMenuState extends State<ExcerptMenu> {
   @override
   initState() {
     super.initState();
-    readerNoteMenuKey = GlobalKey<ReaderNoteMenuState>();
     annoType = Prefs().annotationType;
     annoColor = Prefs().annotationColor;
     _initializeExistingNote();
@@ -87,6 +90,11 @@ class ExcerptMenuState extends State<ExcerptMenu> {
         annoType = note.type;
         annoColor = note.color;
       });
+      if (!widget.footnote &&
+          note.readerNote != null &&
+          note.readerNote!.isNotEmpty) {
+        await widget.openReaderNoteMenu(note.id!);
+      }
     } catch (_) {
       // When the note cannot be loaded we keep the defaults from Prefs.
     }
@@ -133,6 +141,7 @@ class ExcerptMenuState extends State<ExcerptMenu> {
 
     final id = await insertBookNote(bookNote);
     bookNote.setId(id);
+    widget.onNoteCreated(id);
 
     if (mounted) {
       setState(() {
@@ -304,9 +313,12 @@ class ExcerptMenuState extends State<ExcerptMenu> {
             InkWell(
               onTap: () async {
                 await onColorSelected(annoColor, close: false);
-                // update that noteId is not null
-                setState(() {});
-                await readerNoteMenuKey.currentState!.showNoteDialog(noteId!);
+                final targetId = noteId ?? widget.id;
+                if (targetId != null) {
+                  await widget.openReaderNoteMenu(targetId);
+                } else {
+                  widget.toggleReaderNoteMenu(show: true);
+                }
               },
               child: IconAndText(
                 icon: const Icon(EvaIcons.edit_2_outline),
@@ -375,18 +387,6 @@ class ExcerptMenuState extends State<ExcerptMenu> {
                   scrollDirection: widget.axis,
                   child: annotationMenu,
                 ),
-            ],
-          ),
-          const SizedBox.square(dimension: 10),
-          AxisFlex(
-            axis: widget.axis,
-            children: [
-              ReaderNoteMenu(
-                key: readerNoteMenuKey,
-                noteId: noteId ?? widget.id,
-                decoration: widget.decoration,
-                axis: widget.axis,
-              ),
             ],
           ),
         ],

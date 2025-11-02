@@ -11,11 +11,15 @@ class ReaderNoteMenu extends StatefulWidget {
     this.noteId,
     required this.decoration,
     required this.axis,
+    required this.onVisibilityChange,
+    required this.onSizeChanged,
   });
 
   final int? noteId;
   final BoxDecoration decoration;
   final Axis axis;
+  final ValueChanged<bool> onVisibilityChange;
+  final VoidCallback onSizeChanged;
 
   @override
   State<ReaderNoteMenu> createState() => ReaderNoteMenuState();
@@ -23,64 +27,95 @@ class ReaderNoteMenu extends StatefulWidget {
 
 class ReaderNoteMenuState extends State<ReaderNoteMenu> {
   BookNote? note;
-  bool isLoading = true;
   bool _showNoteDialog = false;
   final textFieldController = TextEditingController();
   bool showSaveButton = false;
-  int? noteId;
 
   @override
   void initState() {
     super.initState();
-    if (mounted) {
-      getNoteDetail(widget.noteId);
-    }
+    getNoteDetail(widget.noteId);
   }
 
   @override
   void dispose() {
+    textFieldController.dispose();
     super.dispose();
+  }
+
+  void _notifyVisibility(bool visible) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        widget.onVisibilityChange(visible);
+      }
+    });
+  }
+
+  void _notifySizeChange() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        widget.onSizeChanged();
+      }
+    });
+  }
+
+  void _setShowNoteDialog(bool value) {
+    if (!mounted) {
+      _showNoteDialog = value;
+      return;
+    }
+    if (_showNoteDialog == value) {
+      setState(() {});
+      _notifySizeChange();
+      _notifyVisibility(value);
+      return;
+    }
+    setState(() {
+      _showNoteDialog = value;
+    });
+    _notifyVisibility(value);
+    _notifySizeChange();
   }
 
   Future<void> getNoteDetail(int? id) async {
     if (id == null) return;
     try {
-      note = await selectBookNoteById(id);
-
+      final fetchedNote = await selectBookNoteById(id);
+      note = fetchedNote;
+    
       if (note != null &&
           note!.readerNote != null &&
           note!.readerNote!.isNotEmpty) {
         textFieldController.text = note!.readerNote!;
-        setState(() {
-          _showNoteDialog = true;
-        });
+        _setShowNoteDialog(true);
       }
     } finally {
-      isLoading = false;
       if (mounted) {
         setState(() {});
+        _notifySizeChange();
       }
     }
   }
 
   Future<void> showNoteDialog(int noteId) async {
     await getNoteDetail(noteId);
-    setState(() {
-      _showNoteDialog = true;
-    });
+    _setShowNoteDialog(true);
   }
 
   void saveNote() {
     textFieldController.text = textFieldController.text.trim();
-    note!.readerNote = textFieldController.text;
-    updateBookNoteById(note!);
+    if (note != null) {
+      note!.readerNote = textFieldController.text;
+      updateBookNoteById(note!);
+    }
+    _notifySizeChange();
   }
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
         child: AnimatedSize(
-      duration: const Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 300),
       curve: Curves.easeOut,
       child: ConstrainedBox(
         constraints: BoxConstraints(
@@ -116,6 +151,7 @@ class ReaderNoteMenuState extends State<ReaderNoteMenu> {
                             setState(() {
                               showSaveButton = true;
                             });
+                            _notifySizeChange();
                           },
                         ),
                       ),
@@ -130,6 +166,7 @@ class ReaderNoteMenuState extends State<ReaderNoteMenu> {
                           setState(() {
                             showSaveButton = false;
                           });
+                          _notifySizeChange();
                         },
                       ),
                     const Spacer(),
