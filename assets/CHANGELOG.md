@@ -2,8 +2,12 @@
 - Feat: Books on the shelf can be displayed using their original cover aspect ratio
 - Feat: 书架上的书籍可以选择使用原始封面比例
 
+## 1.10.0
+- Feat: Translation can leverage context for more accurate understanding and expression
 
-## 1.9.3
+- Feat: 翻译内容可以结合上下文进行更准确的理解和表达
+
+## 1.9.2
 - Feat: Directory interface is displayed as a drawer from the side
 - Feat: AI output can be more easily selected and copied
 - Feat: In vertical layout, optimize the quotation mark style
