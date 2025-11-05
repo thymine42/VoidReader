@@ -115,7 +115,7 @@ class SyncStatus extends _$SyncStatus {
   }
 
   Future<List<Book>> _listAllBooksInBookShelf() async {
-    return await selectNotDeleteBooks();
+    return await bookDao.selectNotDeleteBooks();
   }
 
   Future<int?> pathToBookId(String filePath) async {

@@ -241,7 +241,7 @@ class _AdvancedSettingState extends State<AdvancedSetting> {
     });
 
     try {
-      final booksToCalculate = await getBooksWithoutMd5();
+      final booksToCalculate = await bookDao.getBooksWithoutMd5();
 
       final result = await MD5Service.batchCalculateMd5(
         booksToCalculate,

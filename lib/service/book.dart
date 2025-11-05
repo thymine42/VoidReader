@@ -396,7 +396,7 @@ Future<void> pushToReadingPage(
     }
   }
   ref.read(aiChatProvider.notifier).clear();
-  final initialThemes = await selectThemes();
+  final initialThemes = await themeDao.selectThemes();
   ref.read(currentReadingProvider.notifier).start(
         CurrentReadingState(
           book: book,
@@ -429,7 +429,7 @@ Future<void> pushToReadingPage(
 
 void updateBookRating(Book book, double rating) {
   book.rating = rating;
-  updateBook(book);
+  bookDao.updateBook(book);
 }
 
 Future<void> resetBookCover(Book book) async {
@@ -466,7 +466,7 @@ Future<void> saveBook(
 
   dbCoverPath = await saveImageToLocal(cover, dbCoverPath);
   if (md5 != null) {
-    provideBook ??= await getBookByMd5(md5);
+    provideBook ??= await bookDao.getBookByMd5(md5);
   }
 
   Book book = Book(
@@ -483,7 +483,7 @@ Future<void> saveBook(
       createTime: provideBook?.createTime ?? DateTime.now(),
       updateTime: DateTime.now());
 
-  book.id = await insertBook(book);
+  book.id = await bookDao.insertBook(book);
   AnxToast.show(L10n.of(navigatorKey.currentContext!).serviceImportSuccess);
   headlessInAppWebView?.dispose();
   headlessInAppWebView = null;

@@ -192,7 +192,7 @@ class _BookDetailState extends ConsumerState<BookDetail> {
 
                   setState(() {
                     widget.book.coverPath = newPath;
-                    updateBook(widget.book);
+                    bookDao.updateBook(widget.book);
                     Sync().syncData(SyncDirection.upload, ref,
                         trigger: SyncTrigger.auto);
                     ref.read(bookListProvider.notifier).refresh();
@@ -307,7 +307,7 @@ class _BookDetailState extends ConsumerState<BookDetail> {
                   onPressed: () {
                     setState(() {
                       isEditing = false;
-                      updateBook(widget.book);
+                      bookDao.updateBook(widget.book);
                       Sync().syncData(SyncDirection.upload, ref,
                           trigger: SyncTrigger.manual);
                       ref.read(bookListProvider.notifier).refresh();
@@ -390,7 +390,7 @@ class _BookDetailState extends ConsumerState<BookDetail> {
           color: Colors.grey,
         );
         return FutureBuilder<int>(
-          future: selectTotalReadingTimeByBookId(widget.book.id),
+          future: readingTimeDao.selectTotalReadingTimeByBookId(widget.book.id),
           builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
             if (snapshot.hasData) {
               int totalReadingTime = snapshot.data!;
@@ -458,7 +458,7 @@ class _BookDetailState extends ConsumerState<BookDetail> {
     Widget buildMoreDetail() {
       Widget buildReadingDetail() {
         return FutureBuilder<List<ReadingTime>>(
-          future: selectReadingTimeByBookId(widget.book.id),
+          future: readingTimeDao.selectReadingTimeByBookId(widget.book.id),
           builder: (BuildContext context,
               AsyncSnapshot<List<ReadingTime>> snapshot) {
             if (snapshot.hasData) {

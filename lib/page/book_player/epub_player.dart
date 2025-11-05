@@ -523,7 +523,7 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
 
   Future<void> renderAnnotations(InAppWebViewController controller) async {
     List<BookNote> annotationList =
-        await selectBookNotesByBookId(widget.book.id);
+        await bookNoteDao.selectBookNotesByBookId(widget.book.id);
     String allAnnotations =
         jsonEncode(annotationList.map((e) => e.toJson()).toList())
             .replaceAll('\'', '\\\'');
@@ -861,7 +861,7 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
     Book book = widget.book;
     book.lastReadPosition = cfi;
     book.readingPercentage = percentage;
-    await updateBook(book);
+    await bookDao.updateBook(book);
     if (mounted) {
       ref.read(bookListProvider.notifier).refresh();
     }

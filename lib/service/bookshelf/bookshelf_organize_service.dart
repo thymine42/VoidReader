@@ -1,4 +1,4 @@
-import 'package:anx_reader/dao/book.dart' as book_dao;
+import 'package:anx_reader/dao/book.dart';
 import 'package:anx_reader/models/book.dart';
 import 'package:anx_reader/models/tb_group.dart';
 import 'package:anx_reader/providers/book_list.dart';
@@ -17,7 +17,7 @@ class BookshelfOrganizeService {
       return;
     }
 
-    final books = await book_dao.selectBooksByIds(bookIds);
+    final books = await bookDao.selectBooksByIds(bookIds);
     final bookMap = {for (final book in books) book.id: book};
     final groupNotifier = _ref.read(groupDaoProvider.notifier);
 
@@ -58,7 +58,7 @@ class BookshelfOrganizeService {
           continue;
         }
         final updated = current.copyWith(groupId: group.groupId);
-        await book_dao.updateBook(updated);
+        await bookDao.updateBook(updated);
         bookMap[current.id] = updated;
       }
     }
@@ -69,7 +69,7 @@ class BookshelfOrganizeService {
         continue;
       }
       final updated = current.copyWith(groupId: 0);
-      await book_dao.updateBook(updated);
+      await bookDao.updateBook(updated);
       bookMap[current.id] = updated;
     }
 

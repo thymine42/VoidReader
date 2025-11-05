@@ -63,20 +63,3 @@ class ThemeDao extends BaseDao {
 }
 
 final themeDao = ThemeDao();
-
-@Deprecated('Use themeDao.insertTheme instead')
-Future<int> insertTheme(ReadTheme readTheme) => themeDao.insertTheme(readTheme);
-
-@Deprecated('Use themeDao.selectThemes instead')
-Future<List<ReadTheme>> selectThemes() => themeDao.selectThemes();
-
-@Deprecated('Use themeDao.deleteTheme instead')
-Future<void> deleteTheme(int id) => themeDao.deleteTheme(id);
-
-@Deprecated('Use themeDao.updateTheme instead')
-Future<void> updateTheme(ReadTheme readTheme) =>
-    themeDao.updateTheme(readTheme);
-
-@Deprecated('Use themeDao.selectReadThemeById instead')
-Future<ReadTheme> selectReadThemeById(int id) =>
-    themeDao.selectReadThemeById(id);

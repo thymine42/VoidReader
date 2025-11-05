@@ -1,5 +1,5 @@
-import 'package:anx_reader/dao/book.dart' as book_dao;
-import 'package:anx_reader/dao/book_note.dart' as note_dao;
+import 'package:anx_reader/dao/book.dart';
+import 'package:anx_reader/dao/book_note.dart';
 import 'package:anx_reader/models/book.dart';
 import 'package:anx_reader/models/book_note.dart';
 
@@ -53,7 +53,7 @@ class NotesRepository {
   }) async {
     final query = keyword?.trim();
 
-    final notes = await note_dao.searchBookNotesAdvanced(
+    final notes = await bookNoteDao.searchBookNotesAdvanced(
       keyword: query,
       bookId: bookId,
       from: from,
@@ -66,7 +66,7 @@ class NotesRepository {
     }
 
     final bookIds = notes.map((note) => note.bookId).toSet().toList();
-    final books = await book_dao.selectBooksByIds(bookIds);
+    final books = await bookDao.selectBooksByIds(bookIds);
     final bookMap = {for (final book in books) book.id: book};
 
     final results = <NoteSearchResult>[];

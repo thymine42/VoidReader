@@ -1,5 +1,5 @@
 import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/dao/book.dart' as book_dao;
+import 'package:anx_reader/dao/book.dart';
 import 'package:anx_reader/enums/sort_field.dart';
 import 'package:anx_reader/enums/sort_order.dart';
 import 'package:anx_reader/models/book.dart';
@@ -77,7 +77,7 @@ class BookList extends _$BookList {
 
   @override
   Future<List<List<Book>>> build() async {
-    final books = await book_dao.selectNotDeleteBooks();
+    final books = await bookDao.selectNotDeleteBooks();
     final sortedBooks = sortBooks(books);
     return groupBooks(sortedBooks);
   }
@@ -94,7 +94,7 @@ class BookList extends _$BookList {
   }
 
   void updateBook(Book book) {
-    book_dao.updateBook(book);
+    bookDao.updateBook(book);
     refresh();
   }
 
@@ -139,7 +139,7 @@ class BookList extends _$BookList {
       return;
     }
 
-    final books = await book_dao.selectNotDeleteBooks();
+    final books = await bookDao.selectNotDeleteBooks();
 
     final filteredBooks = books.where((book) {
       return book.title.contains(value) || book.author.contains(value);

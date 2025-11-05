@@ -110,7 +110,7 @@ class _BookNotesPageState extends State<BookNotesPage> {
 
   Future<void> handleExportNotes(BuildContext context, Book book,
       {List<BookNote>? notes}) async {
-    notes ??= await selectBookNotesByBookId(book.id);
+    notes ??= await bookNoteDao.selectBookNotesByBookId(book.id);
 
     showModalBottomSheet(
         context: context,

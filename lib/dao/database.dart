@@ -226,7 +226,7 @@ class DBHelper {
       case 3:
         // remove former book style
         Prefs().removeBookStyle();
-        selectBooks().then((books) {
+        bookDao.selectBooks().then((books) {
           for (var book in books) {
             if (!File(book.coverFullPath).existsSync()) {
               resetBookCover(book);

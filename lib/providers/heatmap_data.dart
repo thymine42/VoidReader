@@ -7,6 +7,6 @@ part 'heatmap_data.g.dart';
 class HeatmapData extends _$HeatmapData {
   @override
   FutureOr<Map<DateTime, int>> build() async {
-    return await selectAllReadingTimeGroupByDay();
+    return await readingTimeDao.selectAllReadingTimeGroupByDay();
   }
 }

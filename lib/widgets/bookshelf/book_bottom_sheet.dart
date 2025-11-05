@@ -30,7 +30,7 @@ class BookBottomSheet extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     Future<void> handleDelete(BuildContext context) async {
       Navigator.pop(context);
-      await updateBook(Book(
+      await bookDao.updateBook(Book(
         id: book.id,
         title: book.title,
         coverPath: book.coverPath,

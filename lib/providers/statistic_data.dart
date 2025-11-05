@@ -72,9 +72,9 @@ class StatisticData extends _$StatisticData {
 
   Future<List<int>> _getReadingTime(ChartMode mode, DateTime date) {
     final readingTimeMap = {
-      ChartMode.week: () => selectReadingTimeOfWeek(date),
-      ChartMode.month: () => selectReadingTimeOfMonth(date),
-      ChartMode.year: () => selectReadingTimeOfYear(date),
+      ChartMode.week: () => readingTimeDao.selectReadingTimeOfWeek(date),
+      ChartMode.month: () => readingTimeDao.selectReadingTimeOfMonth(date),
+      ChartMode.year: () => readingTimeDao.selectReadingTimeOfYear(date),
       ChartMode.heatmap: () => Future.value([0]),
     };
     return readingTimeMap[mode]!();
@@ -109,13 +109,14 @@ class StatisticData extends _$StatisticData {
     DateTime date,
   ) {
     if (isSelectingDay) {
-      return selectBookReadingTimeOfDay(date);
+      return readingTimeDao.selectBookReadingTimeOfDay(date);
     } else {
       final bookReadingTimeMap = {
-        ChartMode.week: () => selectBookReadingTimeOfWeek(date),
-        ChartMode.month: () => selectBookReadingTimeOfMonth(date),
-        ChartMode.year: () => selectBookReadingTimeOfYear(date),
-        ChartMode.heatmap: () => selectBookReadingTimeOfAll(date),
+        ChartMode.week: () => readingTimeDao.selectBookReadingTimeOfWeek(date),
+        ChartMode.month: () =>
+            readingTimeDao.selectBookReadingTimeOfMonth(date),
+        ChartMode.year: () => readingTimeDao.selectBookReadingTimeOfYear(date),
+        ChartMode.heatmap: () => readingTimeDao.selectBookReadingTimeOfAll(),
       };
       return bookReadingTimeMap[mode]!();
     }

@@ -121,7 +121,7 @@ class ReadingPageState extends ConsumerState<ReadingPage>
     WakelockPlus.disable();
     showStatusBar();
     WidgetsBinding.instance.removeObserver(this);
-    insertReadingTime(ReadingTime(
+    readingTimeDao.insertReadingTime(ReadingTime(
         bookId: _book.id, readingTime: _readTimeWatch.elapsed.inSeconds));
     audioHandler.stop();
     // if (_volumeKeyListenerAttached) {
@@ -234,7 +234,7 @@ class ReadingPageState extends ConsumerState<ReadingPage>
             state == AppLifecycleState.hidden ||
             state == AppLifecycleState.detached) {
           epubPlayerKey.currentState?.saveReadingProgress();
-          insertReadingTime(ReadingTime(
+          readingTimeDao.insertReadingTime(ReadingTime(
               bookId: _book.id, readingTime: _readTimeWatch.elapsed.inSeconds));
         }
         break;
@@ -304,7 +304,7 @@ class ReadingPageState extends ConsumerState<ReadingPage>
   }
 
   Future<void> styleHandler(StateSetter modalSetState) async {
-    List<ReadTheme> themes = await selectThemes();
+    List<ReadTheme> themes = await themeDao.selectThemes();
     setState(() {
       _currentPage = StyleWidget(
         themes: themes,

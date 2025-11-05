@@ -80,7 +80,7 @@ class ExcerptMenuState extends State<ExcerptMenu> {
     }
 
     try {
-      final note = await selectBookNoteById(existingId);
+      final note = await bookNoteDao.selectBookNoteById(existingId);
       if (!mounted) {
         return;
       }
@@ -107,7 +107,7 @@ class ExcerptMenuState extends State<ExcerptMenu> {
     }
 
     try {
-      return await selectBookNoteById(existingId);
+      return await bookNoteDao.selectBookNoteById(existingId);
     } catch (_) {
       return null;
     }
@@ -139,7 +139,7 @@ class ExcerptMenuState extends State<ExcerptMenu> {
       updateTime: now,
     );
 
-    final id = await insertBookNote(bookNote);
+    final id = await bookNoteDao.save(bookNote);
     bookNote.setId(id);
     widget.onNoteCreated(id);
 
@@ -172,7 +172,7 @@ class ExcerptMenuState extends State<ExcerptMenu> {
   void deleteHandler() {
     if (deleteConfirm) {
       if (widget.id != null) {
-        deleteBookNoteById(widget.id!);
+        bookNoteDao.deleteBookNoteById(widget.id!);
         epubPlayerKey.currentState!.removeAnnotation(widget.annoCfi);
       }
       widget.onClose();

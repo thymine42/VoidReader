@@ -1,5 +1,5 @@
-import 'package:anx_reader/dao/book.dart' as book_dao;
-import 'package:anx_reader/dao/reading_time.dart' as reading_time_dao;
+import 'package:anx_reader/dao/book.dart';
+import 'package:anx_reader/dao/reading_time.dart';
 import 'package:anx_reader/models/book.dart';
 import 'package:anx_reader/models/reading_time.dart';
 import 'package:anx_reader/utils/date/convert_seconds.dart';
@@ -34,7 +34,7 @@ class ReadingHistoryRepository {
     DateTime? to,
     int limit = 20,
   }) async {
-    final entries = await reading_time_dao.queryReadingHistory(
+    final entries = await readingTimeDao.queryReadingHistory(
       bookId: bookId,
       from: from,
       to: to,
@@ -46,7 +46,7 @@ class ReadingHistoryRepository {
     }
 
     final bookIds = entries.map((entry) => entry.bookId).toSet().toList();
-    final books = await book_dao.selectBooksByIds(bookIds);
+    final books = await bookDao.selectBooksByIds(bookIds);
     final bookMap = {for (final book in books) book.id: book};
 
     final records = <ReadingHistoryRecord>[];

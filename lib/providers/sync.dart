@@ -317,8 +317,8 @@ class Sync extends _$Sync {
     if (client == null) return;
 
     AnxLog.info('Sync: syncFiles');
-    List<String> currentBooks = await getCurrentBooks();
-    List<String> currentCover = await getCurrentCover();
+    List<String> currentBooks = await bookDao.getCurrentBooks();
+    List<String> currentCover = await bookDao.getCurrentCover();
 
     List<String> remoteBooksName = [];
     List<String> remoteCoversName = [];
@@ -615,7 +615,7 @@ class Sync extends _$Sync {
 
     for (final bookId in bookIds) {
       try {
-        final book = await selectBookById(bookId);
+        final book = await bookDao.selectBookById(bookId);
         AnxLog.info('WebDAV: Downloading book ID $bookId: ${book.title}');
         await _downloadBook(book);
         successCount++;
@@ -647,8 +647,8 @@ class Sync extends _$Sync {
   }
 
   Future<bool> isCurrentEmpty() async {
-    List<String> currentBooks = await getCurrentBooks();
-    List<String> currentCover = await getCurrentCover();
+    List<String> currentBooks = await bookDao.getCurrentBooks();
+    List<String> currentCover = await bookDao.getCurrentCover();
     List<String> totalCurrentFiles = [...currentCover, ...currentBooks];
     return totalCurrentFiles.isEmpty;
   }

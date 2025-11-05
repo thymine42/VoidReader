@@ -25,7 +25,7 @@ class MD5Service {
   }
 
   static Future<Book?> checkDuplicateByMd5(String md5) async {
-    return await getBookByMd5(md5);
+    return await bookDao.getBookByMd5(md5);
   }
 
   static Future<MD5CalculationResult> batchCalculateMd5(List<Book> books,
@@ -49,7 +49,7 @@ class MD5Service {
 
       final md5 = await calculateFileMd5(book.fileFullPath);
       if (md5 != null) {
-        await updateBookMd5(book.id, md5);
+        await bookDao.updateBookMd5(book.id, md5);
         calculated++;
       } else {
         failed++;
@@ -66,8 +66,8 @@ class MD5Service {
   }
 
   static Future<MD5Statistics> getMd5Statistics() async {
-    final allBooks = await selectNotDeleteBooks();
-    final booksWithoutMd5 = await getBooksWithoutMd5();
+    final allBooks = await bookDao.selectNotDeleteBooks();
+    final booksWithoutMd5 = await bookDao.getBooksWithoutMd5();
 
     int localFilesCount = 0;
     int localFilesWithoutMd5 = 0;

@@ -11,7 +11,7 @@ class TotalReadingTime extends _$TotalReadingTime {
   }
 
   Future<int> _getTotalReadingTime() async {
-    return await selectTotalReadingTime();
+    return await readingTimeDao.selectTotalReadingTime();
   }
 
   Future<void> refresh() async {

@@ -1,4 +1,4 @@
-import 'package:anx_reader/dao/book.dart' as book_dao;
+import 'package:anx_reader/dao/book.dart';
 import 'package:anx_reader/models/book.dart';
 
 class BookSearchResult {
@@ -30,7 +30,7 @@ class BooksRepository {
       return const <int, Book>{};
     }
 
-    final books = await book_dao.selectBooksByIds(uniqueIds);
+    final books = await bookDao.selectBooksByIds(uniqueIds);
     return {for (final book in books) book.id: book};
   }
 
@@ -44,9 +44,9 @@ class BooksRepository {
 
     List<Book> books;
     if (query.isEmpty) {
-      books = await book_dao.selectBooks();
+      books = await bookDao.selectBooks();
     } else {
-      books = await book_dao.searchBooks(query);
+      books = await bookDao.searchBooks(query);
     }
 
     if (!includeDeleted) {

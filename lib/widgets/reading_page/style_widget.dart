@@ -334,7 +334,7 @@ class StyleWidgetState extends State<StyleWidget> {
                   ),
                   child: InkWell(
                     onTap: () async {
-                      int currId = await insertTheme(ReadTheme(
+                      int currId = await themeDao.insertTheme(ReadTheme(
                           backgroundColor: 'ff121212',
                           textColor: 'ffcccccc',
                           backgroundImagePath: ''));
@@ -450,7 +450,7 @@ class _ThemeChangeWidgetState extends State<ThemeChangeWidget> {
             setState(() {
               readTheme.backgroundColor = pickingColor!;
             });
-            updateTheme(readTheme);
+            themeDao.updateTheme(readTheme);
           }
         },
         icon: Icon(Icons.circle,
@@ -465,7 +465,7 @@ class _ThemeChangeWidgetState extends State<ThemeChangeWidget> {
               setState(() {
                 readTheme.textColor = pickingColor!;
               });
-              updateTheme(readTheme);
+              themeDao.updateTheme(readTheme);
             }
           },
           icon: Icon(Icons.text_fields,
@@ -475,7 +475,7 @@ class _ThemeChangeWidgetState extends State<ThemeChangeWidget> {
       ),
       IconButton(
         onPressed: () {
-          deleteTheme(readTheme.id!);
+          themeDao.deleteTheme(readTheme.id!);
           widget.setCurrentPage(const SizedBox(height: 1));
           // setState(() {});
         },

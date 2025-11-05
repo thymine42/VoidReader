@@ -6,7 +6,7 @@ class StatisticService {
 
   StatisticService._() {
     Future.microtask(() async {
-      readingTimes = await selectAllReadingTime();
+      readingTimes = await readingTimeDao.selectAllReadingTime();
     });
   }
 

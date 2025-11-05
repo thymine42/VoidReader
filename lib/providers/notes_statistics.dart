@@ -14,7 +14,7 @@ class NotesStatistics extends _$NotesStatistics {
   }
 
   Future<Map<String, int>> _getNotesStatistics() async {
-    return await selectNumberOfNotesAndBooks();
+    return await bookNoteDao.selectNumberOfNotesAndBooks();
   }
 
   Future<void> refresh() async {
@@ -31,8 +31,9 @@ class BookIdAndNotes extends _$BookIdAndNotes {
     final result = <Map<String, dynamic>>[];
 
     for (final data in bookDataList) {
-      Book book = await selectBookById(data['bookId']);
-      int readingTime = await selectTotalReadingTimeByBookId(book.id);
+      Book book = await bookDao.selectBookById(data['bookId']);
+      int readingTime =
+          await readingTimeDao.selectTotalReadingTimeByBookId(book.id);
       result.add({
         'bookId': data['bookId'],
         'numberOfNotes': data['numberOfNotes'],
@@ -45,7 +46,7 @@ class BookIdAndNotes extends _$BookIdAndNotes {
   }
 
   Future<List<Map<String, dynamic>>> _getBookIdAndNotes() async {
-    return await selectAllBookIdAndNotes();
+    return await bookNoteDao.selectAllBookIdAndNotes();
   }
 
   Future<void> refresh() async {
@@ -62,7 +63,7 @@ class BookReadingTime extends _$BookReadingTime {
   }
 
   Future<int> _getBookReadingTime(int bookId) async {
-    return await selectTotalReadingTimeByBookId(bookId);
+    return await readingTimeDao.selectTotalReadingTimeByBookId(bookId);
   }
 
   Future<void> refresh(int bookId) async {

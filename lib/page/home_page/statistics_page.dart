@@ -38,9 +38,9 @@ class _StatisticPageState extends State<StatisticPage> {
       widget.controller ?? ScrollController();
 
   void setNumbers() async {
-    final numberOfBook = await selectTotalNumberOfBook();
-    final numberOfDate = await selectTotalNumberOfDate();
-    final numberOfNotes = await selectTotalNumberOfNotes();
+    final numberOfBook = await readingTimeDao.selectTotalNumberOfBook();
+    final numberOfDate = await readingTimeDao.selectTotalNumberOfDate();
+    final numberOfNotes = await readingTimeDao.selectTotalNumberOfNotes();
     setState(() {
       totalNumberOfBook = numberOfBook;
       totalNumberOfDate = numberOfDate;
@@ -231,7 +231,7 @@ class _DateBooksState extends ConsumerState<DateBooks> {
   void dispose() {
     super.dispose();
     if (deleteBookIds.isNotEmpty) {
-      deleteReadingTimeByBookId(deleteBookIds);
+      readingTimeDao.deleteReadingTimeByBookId(deleteBookIds);
     }
   }
 
@@ -400,7 +400,7 @@ class BookStatisticItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Book>(
-      future: selectBookById(bookId),
+      future: bookDao.selectBookById(bookId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           return GestureDetector(

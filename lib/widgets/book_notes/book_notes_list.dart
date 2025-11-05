@@ -63,7 +63,8 @@ class _BookNotesListState extends ConsumerState<BookNotesList> {
   }
 
   Future<void> _loadBookNotes() async {
-    List<BookNote> notes = await selectBookNotesByBookId(widget.book.id);
+    List<BookNote> notes =
+        await bookNoteDao.selectBookNotesByBookId(widget.book.id);
     setState(() {
       bookNotes = notes;
       showNotes = bookNotes;
@@ -196,7 +197,7 @@ class _BookNotesListState extends ConsumerState<BookNotesList> {
                       createTime: bookNote.createTime,
                       updateTime: DateTime.now(),
                     );
-                    updateBookNoteById(updatedNote);
+                    bookNoteDao.updateBookNoteById(updatedNote);
                     Sync().syncData(SyncDirection.upload, ref,
                         trigger: SyncTrigger.manual);
                     _loadBookNotes();
@@ -563,7 +564,7 @@ class _BookNotesListState extends ConsumerState<BookNotesList> {
         delete: () {
           final notesToDelete = List<BookNote>.from(selectedNotes);
           for (final note in notesToDelete) {
-            deleteBookNoteById(note.id!);
+            bookNoteDao.deleteBookNoteById(note.id!);
           }
 
           Sync().syncData(SyncDirection.upload, ref, trigger: SyncTrigger.auto);

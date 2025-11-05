@@ -12,7 +12,7 @@ class NotesPageCurrentBook extends _$NotesPageCurrentBook {
   Future<CurrentNotesDetail> build() async {
     final idAndNotes = await ref.watch(bookIdAndNotesProvider.future);
 
-    Book book = await selectBookById(idAndNotes[0]['bookId']!);
+    Book book = await bookDao.selectBookById(idAndNotes[0]['bookId']!);
 
     return CurrentNotesDetail(
         book: book, numberOfNotes: idAndNotes[0]['numberOfNotes']!);

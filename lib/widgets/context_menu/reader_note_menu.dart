@@ -80,7 +80,7 @@ class ReaderNoteMenuState extends State<ReaderNoteMenu> {
   Future<void> getNoteDetail(int? id) async {
     if (id == null) return;
     try {
-      final fetchedNote = await selectBookNoteById(id);
+      final fetchedNote = await bookNoteDao.selectBookNoteById(id);
       note = fetchedNote;
 
       if (note != null &&
@@ -106,7 +106,7 @@ class ReaderNoteMenuState extends State<ReaderNoteMenu> {
     textFieldController.text = textFieldController.text.trim();
     if (note != null) {
       note!.readerNote = textFieldController.text;
-      updateBookNoteById(note!);
+      bookNoteDao.updateBookNoteById(note!);
     }
     _notifySizeChange();
   }
