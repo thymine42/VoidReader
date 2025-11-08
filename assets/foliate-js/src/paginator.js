@@ -1139,48 +1139,48 @@ export class Paginator extends HTMLElement {
     this.dispatchEvent(new CustomEvent('relocate', { detail }))
   }
   #handleScrollBoundaries() {
-    if (!this.scrolled || this.#locked) return
+    // if (!this.scrolled || this.#locked) return
     
-    // Only trigger transitions when very close to boundaries (95% through)
-    const threshold = Math.min(50, this.size * 0.05) // Small threshold or 5% of size
-    const atEnd = this.viewSize - this.end <= threshold
-    const atStart = this.start <= threshold
+    // // Only trigger transitions when very close to boundaries (95% through)
+    // const threshold = Math.min(50, this.size * 0.05) // Small threshold or 5% of size
+    // const atEnd = this.viewSize - this.end <= threshold
+    // const atStart = this.start <= threshold
     
-    // Only auto-load if we're actually at the boundary, not just approaching
-    if (atEnd && !this.#loadingNext) {
-      const nextIndex = this.#adjacentIndex(1)
-      if (nextIndex != null) {
-        this.#loadingNext = true
-        // Small delay to ensure scroll has finished
-        setTimeout(() => {
-          this.#goTo({
-            index: nextIndex,
-            anchor: () => 0,
-          }).then(() => {
-            this.#loadingNext = false
-          }).catch(() => {
-            this.#loadingNext = false
-          })
-        }, 200)
-      }
-    }
+    // // Only auto-load if we're actually at the boundary, not just approaching
+    // if (atEnd && !this.#loadingNext) {
+    //   const nextIndex = this.#adjacentIndex(1)
+    //   if (nextIndex != null) {
+    //     this.#loadingNext = true
+    //     // Small delay to ensure scroll has finished
+    //     setTimeout(() => {
+    //       this.#goTo({
+    //         index: nextIndex,
+    //         anchor: () => 0,
+    //       }).then(() => {
+    //         this.#loadingNext = false
+    //       }).catch(() => {
+    //         this.#loadingNext = false
+    //       })
+    //     }, 200)
+    //   }
+    // }
     
-    if (atStart && !this.#loadingPrev) {
-      const prevIndex = this.#adjacentIndex(-1)
-      if (prevIndex != null) {
-        this.#loadingPrev = true
-        setTimeout(() => {
-          this.#goTo({
-            index: prevIndex,
-            anchor: () => 1,
-          }).then(() => {
-            this.#loadingPrev = false
-          }).catch(() => {
-            this.#loadingPrev = false
-          })
-        }, 200)
-      }
-    }
+    // if (atStart && !this.#loadingPrev) {
+    //   const prevIndex = this.#adjacentIndex(-1)
+    //   if (prevIndex != null) {
+    //     this.#loadingPrev = true
+    //     setTimeout(() => {
+    //       this.#goTo({
+    //         index: prevIndex,
+    //         anchor: () => 1,
+    //       }).then(() => {
+    //         this.#loadingPrev = false
+    //       }).catch(() => {
+    //         this.#loadingPrev = false
+    //       })
+    //     }, 200)
+    //   }
+    // }
   }
   async #display(promise) {
     const { index, src, anchor, onLoad, select } = await promise
