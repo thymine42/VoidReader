@@ -27,7 +27,7 @@ abstract class StatisticsDashboardTileBase {
     required int columnUnits,
     required double baseTileHeight,
   }) {
-    final span =  metadata.columnSpan;
+    final span = metadata.columnSpan;
 
     DashboardTileShell buildShell({required bool includeRemoveButton}) {
       return DashboardTileShell(
