@@ -12,8 +12,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:staggered_reorderable/staggered_reorderable.dart';
 
-const double _baseTileHeight = 90.0;
-
 final Map<StatisticsDashboardTileType, StatisticsDashboardTileMetadata>
     _tileMetadata = {
   StatisticsDashboardTileType.totalTime: StatisticsDashboardTileMetadata(
@@ -266,6 +264,7 @@ class _StatisticsDashboardState extends State<StatisticsDashboard> {
                 canDrag: true,
                 scrollDirection: Axis.vertical,
                 onReorder: _handleReorder,
+                fixedCellHeight: 50,
               );
             },
           ),
@@ -277,10 +276,10 @@ class _StatisticsDashboardState extends State<StatisticsDashboard> {
     return _workingTiles.map((type) {
       final metadata = _tileMetadata[type]!;
       final span = math.min(columnUnits, metadata.columnSpan);
-      final tileHeight = _baseTileHeight * metadata.rowSpan;
+      // final tileHeight = _baseTileHeight * metadata.rowSpan;
       final tile = SizedBox.expand(
         child: _DashboardTileShell(
-          height: tileHeight,
+          // height: tileHeight,
           child: _buildTileContent(metadata),
           showRemoveButton: _workingTiles.length > 1,
           onRemove:
@@ -319,13 +318,13 @@ int _calculateColumnUnits(double width) {
 
 class _DashboardTileShell extends StatelessWidget {
   const _DashboardTileShell({
-    required this.height,
+    // required this.height,
     required this.child,
     required this.showRemoveButton,
     this.onRemove,
   });
 
-  final double height;
+  // final double height;
   final Widget child;
   final bool showRemoveButton;
   final VoidCallback? onRemove;
@@ -334,7 +333,7 @@ class _DashboardTileShell extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Container(
-      constraints: BoxConstraints.tightFor(height: height),
+      // constraints: BoxConstraints.tightFor(height: height),
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(

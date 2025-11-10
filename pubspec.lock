@@ -2001,10 +2001,11 @@ packages:
   staggered_reorderable:
     dependency: "direct main"
     description:
-      name: staggered_reorderable
-      sha256: "0aa94d065714396b87d403d3bcae65fc278e566de9c76d9197f05f5c3168ccaf"
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: "8c52a6f011a1d3b4af8882430e5018f014d1d2e6"
+      resolved-ref: "8c52a6f011a1d3b4af8882430e5018f014d1d2e6"
+      url: "https://github.com/Anxcye/staggered_reorderable.git"
+    source: git
     version: "0.0.14"
   state_notifier:
     dependency: transitive

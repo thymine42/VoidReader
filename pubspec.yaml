@@ -115,7 +115,10 @@ dependencies:
   scrollable_positioned_list: ^0.3.8
   math_expressions: ^2.5.0
   share_handler: ^0.0.25
-  staggered_reorderable: ^0.0.14
+  staggered_reorderable:
+    git:
+      url: https://github.com/Anxcye/staggered_reorderable.git
+      ref: 8c52a6f011a1d3b4af8882430e5018f014d1d2e6
 
 dependency_overrides:
   openai_dart:
