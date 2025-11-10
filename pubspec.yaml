@@ -118,7 +118,7 @@ dependencies:
   staggered_reorderable:
     git:
       url: https://github.com/Anxcye/staggered_reorderable.git
-      ref: 8c52a6f011a1d3b4af8882430e5018f014d1d2e6
+      ref: b56cb61ca41dcf7793762beff07259603cf47833
 
 dependency_overrides:
   openai_dart:
