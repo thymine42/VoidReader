@@ -66,31 +66,28 @@ class DashboardTileShell extends ConsumerWidget {
     final state = ref.watch(dashboardTilesProvider);
     final showRemoveButton =
         state.isEditing && state.workingTiles.length > 1 && onRemove != null;
-    return SizedBox.expand(
-      child: FilledContainer(
-        width: double.infinity,
-        height: double.infinity,
-        padding: const EdgeInsets.all(6),
-        radius: 16,
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            child,
-            if (showRemoveButton)
-              Positioned(
-                top: -8,
-                right: -8,
-                child: IconButton.filledTonal(
-                  iconSize: 18,
-                  visualDensity: VisualDensity.compact,
-                  tooltip: 'Remove card', // TODO(l10n)
-                  onPressed: onRemove,
-                  icon: const Icon(Icons.close),
-                ),
-              ),
-          ],
+    return Stack(
+      children: [
+        FilledContainer(
+          width: double.infinity,
+          height: double.infinity,
+          padding: const EdgeInsets.all(6),
+          radius: 16,
+          child: child,
         ),
-      ),
+        if (showRemoveButton)
+          Positioned(
+            top: 0,
+            right: 0,
+            child: IconButton.filledTonal(
+              iconSize: 18,
+              visualDensity: VisualDensity.compact,
+              tooltip: 'Remove card', // TODO(l10n)
+              onPressed: onRemove,
+              icon: const Icon(Icons.close),
+            ),
+          ),
+      ],
     );
   }
 }
