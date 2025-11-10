@@ -2,7 +2,6 @@ import 'dart:math' as math;
 
 import 'package:anx_reader/config/shared_preference_provider.dart';
 import 'package:anx_reader/models/statistics_dashboard_tile.dart';
-import 'package:anx_reader/widgets/common/container/filled_container.dart';
 import 'package:anx_reader/widgets/statistic/dashboard_tiles/dashboard_tile_metadata.dart';
 import 'package:anx_reader/widgets/statistic/dashboard_tiles/library_totals_tile.dart';
 import 'package:anx_reader/widgets/statistic/dashboard_tiles/period_summary_tile.dart';
@@ -18,24 +17,24 @@ final Map<StatisticsDashboardTileType, StatisticsDashboardTileMetadata>
     type: StatisticsDashboardTileType.totalTime,
     title: 'Lifetime reading', // TODO(l10n)
     description: 'Hours and minutes logged in Anx Reader.', // TODO(l10n)
-    columnSpan: 4,
-    rowSpan: 2,
+    columnSpan: 2,
+    rowSpan: 1,
     icon: Icons.timer_outlined,
   ),
   StatisticsDashboardTileType.libraryTotals: StatisticsDashboardTileMetadata(
     type: StatisticsDashboardTileType.libraryTotals,
     title: 'Library totals', // TODO(l10n)
     description: 'Books, reading days, and notes overview.', // TODO(l10n)
-    columnSpan: 4,
-    rowSpan: 2,
+    columnSpan: 2,
+    rowSpan: 1,
     icon: Icons.menu_book_outlined,
   ),
   StatisticsDashboardTileType.periodSummary: StatisticsDashboardTileMetadata(
     type: StatisticsDashboardTileType.periodSummary,
     title: 'Current period', // TODO(l10n)
     description: 'Highlights for the selected period below.', // TODO(l10n)
-    columnSpan: 4,
-    rowSpan: 2,
+    columnSpan: 2,
+    rowSpan: 1,
     icon: Icons.bar_chart_rounded,
   ),
   StatisticsDashboardTileType.topBook: StatisticsDashboardTileMetadata(
@@ -211,9 +210,6 @@ class _StatisticsDashboardState extends State<StatisticsDashboard> {
       children: [
         Row(
           children: [
-            Text('Dashboard', // TODO(l10n)
-                style: Theme.of(context).textTheme.titleLarge),
-            const Spacer(),
             if (_hasUnsavedChanges)
               Row(
                 mainAxisSize: MainAxisSize.min,
@@ -264,7 +260,7 @@ class _StatisticsDashboardState extends State<StatisticsDashboard> {
                 canDrag: true,
                 scrollDirection: Axis.vertical,
                 onReorder: _handleReorder,
-                fixedCellHeight: 50,
+                fixedCellHeight: 90,
               );
             },
           ),
@@ -309,11 +305,10 @@ class _StatisticsDashboardState extends State<StatisticsDashboard> {
         return TopBookTile(snapshot: widget.snapshot, metadata: metadata);
     }
   }
-}
 
-int _calculateColumnUnits(double width) {
-  print('width: $width, units: ${(width ~/ 300) * 2 + 2}');
-  return (width ~/ 300) * 2 + 2;
+  int _calculateColumnUnits(double width) {
+    return (width ~/ 300) * 2 + 2;
+  }
 }
 
 class _DashboardTileShell extends StatelessWidget {
@@ -333,9 +328,8 @@ class _DashboardTileShell extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Container(
-      // constraints: BoxConstraints.tightFor(height: height),
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(6),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
