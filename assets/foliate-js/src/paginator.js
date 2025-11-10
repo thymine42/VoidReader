@@ -1,7 +1,8 @@
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 const lerp = (min, max, x) => x * (max - min) + min
-const easeOutSine = x => Math.sin((x * Math.PI) / 2)
+// const easeOutSine = x => Math.sin((x * Math.PI) / 2)
+const easeOutSine = x => 1 - (1 - x) * (1 - x);
 const animate = (a, b, duration, ease, render) => new Promise(resolve => {
   let start
   const step = now => {
@@ -787,7 +788,7 @@ export class Paginator extends HTMLElement {
     const currentOffset = this.#container[this.scrollProp]
     const signedOffset = this.#rtl ? -currentOffset : currentOffset
     let page = Math.round(signedOffset / size)
-    const velocityThreshold = 0.35
+    const velocityThreshold = 0.25
     if (Math.abs(velocity) > velocityThreshold)
       page += velocity > 0 ? 1 : -1
     const originPage = state?.startPage ?? this.page
