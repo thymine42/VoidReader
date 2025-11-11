@@ -102,7 +102,7 @@ class DashboardTileShell extends ConsumerWidget {
                   tile.title,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
-              buildContent(context, ref),
+              Expanded(child: buildContent(context, ref)),
             ],
           ),
         ),

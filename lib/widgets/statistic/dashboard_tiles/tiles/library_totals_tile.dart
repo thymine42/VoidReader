@@ -23,7 +23,6 @@ class LibraryTotalsTile extends StatisticsDashboardTileBase {
     BuildContext context,
     WidgetRef ref,
   ) {
-    final textTheme = Theme.of(context).textTheme;
     final l10n = L10n.of(context);
 
     return AsyncSkeletonWrapper<List>(
@@ -37,34 +36,28 @@ class LibraryTotalsTile extends StatisticsDashboardTileBase {
           final booksRead = data[0] as int;
           final daysOfReading = data[1] as int;
           final notesCount = data[2] as int;
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(metadata.title, style: textTheme.titleMedium),
-              Row(
-                children: [
-                  Expanded(
-                    child: _NumberTile(
-                      icon: Icons.auto_stories,
-                      label: l10n.statisticBooksRead(booksRead),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: _NumberTile(
-                      icon: Icons.calendar_today,
-                      label: l10n.statisticDaysOfReading(daysOfReading),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: _NumberTile(
-                      icon: Icons.note_alt_outlined,
-                      label: l10n.statisticNotes(notesCount),
-                    ),
-                  ),
-                ],
+              Expanded(
+                child: _NumberTile(
+                  icon: Icons.auto_stories,
+                  label: l10n.statisticBooksRead(booksRead),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: _NumberTile(
+                  icon: Icons.calendar_today,
+                  label: l10n.statisticDaysOfReading(daysOfReading),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: _NumberTile(
+                  icon: Icons.note_alt_outlined,
+                  label: l10n.statisticNotes(notesCount),
+                ),
               ),
             ],
           );
@@ -86,15 +79,14 @@ class _NumberTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         color: Theme.of(context).colorScheme.surfaceContainerHighest,
       ),
-      child: Row(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, size: 20),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              label,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
+          Icon(icon, size: 30),
+          SizedBox(height: 2),
+          Text(
+            label,
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
         ],
       ),
