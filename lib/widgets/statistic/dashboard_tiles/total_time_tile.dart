@@ -26,7 +26,7 @@ class TotalTimeTile extends StatisticsDashboardTileBase {
     WidgetRef ref,
   ) {
     final totalReadingTime = ref.watch(totalReadingTimeProvider);
-    
+
     return AsyncSkeletonWrapper<int>(
       asyncValue: totalReadingTime,
       builder: (seconds) => _TotalTimeContent(
@@ -50,7 +50,7 @@ class _TotalTimeContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final hours = seconds ~/ 3600;
     final minutes = (seconds % 3600) ~/ 60;
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -63,15 +63,15 @@ class _TotalTimeContent extends StatelessWidget {
           children: [
             highlightDigit(
               context,
-               L10n.of(context).commonHours(hours),
-               Theme.of(context).textTheme.bodyLarge!,
-               Theme.of(context).textTheme.titleMedium!,
+              L10n.of(context).commonHours(hours),
+              Theme.of(context).textTheme.bodyLarge!,
+              Theme.of(context).textTheme.titleMedium!,
             ),
             highlightDigit(
               context,
-               L10n.of(context).commonMinutes(minutes),
-               Theme.of(context).textTheme.bodyLarge!,
-               Theme.of(context).textTheme.titleMedium!,
+              L10n.of(context).commonMinutes(minutes),
+              Theme.of(context).textTheme.bodyLarge!,
+              Theme.of(context).textTheme.titleMedium!,
             ),
           ],
         ),
