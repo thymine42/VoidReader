@@ -1,8 +1,10 @@
 import 'package:anx_reader/l10n/generated/L10n.dart';
 import 'package:anx_reader/models/statistics_dashboard_tile.dart';
+import 'package:anx_reader/providers/statictics_summary_value.dart';
 import 'package:anx_reader/widgets/statistic/dashboard_tiles/dashboard_tile_base.dart';
 import 'package:anx_reader/widgets/statistic/dashboard_tiles/dashboard_tile_metadata.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class LibraryTotalsTile extends StatisticsDashboardTileBase {
   const LibraryTotalsTile()
@@ -18,6 +20,7 @@ class LibraryTotalsTile extends StatisticsDashboardTileBase {
   @override
   Widget buildContent(
     BuildContext context,
+    WidgetRef ref,
   ) {
     final textTheme = Theme.of(context).textTheme;
     final l10n = L10n.of(context);
@@ -31,7 +34,7 @@ class LibraryTotalsTile extends StatisticsDashboardTileBase {
             Expanded(
               child: _NumberTile(
                 icon: Icons.auto_stories,
-                label: l10n.statisticBooksRead(9),
+                label: l10n.statisticBooksRead(0),
               ),
             ),
             const SizedBox(width: 12),

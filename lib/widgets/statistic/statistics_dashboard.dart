@@ -33,7 +33,6 @@ class StatisticsDashboard extends ConsumerWidget {
                       context,
                       workingTiles,
                       crossAxisUnits,
-                      notifier.removeTile,
                     ),
                     onReorder: notifier.reorder,
                     fixedCellHeight: 90,
@@ -48,15 +47,11 @@ class StatisticsDashboard extends ConsumerWidget {
     BuildContext context,
     List<StatisticsDashboardTileType> workingTiles,
     int columnUnits,
-    void Function(StatisticsDashboardTileType) onRemove,
   ) {
     return workingTiles
         .map(
           (type) => dashboardTileRegistry[type]!.buildReorderableItem(
             context: context,
-            onRemove: () => onRemove(type),
-            columnUnits: columnUnits,
-            baseTileHeight: kDashboardTileBaseHeight,
           ),
         )
         .toList(growable: false);

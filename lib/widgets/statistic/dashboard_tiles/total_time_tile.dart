@@ -21,46 +21,43 @@ class TotalTimeTile extends StatisticsDashboardTileBase {
   @override
   Widget buildContent(
     BuildContext context,
+    WidgetRef ref,
   ) {
-    return Consumer(
-      builder: (context, ref, _) {
-        final totalReadingTime = ref.watch(totalReadingTimeProvider);
-        return totalReadingTime.when(
-          data: (seconds) {
-            final hours = seconds ~/ 3600;
-            final minutes = (seconds % 3600) ~/ 60;
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    final totalReadingTime = ref.watch(totalReadingTimeProvider);
+    return totalReadingTime.when(
+      data: (seconds) {
+        final hours = seconds ~/ 3600;
+        final minutes = (seconds % 3600) ~/ 60;
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(metadata.title,
+                style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: 12),
+            Wrap(
+              runSpacing: 8,
               children: [
-                Text(metadata.title,
-                    style: Theme.of(context).textTheme.titleMedium),
-                const SizedBox(height: 12),
-                Wrap(
-                  runSpacing: 8,
-                  children: [
-                    _NumberBadge(
-                      label: L10n.of(context).commonHours(hours),
-                      value: hours.toString(),
-                    ),
-                    _NumberBadge(
-                      label: L10n.of(context).commonMinutes(minutes),
-                      value: minutes.toString(),
-                    ),
-                  ],
+                _NumberBadge(
+                  label: L10n.of(context).commonHours(hours),
+                  value: hours.toString(),
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  '${Prefs().beginDate?.toString().substring(0, 10) ?? ''} '
-                  '${L10n.of(context).statisticToPresent}',
-                  style: Theme.of(context).textTheme.bodySmall,
+                _NumberBadge(
+                  label: L10n.of(context).commonMinutes(minutes),
+                  value: minutes.toString(),
                 ),
               ],
-            );
-          },
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, _) => Text('$error'),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              '${Prefs().beginDate?.toString().substring(0, 10) ?? ''} '
+              '${L10n.of(context).statisticToPresent}',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ],
         );
       },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, _) => Text('$error'),
     );
   }
 }

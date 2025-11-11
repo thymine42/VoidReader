@@ -23,49 +23,47 @@ class PeriodSummaryTile extends StatisticsDashboardTileBase {
   @override
   Widget buildContent(
     BuildContext context,
+    WidgetRef ref,
   ) {
     final theme = Theme.of(context);
     final l10n = L10n.of(context);
-    return Consumer(
-      builder: (context, ref, __) {
-        final statisticData = ref.watch(statisticDataProvider);
-        return statisticData.when(
-          data: (data) {
-            final totalSeconds =
-                data.readingTime.fold<int>(0, (sum, seconds) => sum + seconds);
-            final formatted = convertSeconds(totalSeconds);
-            final periodLabel = data.mode == ChartMode.week
-                ? l10n.statisticWeek
-                : data.mode == ChartMode.month
-                    ? l10n.statisticMonth
-                    : l10n.statisticYear;
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(metadata.title, style: theme.textTheme.titleMedium),
-                const SizedBox(height: 8),
-                Text(
-                  periodLabel,
-                  style: theme.textTheme.bodySmall
-                      ?.copyWith(color: theme.colorScheme.primary),
-                ),
-                const SizedBox(height: 12),
-                Text('$formatted of reading', // TODO(l10n)
-                    style: theme.textTheme.headlineSmall),
-                const SizedBox(height: 12),
-                LinearProgressIndicator(
-                  value: totalSeconds == 0
-                      ? 0
-                      : (totalSeconds / 3600 / 10).clamp(0, 1).toDouble(),
-                  minHeight: 6,
-                ),
-              ],
-            );
-          },
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, _) => Text('$error'),
+
+    final statisticData = ref.watch(statisticDataProvider);
+    return statisticData.when(
+      data: (data) {
+        final totalSeconds =
+            data.readingTime.fold<int>(0, (sum, seconds) => sum + seconds);
+        final formatted = convertSeconds(totalSeconds);
+        final periodLabel = data.mode == ChartMode.week
+            ? l10n.statisticWeek
+            : data.mode == ChartMode.month
+                ? l10n.statisticMonth
+                : l10n.statisticYear;
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(metadata.title, style: theme.textTheme.titleMedium),
+            const SizedBox(height: 8),
+            Text(
+              periodLabel,
+              style: theme.textTheme.bodySmall
+                  ?.copyWith(color: theme.colorScheme.primary),
+            ),
+            const SizedBox(height: 12),
+            Text('$formatted of reading', // TODO(l10n)
+                style: theme.textTheme.headlineSmall),
+            const SizedBox(height: 12),
+            LinearProgressIndicator(
+              value: totalSeconds == 0
+                  ? 0
+                  : (totalSeconds / 3600 / 10).clamp(0, 1).toDouble(),
+              minHeight: 6,
+            ),
+          ],
         );
       },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, _) => Text('$error'),
     );
   }
 }

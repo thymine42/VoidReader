@@ -14,34 +14,30 @@ abstract class StatisticsDashboardTileBase {
 
   StatisticsDashboardTileType get type => metadata.type;
 
-  /// Builds the tile body.
-  Widget buildContent(
-    BuildContext context,
-  );
+  /// Builds the tile body with access to WidgetRef.
+  Widget buildContent(BuildContext context, WidgetRef ref);
+
+  onRemove() {}
 
   /// Returns the [ReorderableItem] used by the reorderable grid.
-  ReorderableItem buildReorderableItem({
-    required BuildContext context,
-    required VoidCallback? onRemove,
-    required int columnUnits,
-    required double baseTileHeight,
-  }) {
-    final span = metadata.columnSpan.clamp(1, columnUnits);
-
+  ReorderableItem buildReorderableItem({required BuildContext context}) {
     return ReorderableItem(
       trackingNumber: type.index,
       id: type.name,
-      crossAxisCellCount: span,
+      crossAxisCellCount: metadata.columnSpan,
       mainAxisCellCount: metadata.rowSpan,
       child: DashboardTileShell(
         tileType: type,
         onRemove: onRemove,
-        child: buildContent(context),
+        buildContent: buildContent,
       ),
-      placeholder: DashboardTileShell(
-        tileType: type,
-        onRemove: null,
-        child: buildContent(context),
+      placeholder: Opacity(
+        opacity: 0.5,
+        child: DashboardTileShell(
+          tileType: type,
+          onRemove: null,
+          buildContent: buildContent,
+        ),
       ),
     );
   }
@@ -50,12 +46,12 @@ abstract class StatisticsDashboardTileBase {
 class DashboardTileShell extends ConsumerWidget {
   const DashboardTileShell({
     super.key,
-    required this.child,
+    required this.buildContent,
     required this.tileType,
     this.onRemove,
   });
 
-  final Widget child;
+  final Widget Function(BuildContext context, WidgetRef ref) buildContent;
   final StatisticsDashboardTileType tileType;
   final VoidCallback? onRemove;
 
@@ -64,6 +60,9 @@ class DashboardTileShell extends ConsumerWidget {
     final state = ref.watch(dashboardTilesProvider);
     final showRemoveButton =
         state.isEditing && state.workingTiles.length > 1 && onRemove != null;
+
+    final notifier = ref.read(dashboardTilesProvider.notifier);
+
     return Stack(
       children: [
         FilledContainer(
@@ -71,7 +70,7 @@ class DashboardTileShell extends ConsumerWidget {
           height: double.infinity,
           padding: const EdgeInsets.all(6),
           radius: 16,
-          child: child,
+          child: buildContent(context, ref),
         ),
         if (showRemoveButton)
           Positioned(
@@ -81,7 +80,10 @@ class DashboardTileShell extends ConsumerWidget {
               iconSize: 18,
               visualDensity: VisualDensity.compact,
               tooltip: 'Remove card', // TODO(l10n)
-              onPressed: onRemove,
+              onPressed: () {
+                notifier.removeTile(tileType);
+                onRemove?.call();
+              },
               icon: const Icon(Icons.close),
             ),
           ),

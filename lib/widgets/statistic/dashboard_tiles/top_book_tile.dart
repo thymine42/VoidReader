@@ -21,45 +21,42 @@ class TopBookTile extends StatisticsDashboardTileBase {
   @override
   Widget buildContent(
     BuildContext context,
+    WidgetRef ref,
   ) {
     final textTheme = Theme.of(context).textTheme;
-    return Consumer(
-      builder: (context, ref, __) {
-        final statisticData = ref.watch(statisticDataProvider);
-        return statisticData.when(
-          data: (data) {
-            if (data.bookReadingTime.isEmpty) {
-              return FittedBox(child: StatisticsTips());
-            }
-            final entry = data.bookReadingTime.first;
-            final book = entry.keys.first;
-            final seconds = entry.values.first;
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(metadata.title, style: textTheme.titleMedium),
-                const SizedBox(height: 12),
-                ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(
-                    book.title,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  subtitle: Text(
-                    book.author,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  trailing: Text(convertSeconds(seconds)),
-                ),
-              ],
-            );
-          },
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, _) => Text('$error'),
+    final statisticData = ref.watch(statisticDataProvider);
+    return statisticData.when(
+      data: (data) {
+        if (data.bookReadingTime.isEmpty) {
+          return FittedBox(child: StatisticsTips());
+        }
+        final entry = data.bookReadingTime.first;
+        final book = entry.keys.first;
+        final seconds = entry.values.first;
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(metadata.title, style: textTheme.titleMedium),
+            const SizedBox(height: 12),
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text(
+                book.title,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              subtitle: Text(
+                book.author,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              trailing: Text(convertSeconds(seconds)),
+            ),
+          ],
         );
       },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, _) => Text('$error'),
     );
   }
 }
