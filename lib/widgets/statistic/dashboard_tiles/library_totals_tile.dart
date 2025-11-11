@@ -1,6 +1,7 @@
 import 'package:anx_reader/l10n/generated/L10n.dart';
 import 'package:anx_reader/models/statistics_dashboard_tile.dart';
 import 'package:anx_reader/providers/statictics_summary_value.dart';
+import 'package:anx_reader/widgets/common/async_skeleton_wrapper.dart';
 import 'package:anx_reader/widgets/statistic/dashboard_tiles/dashboard_tile_base.dart';
 import 'package:anx_reader/widgets/statistic/dashboard_tiles/dashboard_tile_metadata.dart';
 import 'package:flutter/material.dart';
@@ -24,36 +25,50 @@ class LibraryTotalsTile extends StatisticsDashboardTileBase {
   ) {
     final textTheme = Theme.of(context).textTheme;
     final l10n = L10n.of(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(metadata.title, style: textTheme.titleMedium),
-        Row(
+
+    return AsyncSkeletonWrapper<List>(
+      asyncValue: combineAsyncValues([
+        ref.watch(StaticticsSummaryValueProvider(StatisticType.totalBooks)),
+        ref.watch(StaticticsSummaryValueProvider(StatisticType.totalDates)),
+        ref.watch(StaticticsSummaryValueProvider(StatisticType.totalNotes)),
+      ]),
+      mockBuilder: () => [0, 0, 0],
+      builder: (data) {
+        final booksRead = data[0] as int;
+        final daysOfReading = data[1] as int;
+        final notesCount = data[2] as int;
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Expanded(
-              child: _NumberTile(
-                icon: Icons.auto_stories,
-                label: l10n.statisticBooksRead(0),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _NumberTile(
-                icon: Icons.calendar_today,
-                label: l10n.statisticDaysOfReading(9),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _NumberTile(
-                icon: Icons.note_alt_outlined,
-                label: l10n.statisticNotes(9),
-              ),
+            Text(metadata.title, style: textTheme.titleMedium),
+            Row(
+              children: [
+                Expanded(
+                  child: _NumberTile(
+                    icon: Icons.auto_stories,
+                    label: l10n.statisticBooksRead(booksRead),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _NumberTile(
+                    icon: Icons.calendar_today,
+                    label: l10n.statisticDaysOfReading(daysOfReading),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _NumberTile(
+                    icon: Icons.note_alt_outlined,
+                    label: l10n.statisticNotes(notesCount),
+                  ),
+                ),
+              ],
             ),
           ],
-        ),
-      ],
+        );
+      } 
     );
   }
 }
