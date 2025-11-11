@@ -2,6 +2,7 @@ import 'package:anx_reader/config/shared_preference_provider.dart';
 import 'package:anx_reader/l10n/generated/L10n.dart';
 import 'package:anx_reader/providers/dashboard_tiles_provider.dart';
 import 'package:anx_reader/providers/total_reading_time.dart';
+import 'package:anx_reader/widgets/common/async_skeleton_wrapper.dart';
 import 'package:anx_reader/widgets/highlight_digit.dart';
 import 'package:anx_reader/widgets/statistic/dashboard_tiles/dashboard_tile_registry.dart';
 import 'package:flutter/material.dart';
@@ -87,8 +88,6 @@ class TotalReadTime extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final totalReadingTime = ref.watch(totalReadingTimeProvider);
-
     TextStyle textStyle = const TextStyle(
       fontSize: 30,
       fontWeight: FontWeight.bold,
@@ -99,42 +98,40 @@ class TotalReadTime extends ConsumerWidget {
       fontWeight: FontWeight.bold,
     );
 
-    return totalReadingTime.when(
-      data: (totalSeconds) {
-        // 12 h 34 m
-        int H = totalSeconds ~/ 3600;
-        int M = (totalSeconds % 3600) ~/ 60;
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                highlightDigit(
-                  context,
-                  L10n.of(context).commonHours(H),
-                  digitStyle,
-                  textStyle,
-                ),
-                highlightDigit(
-                  context,
-                  L10n.of(context).commonMinutes(M),
-                  digitStyle,
-                  textStyle,
-                ),
-              ],
-            ),
-            Text(
-              '${Prefs().beginDate.toString().substring(0, 10)} ${L10n.of(context).statisticToPresent}',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey[600],
+    return AsyncSkeletonWrapper<int>(
+        asyncValue: ref.watch(totalReadingTimeProvider),
+        builder: (seconds) {
+          final hours = seconds ~/ 3600;
+          final minutes = (seconds % 3600) ~/ 60;
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  highlightDigit(
+                    context,
+                    L10n.of(context).commonHours(hours),
+                    digitStyle,
+                    textStyle,
+                  ),
+                  highlightDigit(
+                    context,
+                    L10n.of(context).commonMinutes(minutes),
+                    digitStyle,
+                    textStyle,
+                  ),
+                ],
               ),
-            )
-          ],
-        );
-      },
-      loading: () => const CircularProgressIndicator(),
-      error: (error, stack) => Text('Error: $error'),
-    );
+              Text(
+                '${Prefs().beginDate.toString().substring(0, 10)} ${L10n.of(context).statisticToPresent}',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey[600],
+                ),
+              )
+            ],
+          );
+        });
   }
 }
