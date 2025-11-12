@@ -163,7 +163,10 @@ class _MyAppState extends ConsumerState<MyApp>
               //   PointerDeviceKind.mouse,
               // },
             ),
-            navigatorObservers: [FlutterSmartDialog.observer, heroineController],
+            navigatorObservers: [
+              FlutterSmartDialog.observer,
+              heroineController
+            ],
             builder: FlutterSmartDialog.init(),
             navigatorKey: navigatorKey,
             locale: prefsNotifier.locale,
