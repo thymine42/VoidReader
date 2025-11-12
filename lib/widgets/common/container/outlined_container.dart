@@ -10,6 +10,7 @@ class OutlinedContainer extends BaseRoundedContainer {
     super.padding,
     super.margin,
     super.radius,
+    super.constraints,
     super.animationDuration,
     super.animationCurve,
   });
