@@ -1,8 +1,10 @@
 import 'package:anx_reader/models/statistics_dashboard_tile.dart';
+import 'package:anx_reader/providers/book_daily_reading_provider.dart';
 import 'package:anx_reader/providers/statistic_data.dart';
 import 'package:anx_reader/utils/date/convert_seconds.dart';
 import 'package:anx_reader/widgets/bookshelf/book_cover.dart';
 import 'package:anx_reader/widgets/common/async_skeleton_wrapper.dart';
+import 'package:anx_reader/widgets/statistic/book_reading_chart.dart';
 import 'package:anx_reader/widgets/statistic/dashboard_tiles/dashboard_tile_base.dart';
 import 'package:anx_reader/widgets/statistic/dashboard_tiles/dashboard_tile_metadata.dart';
 import 'package:anx_reader/widgets/tips/statistic_tips.dart';
@@ -84,8 +86,54 @@ class TopBookTile extends StatisticsDashboardTileBase {
                       ],
                     ),
                     const SizedBox(height: 10),
-                    Row(
-                      children: [Expanded(child: Text('Graph'))],
+                    SizedBox(
+                      height: 80,
+                      child: Consumer(
+                        builder: (context, ref, child) {
+                          final chartData = ref.watch(
+                            bookDailyReadingProvider(bookId: book.id),
+                          );
+
+                          return chartData.when(
+                            data: (data) {
+                              if (data.readingTimes.isEmpty ||
+                                  data.readingTimes
+                                      .every((time) => time == 0)) {
+                                return Center(
+                                  child: Text(
+                                    'No recent reading data',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey.withOpacity(0.6),
+                                    ),
+                                  ),
+                                );
+                              }
+
+                              return BookReadingChart(
+                                readingTimes: data.readingTimes,
+                                xLabels: data.formattedLabels,
+                                maxReadingTime: data.maxReadingTime,
+                              );
+                            },
+                            loading: () => const Center(
+                              child: SizedBox(
+                                width: 20,
+                                height: 20,
+                                child:
+                                    CircularProgressIndicator(strokeWidth: 2),
+                              ),
+                            ),
+                            error: (error, stack) => Center(
+                              child: Icon(
+                                Icons.error_outline,
+                                color: Colors.red.withOpacity(0.6),
+                                size: 20,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ]),
             ),
