@@ -31,7 +31,7 @@ class LibraryTotalsTile extends StatisticsDashboardTileBase {
           ref.watch(StaticticsSummaryValueProvider(StatisticType.totalDates)),
           ref.watch(StaticticsSummaryValueProvider(StatisticType.totalNotes)),
         ]),
-        mockBuilder: () => [0, 0, 0],
+        mock: [0, 0, 0],
         builder: (data) {
           final booksRead = data[0] as int;
           final daysOfReading = data[1] as int;

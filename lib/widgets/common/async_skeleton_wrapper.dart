@@ -1,3 +1,4 @@
+import 'package:anx_reader/utils/log/common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -29,7 +30,7 @@ class AsyncSkeletonWrapper<T> extends StatelessWidget {
 
   /// Optional mock data provider for generating skeleton.
   /// If not provided and no skeleton is given, a default mock will be attempted.
-  final T Function()? mockBuilder;
+  final T? mock;
 
   /// Optional custom error widget builder
   final Widget Function(Object error, StackTrace? stackTrace)? errorBuilder;
@@ -42,7 +43,7 @@ class AsyncSkeletonWrapper<T> extends StatelessWidget {
     required this.asyncValue,
     required this.builder,
     this.skeleton,
-    this.mockBuilder,
+    this.mock,
     this.errorBuilder,
     this.enabled = true,
   });
@@ -66,10 +67,10 @@ class AsyncSkeletonWrapper<T> extends StatelessWidget {
 
         // Try to generate skeleton with mock data
         try {
-          final mock = mockBuilder?.call() ?? _createDefaultMock<T>();
+          final mockData = mock ?? _createDefaultMock<T>();
           return Skeletonizer(
             enabled: true,
-            child: builder(mock),
+            child: builder(mockData),
           );
         } catch (e) {
           // Fallback to circular progress if mock generation fails
@@ -104,16 +105,13 @@ class AsyncSkeletonWrapper<T> extends StatelessWidget {
   /// Attempts to create a default mock value for common types
   static T _createDefaultMock<T>() {
     // Handle common types
-    if (T == int) return 0 as T;
-    if (T == double) return 0.0 as T;
+    if (T == int) return 1 as T;
+    if (T == double) return 1.0 as T;
     if (T == String) return 'a ' * 5 as T;
     if (T == bool) return false as T;
+    AnxLog.severe('No default mock available for type $T');
 
-    // For other types, throw an error to trigger fallback
-    throw UnsupportedError(
-      'Cannot create default mock for type $T. '
-      'Please provide a mockBuilder or skeleton widget.',
-    );
+    throw Exception('No default mock available for type $T');
   }
 }
 

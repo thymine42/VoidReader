@@ -13,4 +13,13 @@ abstract class StatisticDataModel with _$StatisticDataModel {
       required List<int> readingTime,
       required List<String> xLabels,
       required List<Map<Book, int>> bookReadingTime}) = _StatisticDataModel;
+  
+  factory StatisticDataModel.mock() => StatisticDataModel(
+        mode: ChartMode.month,
+        isSelectingDay: false,
+        date: DateTime.now(),
+        readingTime: [],
+        xLabels: [],
+        bookReadingTime: [],
+      );
 }

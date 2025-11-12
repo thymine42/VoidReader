@@ -30,6 +30,7 @@ class PeriodSummaryTile extends StatisticsDashboardTileBase {
     return Consumer(builder: (context, ref, _) {
       return AsyncSkeletonWrapper(
           asyncValue: ref.watch(statisticDataProvider),
+          mock: StatisticDataModel.mock(),
           builder: (data) {
             final periodLabel = data.mode == ChartMode.week
                 ? l10n.statisticWeek
@@ -63,6 +64,10 @@ class PeriodSummaryTile extends StatisticsDashboardTileBase {
           ref.watch(statisticDataProvider),
           ref.watch(totalReadingTimeProvider),
         ]),
+        mock: [
+          StatisticDataModel.mock(),
+          1,
+        ],
         builder: (data) {
           final statisticData = data[0] as StatisticDataModel;
           final totalSeconds = data[1] as int;
