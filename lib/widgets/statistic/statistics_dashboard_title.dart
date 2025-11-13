@@ -64,7 +64,7 @@ class _StatisticDashboardTitleState
               IconButton(
                 onPressed: notifier.saveLayout,
                 icon: const Icon(Icons.save),
-                tooltip: 'Save layout', // TODO(l10n)
+                tooltip: 'Save', // TODO(l10n) commonSave
               ),
             ],
           ),

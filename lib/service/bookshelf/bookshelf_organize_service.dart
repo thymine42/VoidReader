@@ -36,7 +36,7 @@ class BookshelfOrganizeService {
 
       final existingGroup = await groupNotifier.getGroup(group.groupId);
       final targetName =
-          group.proposedName ?? group.currentName ?? 'New group'; // TODO: l10n
+          group.proposedName ?? group.currentName ?? 'New group'; 
 
       if (targetName.trim().isNotEmpty) {
         final payload = (existingGroup ??

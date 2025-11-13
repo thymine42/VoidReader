@@ -291,7 +291,7 @@ class DashboardTileShell extends ConsumerWidget {
                 child: IconButton.filledTonal(
                   iconSize: 18,
                   visualDensity: VisualDensity.compact,
-                  tooltip: 'Remove card', // TODO(l10n)
+                  tooltip: 'Remove card', // TODO(l10n) commonRemove
                   onPressed: () {
                     notifier.removeTile(tileType);
                     tile.onRemove(context, ref);
