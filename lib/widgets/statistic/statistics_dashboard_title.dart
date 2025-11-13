@@ -145,25 +145,28 @@ class _AddTileSheetContentState extends ConsumerState<AddTileSheetContent> {
                 final dashboardTile = dashboardTileRegistry[type]!;
                 final metadata = dashboardTile.metadata;
                 return PageViewModel(
-                  titleWidget: Text(
-                    metadata.title,
-                    style: Theme.of(context).textTheme.headlineMedium,
-                  ),
-                  bodyWidget: Column(
-                    children: [
-                      SizedBox(
-                          height: dashboardTile.tileSize(context).height,
-                          width: dashboardTile.tileSize(context).width,
-                          child: dashboardTile.buildTile(context, ref)),
-                      SizedBox(height: 40),
-                      Text(
-                        metadata.description,
-                        style: Theme.of(context).textTheme.bodyLarge,
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                );
+                    titleWidget: Text(
+                      metadata.title,
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    ),
+                    bodyWidget: Column(
+                      children: [
+                        SizedBox(
+                            height: dashboardTile.tileSize(context).height,
+                            width: dashboardTile.tileSize(context).width,
+                            child: dashboardTile.buildTile(context, ref)),
+                        SizedBox(height: 40),
+                        Text(
+                          metadata.description,
+                          style: Theme.of(context).textTheme.bodyLarge,
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                    decoration: PageDecoration(
+                      bodyPadding: EdgeInsets.all(0),
+                      pageMargin: EdgeInsets.all(0),
+                    ));
               }).toList(),
               onDone: () {
                 // Navigator.pop(context);
