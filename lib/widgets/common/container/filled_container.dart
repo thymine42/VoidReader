@@ -54,6 +54,7 @@ class FilledContainer extends BaseRoundedContainer {
       borderSide: const BorderSide(
         color: Colors.transparent,
         width: 1,
+        strokeAlign: BorderSide.strokeAlignOutside
       ),
       borderRadius: borderRadius,
     );

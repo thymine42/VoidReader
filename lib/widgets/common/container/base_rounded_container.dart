@@ -33,17 +33,17 @@ abstract class BaseRoundedContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     final BorderRadiusGeometry borderRadius = _borderRadius;
 
-    return ClipRSuperellipse(
-      borderRadius: borderRadius,
-      child: AnimatedContainer(
-        duration: animationDuration,
-        curve: animationCurve,
-        margin: margin,
-        padding: padding,
-        width: width,
-        height: height,
-        constraints: constraints,
-        decoration: decoration(context, borderRadius),
+    return AnimatedContainer(
+      duration: animationDuration,
+      curve: animationCurve,
+      margin: margin,
+      padding: padding,
+      width: width,
+      height: height,
+      constraints: constraints,
+      decoration: decoration(context, borderRadius),
+      child: ClipRSuperellipse(
+        borderRadius: borderRadius,
         child: child,
       ),
     );

@@ -25,6 +25,7 @@ class OutlinedContainer extends BaseRoundedContainer {
       borderSide: BorderSide(
         color: Theme.of(context).colorScheme.outline,
         width: 1,
+        strokeAlign: BorderSide.strokeAlignOutside
       ),
       borderRadius: borderRadius,
     );
