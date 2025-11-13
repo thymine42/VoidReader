@@ -58,7 +58,7 @@ abstract class _BaseReadingDurationTile extends StatisticsDashboardTileBase {
 }
 
 class ReadingDurationLast7Tile extends _BaseReadingDurationTile {
-   ReadingDurationLast7Tile()
+  ReadingDurationLast7Tile()
       : super(
           type: StatisticsDashboardTileType.readingDurationLast7,
           titleBuilder: (l10n) => l10n.tileReadingDuration7Title,
@@ -68,7 +68,7 @@ class ReadingDurationLast7Tile extends _BaseReadingDurationTile {
 }
 
 class ReadingDurationLast30Tile extends _BaseReadingDurationTile {
-   ReadingDurationLast30Tile()
+  ReadingDurationLast30Tile()
       : super(
           type: StatisticsDashboardTileType.readingDurationLast30,
           titleBuilder: (l10n) => l10n.tileReadingDuration30Title,

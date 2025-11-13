@@ -55,7 +55,8 @@ final Map<StatisticsDashboardTileType, StatisticsDashboardTileBase>
   StatisticsDashboardTileType.randomHighlight: const RandomHighlightTile(),
   StatisticsDashboardTileType.readingDurationLast7: ReadingDurationLast7Tile(),
   StatisticsDashboardTileType.readingDurationLast30:
-       ReadingDurationLast30Tile(),
-  StatisticsDashboardTileType.completionProgress: const CompletionProgressTile(),
+      ReadingDurationLast30Tile(),
+  StatisticsDashboardTileType.completionProgress:
+      const CompletionProgressTile(),
   StatisticsDashboardTileType.topBook: const TopBookTile(),
 };
