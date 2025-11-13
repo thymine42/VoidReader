@@ -29,18 +29,15 @@ enum StatisticsDashboardTileType {
 
 /// Default order for dashboard tiles when the user has not customized the layout.
 const List<StatisticsDashboardTileType> defaultStatisticsDashboardTiles = [
-  StatisticsDashboardTileType.totalTime,
-  StatisticsDashboardTileType.libraryTotals,
-  StatisticsDashboardTileType.periodSummary,
-  StatisticsDashboardTileType.booksTotal,
   StatisticsDashboardTileType.readingDaysTotal,
-  StatisticsDashboardTileType.notesTotal,
+  StatisticsDashboardTileType.booksTotal,
+  StatisticsDashboardTileType.periodSummary,
+  StatisticsDashboardTileType.topBook,
   StatisticsDashboardTileType.readingStreak,
-  StatisticsDashboardTileType.readingDurationLast7,
-  StatisticsDashboardTileType.readingDurationLast30,
   StatisticsDashboardTileType.randomHighlight,
   StatisticsDashboardTileType.completionProgress,
-  StatisticsDashboardTileType.topBook,
+  StatisticsDashboardTileType.readingDurationLast7,
+  StatisticsDashboardTileType.readingDurationLast30,
 ];
 
 final Map<StatisticsDashboardTileType, StatisticsDashboardTileBase>
