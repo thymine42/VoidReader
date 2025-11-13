@@ -446,6 +446,29 @@ class ReadingTimeDao extends BaseDao {
       },
     );
   }
+
+  Future<Map<DateTime, int>> selectDailyReadingTimeSince(
+      DateTime startDate) async {
+    final rows = await rawQueryList(
+      '''
+      SELECT DATE(date) as day, SUM(reading_time) as total_time
+      FROM $table
+      WHERE DATE(date) >= DATE(?)
+      GROUP BY day
+      ORDER BY day ASC
+      ''',
+      arguments: [startDate.toIso8601String().substring(0, 10)],
+      mapper: (row) => row,
+    );
+
+    final result = <DateTime, int>{};
+    for (final row in rows) {
+      final day = row['day'] as String?;
+      if (day == null) continue;
+      result[DateTime.parse(day)] = row['total_time'] as int? ?? 0;
+    }
+    return result;
+  }
 }
 
 final readingTimeDao = ReadingTimeDao();
