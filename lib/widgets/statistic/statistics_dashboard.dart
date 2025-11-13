@@ -1,6 +1,8 @@
 import 'dart:math';
 
+import 'package:anx_reader/enums/hint_key.dart';
 import 'package:anx_reader/providers/dashboard_tiles_provider.dart';
+import 'package:anx_reader/widgets/hint/hint_banner.dart';
 import 'package:anx_reader/widgets/statistic/dashboard_tiles/dashboard_tile_registry.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,6 +20,11 @@ class StatisticsDashboard extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        HintBanner(
+            icon: const Icon(Icons.drag_handle),
+            hintKey: HintKey.statisticsDashboardRearrange,
+            margin: const EdgeInsets.only(bottom: 10),
+            child: Text('Tap and hold a card to rearrange or add cards')), // TODO(l10n)
         workingTiles.isEmpty
             ? _buildEmptyState(context, () => notifier.reorder)
             : LayoutBuilder(
