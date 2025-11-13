@@ -30,6 +30,48 @@ abstract class StatisticsDashboardTileBase {
   /// Override this method to provide a custom icon.
   Widget buildCorner(BuildContext context, WidgetRef ref) => SizedBox.shrink();
 
+  Widget buildTile(BuildContext context, WidgetRef ref) {
+    return FilledContainer(
+      width: double.infinity,
+      height: double.infinity,
+      radius: 16,
+      color: Theme.of(context).colorScheme.surfaceContainer,
+      child: Stack(
+        children: [
+          Positioned(
+            bottom: -20,
+            right: -20,
+            child: Opacity(
+              opacity: 0.1,
+              child: Transform.rotate(
+                angle: -0.2,
+                child: buildCorner(context, ref),
+              ),
+            ),
+          ),
+          Container(
+            color: Colors.transparent,
+            padding: const EdgeInsets.all(6),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                if (title.isNotEmpty)
+                  Text(
+                    title,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                Expanded(
+                  child: buildContent(context, ref),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   String get title => '';
 
   bool get canFlip => true;
@@ -38,9 +80,17 @@ abstract class StatisticsDashboardTileBase {
 
   double get flipTitleSize => 100;
 
+  Size tileSize(BuildContext context) {
+    final width = min(flipSquareSize * metadata.columnSpan,
+        MediaQuery.sizeOf(context).width * 0.9);
+    final height = min(flipSquareSize * metadata.rowSpan,
+        MediaQuery.sizeOf(context).height * 0.8);
+    return Size(width, height);
+  }
+
   Size flipSize(BuildContext context) {
     final width = min(max(flipSquareSize * metadata.columnSpan, 300.0),
-        MediaQuery.sizeOf(context).width * 0.8);
+        MediaQuery.sizeOf(context).width * 0.9);
 
     final height = min(flipSquareSize * metadata.rowSpan + flipTitleSize,
         MediaQuery.sizeOf(context).height * 0.8);
@@ -52,7 +102,7 @@ abstract class StatisticsDashboardTileBase {
     return flipScaffold(
       context,
       ref,
-      buildContent(context, ref),
+      buildTile(context, ref),
     );
   }
 
@@ -213,45 +263,7 @@ class DashboardTileShell extends ConsumerWidget {
         },
         child: Stack(
           children: [
-            FilledContainer(
-              width: double.infinity,
-              height: double.infinity,
-              radius: 16,
-              color: Theme.of(context).colorScheme.surfaceContainer,
-              child: Stack(
-                children: [
-                  Positioned(
-                    bottom: -20,
-                    right: -20,
-                    child: Opacity(
-                      opacity: 0.1,
-                      child: Transform.rotate(
-                        angle: -0.2,
-                        child: tile.buildCorner(context, ref),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    color: Colors.transparent,
-                    padding: const EdgeInsets.all(6),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        if (tile.title.isNotEmpty)
-                          Text(
-                            tile.title,
-                            style: Theme.of(context).textTheme.titleMedium,
-                          ),
-                        Expanded(
-                          child: buildContent(context, ref),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            tile.buildTile(context, ref),
             if (showRemoveButton)
               Positioned(
                 top: 0,
