@@ -9,6 +9,7 @@ abstract class BaseRoundedContainer extends StatelessWidget {
     this.padding,
     this.margin,
     this.radius,
+    this.constraints,
     this.animationDuration = const Duration(milliseconds: 250),
     this.animationCurve = Curves.easeInOut,
   });
@@ -21,6 +22,7 @@ abstract class BaseRoundedContainer extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? margin;
   final double? radius;
+  final BoxConstraints? constraints;
   final Duration animationDuration;
   final Curve animationCurve;
 
@@ -31,17 +33,20 @@ abstract class BaseRoundedContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     final BorderRadiusGeometry borderRadius = _borderRadius;
 
-    return ClipRSuperellipse(
-      borderRadius: borderRadius,
-      child: AnimatedContainer(
-        duration: animationDuration,
-        curve: animationCurve,
-        margin: margin,
-        padding: padding,
-        width: width,
-        height: height,
-        decoration: decoration(context, borderRadius),
-        child: child,
+    return AnimatedContainer(
+      duration: animationDuration,
+      curve: animationCurve,
+      margin: margin,
+      width: width,
+      height: height,
+      constraints: constraints,
+      decoration: decoration(context, borderRadius),
+      child: ClipRSuperellipse(
+        borderRadius: borderRadius,
+        child: Container(
+          padding: padding,
+          child: child,
+        ),
       ),
     );
   }

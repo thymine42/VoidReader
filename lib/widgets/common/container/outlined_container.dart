@@ -10,6 +10,7 @@ class OutlinedContainer extends BaseRoundedContainer {
     super.padding,
     super.margin,
     super.radius,
+    super.constraints,
     super.animationDuration,
     super.animationCurve,
   });
@@ -22,9 +23,9 @@ class OutlinedContainer extends BaseRoundedContainer {
     return buildShapeDecoration(
       color: Colors.transparent,
       borderSide: BorderSide(
-        color: Theme.of(context).colorScheme.outline,
-        width: 1,
-      ),
+          color: Theme.of(context).colorScheme.outline,
+          width: 1,
+          strokeAlign: BorderSide.strokeAlignOutside),
       borderRadius: borderRadius,
     );
   }

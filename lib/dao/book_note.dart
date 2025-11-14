@@ -147,6 +147,13 @@ class BookNoteDao extends BaseDao {
       limit: limit,
     );
   }
+
+  Future<BookNote?> selectRandomNote() async {
+    return rawQuerySingle(
+      'SELECT * FROM $table ORDER BY RANDOM() LIMIT 1',
+      mapper: BookNote.fromDb,
+    );
+  }
 }
 
 final bookNoteDao = BookNoteDao();

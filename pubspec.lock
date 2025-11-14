@@ -1031,6 +1031,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.5.0"
+  haptic_feedback:
+    dependency: "direct main"
+    description:
+      name: haptic_feedback
+      sha256: d3b5ad41858d18a35d317636c9cdc1cb8aef23c7b861ca5896273acc68e1a98a
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.1+1"
   hashcodes:
     dependency: transitive
     description:
@@ -1039,6 +1047,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  heroine:
+    dependency: "direct main"
+    description:
+      name: heroine
+      sha256: b54d9462a65fd299ccd2bc7dfea1bfda5952a1fd874fad77fea703c7eb7e914d
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.0+2"
   hotreloader:
     dependency: transitive
     description:
@@ -1336,6 +1352,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "9.0.0"
+  motor:
+    dependency: transitive
+    description:
+      name: motor
+      sha256: d6fd00496a2b934f8f54e660acc0d039d0e4bf8e667b6977b0480be97385779e
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   nested:
     dependency: transitive
     description:
@@ -1998,6 +2022,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.12.1"
+  staggered_reorderable:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: "526793e0bd3e08a5fb5016dae0538e0d15d34c18"
+      resolved-ref: "526793e0bd3e08a5fb5016dae0538e0d15d34c18"
+      url: "https://github.com/Anxcye/staggered_reorderable.git"
+    source: git
+    version: "0.0.14"
   state_notifier:
     dependency: transitive
     description:
@@ -2230,6 +2263,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.1.2"
+  vibration:
+    dependency: "direct main"
+    description:
+      name: vibration
+      sha256: "1fd51cb0f91c6d512734ca0e282dd87fbc7f389b6da5f03c77709ba2cf8fa901"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.4"
+  vibration_platform_interface:
+    dependency: transitive
+    description:
+      name: vibration_platform_interface
+      sha256: "4134fbfcd427b59a7a91f8733292e4e9b29a7f1e8224ff0d80f5745fbf0743c6"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.1"
   vm_service:
     dependency: transitive
     description:

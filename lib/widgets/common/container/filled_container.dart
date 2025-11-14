@@ -14,6 +14,7 @@ class FilledContainer extends BaseRoundedContainer {
     this.color,
     this.fill = false,
     super.radius,
+    super.constraints,
     super.animationDuration,
     super.animationCurve,
   });
@@ -30,6 +31,7 @@ class FilledContainer extends BaseRoundedContainer {
         padding: padding,
         margin: margin,
         radius: radius,
+        constraints: constraints,
         animationDuration: animationDuration,
         animationCurve: animationCurve,
         child: child,
@@ -50,9 +52,9 @@ class FilledContainer extends BaseRoundedContainer {
     return buildShapeDecoration(
       color: effectiveColor,
       borderSide: const BorderSide(
-        color: Colors.transparent,
-        width: 1,
-      ),
+          color: Colors.transparent,
+          width: 1,
+          strokeAlign: BorderSide.strokeAlignOutside),
       borderRadius: borderRadius,
     );
   }
