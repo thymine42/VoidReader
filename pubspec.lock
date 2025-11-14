@@ -2026,8 +2026,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "526793e0bd3e08a5fb5016dae0538e0d15d34c18"
-      resolved-ref: "526793e0bd3e08a5fb5016dae0538e0d15d34c18"
+      ref: "2ac799a6eeb5da74bf5080a2ba2057272fa52b78"
+      resolved-ref: "2ac799a6eeb5da74bf5080a2ba2057272fa52b78"
       url: "https://github.com/Anxcye/staggered_reorderable.git"
     source: git
     version: "0.0.14"
