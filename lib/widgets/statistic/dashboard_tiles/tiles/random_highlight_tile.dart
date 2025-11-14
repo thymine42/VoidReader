@@ -82,31 +82,25 @@ class _HighlightCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '“$quote”',
-                style: theme.textTheme.titleMedium,
-                maxLines: 4,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const Spacer(),
-              Text(
-                data.book?.title ?? L10n.of(context).randomHighlightUnknownBook,
-                style: theme.textTheme.labelLarge,
-                overflow: TextOverflow.ellipsis,
-              ),
-              if (data.note.chapter.isNotEmpty)
-                Text(
-                  data.note.chapter,
-                  style: theme.textTheme.bodySmall,
-                  overflow: TextOverflow.ellipsis,
-                ),
-            ],
+          child: SingleChildScrollView(
+            child: Text(
+              quote,
+              style: theme.textTheme.titleMedium,
+            ),
           ),
         ),
-        const SizedBox(height: 8),
+        const Divider(height: 2),
+        Text(
+          data.book?.title ?? L10n.of(context).randomHighlightUnknownBook,
+          style: theme.textTheme.labelLarge,
+          overflow: TextOverflow.ellipsis,
+        ),
+        if (data.note.chapter.isNotEmpty)
+          Text(
+            data.note.chapter,
+            style: theme.textTheme.bodySmall,
+            overflow: TextOverflow.ellipsis,
+          ),
         Row(
           children: [
             Expanded(
