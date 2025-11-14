@@ -16,7 +16,7 @@ class ReadingCompletion extends _$ReadingCompletion {
     final filtered = books
         .where(
           (book) =>
-              book.readingPercentage >= 0.6 && book.readingPercentage < 0.99,
+              book.readingPercentage >= 0.6 && book.readingPercentage < 0.93,
         )
         .toList();
     filtered.sort(

@@ -32,6 +32,22 @@ class Book {
       required this.createTime,
       required this.updateTime});
 
+  factory Book.mock() {
+    return Book(
+      id: 1,
+      title: 'Mock Book',
+      coverPath: '',
+      filePath: '',
+      lastReadPosition: '',
+      readingPercentage: 0.78,
+      author: 'Anx',
+      isDeleted: false,
+      rating: 0,
+      createTime: DateTime.now(),
+      updateTime: DateTime.now(),
+    );
+  }
+
   String get coverFullPath {
     return getBasePath(coverPath);
   }

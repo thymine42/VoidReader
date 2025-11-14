@@ -32,21 +32,7 @@ class CompletionProgressTile extends StatisticsDashboardTileBase {
     final asyncValue = ref.watch(readingCompletionProvider);
     return AsyncSkeletonWrapper<List<Book>>(
       asyncValue: asyncValue,
-      mock: [
-        Book(
-          id: 1,
-          title: 'Mock Book',
-          coverPath: '',
-          filePath: '',
-          lastReadPosition: '',
-          readingPercentage: 0.78,
-          author: 'Anx',
-          isDeleted: false,
-          rating: 0,
-          createTime: DateTime.now(),
-          updateTime: DateTime.now(),
-        ),
-      ],
+      mock: [Book.mock()],
       builder: (books) => _CompletionContent(books: books),
     );
   }
@@ -83,33 +69,36 @@ class _CompletionContent extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
-                      child: ListView.separated(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: books.length,
-                        itemBuilder: (context, index) {
-                          final book = books[index];
-                          final percent = (book.readingPercentage * 100)
-                              .clamp(0, 100)
-                              .toStringAsFixed(0);
-                          return Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  book.title,
-                                  style: theme.textTheme.bodyMedium,
-                                  overflow: TextOverflow.ellipsis,
+                      child: SingleChildScrollView(
+                        child: ListView.separated(
+                          padding: EdgeInsets.zero,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: books.length,
+                          itemBuilder: (context, index) {
+                            final book = books[index];
+                            final percent = (book.readingPercentage * 100)
+                                .clamp(0, 100)
+                                .toStringAsFixed(0);
+                            return Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    book.title,
+                                    style: theme.textTheme.bodyMedium,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                '$percent%',
-                                style: theme.textTheme.titleMedium,
-                              ),
-                            ],
-                          );
-                        },
-                        separatorBuilder: (_, __) =>
-                            const Divider(height: 12, thickness: 0.4),
+                                Text(
+                                  '$percent%',
+                                  style: theme.textTheme.titleMedium,
+                                ),
+                              ],
+                            );
+                          },
+                          separatorBuilder: (_, __) =>
+                              const Divider(height: 12, thickness: 0.4),
+                        ),
                       ),
                     ),
                     Text(
@@ -134,15 +123,17 @@ class _CompletionRing extends StatelessWidget {
     final normalized = percentage.clamp(0, 1);
     final theme = Theme.of(context);
     return SizedBox(
-      width: 110,
-      height: 110,
+      width: 120,
+      height: 120,
       child: Stack(
         alignment: Alignment.center,
         children: [
-          CircularProgressIndicator(
-            value: normalized as double,
-            strokeWidth: 10,
-            backgroundColor: theme.colorScheme.surfaceContainerHighest,
+          SizedBox.expand(
+            child: CircularProgressIndicator(
+              value: normalized as double,
+              strokeWidth: 10,
+              color: Theme.of(context).colorScheme.primary,
+            ),
           ),
           Column(
             mainAxisSize: MainAxisSize.min,
