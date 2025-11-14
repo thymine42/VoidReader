@@ -12,6 +12,7 @@
 - Fix: Smoother page turn animation
 - Fix: Optimize context menu styles
 - Fix: Reading time statistics accuracy issue
+- Fix: Abnormal underline display issue
 - UI: Optimize part of the interface design
 
 - Feat: 统计界面添加更多数据展示
@@ -23,6 +24,7 @@
 - Fix: 更流畅的滑动翻页动画
 - Fix: 优化上下文菜单样式
 - Fix: 阅读时长统计不准确的问题
+- Fix: 划线显示异常的问题
 - UI: 优化部分界面设计
 
 ## 1.9.2
