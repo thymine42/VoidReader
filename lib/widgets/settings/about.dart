@@ -1,10 +1,15 @@
+import 'dart:async';
+
+import 'package:anx_reader/config/shared_preference_provider.dart';
 import 'package:anx_reader/l10n/generated/L10n.dart';
 import 'package:anx_reader/main.dart';
+import 'package:anx_reader/page/settings_page/developer/developer_options_page.dart';
 import 'package:anx_reader/utils/env_var.dart';
 import 'package:anx_reader/utils/toast/common.dart';
 import 'package:anx_reader/widgets/settings/link_icon.dart';
 import 'package:anx_reader/utils/check_update.dart';
 import 'package:anx_reader/widgets/settings/show_donate_dialog.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -47,6 +52,45 @@ class _AboutState extends State<About> {
   }
 }
 
+const int _developerUnlockTapThreshold = 7;
+int _developerUnlockTapCount = 0;
+Timer? _developerUnlockResetTimer;
+
+void _handleDeveloperUnlockTap(BuildContext context) {
+  _developerUnlockTapCount++;
+  _developerUnlockResetTimer?.cancel();
+  _developerUnlockResetTimer =
+      Timer(const Duration(seconds: 2), () => _developerUnlockTapCount = 0);
+
+  final alreadyEnabled = Prefs().developerOptionsEnabled;
+  if (_developerUnlockTapCount < _developerUnlockTapThreshold) {
+    return;
+  }
+
+  _developerUnlockTapCount = 0;
+  if (!alreadyEnabled) {
+    Prefs().developerOptionsEnabled = true;
+    AnxToast.show('Developer options enabled');
+  }
+
+  final navigator = Navigator.of(context, rootNavigator: true);
+  if (navigator.canPop()) {
+    navigator.pop();
+  }
+  Future.microtask(_openDeveloperOptionsPage);
+}
+
+void _openDeveloperOptionsPage() {
+  final BuildContext? navContext = navigatorKey.currentContext;
+  if (navContext == null) return;
+  Navigator.of(navContext).push(
+    CupertinoPageRoute(
+      fullscreenDialog: false,
+      builder: (context) => const DeveloperOptionsPage(),
+    ),
+  );
+}
+
 Future<void> openAboutDialog() async {
   final pubspecContent = await rootBundle.loadString('pubspec.yaml');
   final pubspec = Pubspec.parse(pubspecContent);
@@ -82,12 +126,14 @@ Future<void> openAboutDialog() async {
                 ),
                 const Divider(),
                 ListTile(
-                    title: Text(L10n.of(context).appVersion),
-                    subtitle: Text(version + (kDebugMode ? ' (debug)' : '')),
-                    onTap: () {
-                      Clipboard.setData(ClipboardData(text: version));
-                      AnxToast.show(L10n.of(context).notesPageCopied);
-                    }),
+                  title: Text(L10n.of(context).appVersion),
+                  subtitle: Text(version + (kDebugMode ? ' (debug)' : '')),
+                  onTap: () {
+                    Clipboard.setData(ClipboardData(text: version));
+                    AnxToast.show(L10n.of(context).notesPageCopied);
+                    _handleDeveloperUnlockTap(context);
+                  },
+                ),
                 if (!EnvVar.isAppStore)
                   ListTile(
                       title: Text(L10n.of(context).aboutCheckForUpdates),

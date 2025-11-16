@@ -200,6 +200,15 @@ class Prefs extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool get developerOptionsEnabled {
+    return prefs.getBool("developerOptionsEnabled") ?? false;
+  }
+
+  set developerOptionsEnabled(bool value) {
+    prefs.setBool("developerOptionsEnabled", value);
+    notifyListeners();
+  }
+
   List<StatisticsDashboardTileType> get statisticsDashboardTiles {
     final stored = prefs.getStringList(_statisticsDashboardTilesKey);
     if (stored == null || stored.isEmpty) {
