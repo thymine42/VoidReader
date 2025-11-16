@@ -21,8 +21,8 @@ class DeveloperOptionsPage extends StatelessWidget {
             children: [
               SwitchListTile(
                 title: const Text('Enable Developer Options'),
-                subtitle:
-                    const Text('Toggle off to hide developer entries in settings'),
+                subtitle: const Text(
+                    'Toggle off to hide developer entries in settings'),
                 value: enabled,
                 onChanged: (value) {
                   Prefs().developerOptionsEnabled = value;
@@ -53,4 +53,3 @@ class DeveloperOptionsPage extends StatelessWidget {
     );
   }
 }
-

@@ -65,8 +65,7 @@ class _VibrationTestPageState extends State<VibrationTestPage> {
                           ),
                         ),
                         const SizedBox(height: 12),
-                        _buildCapabilityRow(
-                            'Has Vibrator', caps.hasVibrator),
+                        _buildCapabilityRow('Has Vibrator', caps.hasVibrator),
                         _buildCapabilityRow(
                             'Has Amplitude Control', caps.hasAmplitudeControl),
                         _buildCapabilityRow('Supports Custom Patterns',
@@ -148,4 +147,3 @@ class _VibrationTestPageState extends State<VibrationTestPage> {
     return buffer.toString();
   }
 }
-
