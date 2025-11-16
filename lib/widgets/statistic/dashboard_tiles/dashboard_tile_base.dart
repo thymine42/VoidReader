@@ -278,7 +278,7 @@ class DashboardTileShell extends ConsumerWidget {
             ),
           )
               .then((_) {
-            VibrationService.soft();
+            VibrationService.rigid();
           });
         },
         child: Stack(
