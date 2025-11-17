@@ -152,16 +152,6 @@ const setStylesImportant = (el, styles) => {
   for (const [k, v] of Object.entries(styles)) style.setProperty(k, v, 'important')
 }
 
-const preferNativeSmoothScroll = (() => {
-  // Safari struggles with JS-driven scroll animations, so prefer native smooth scrolling there.
-  if (typeof navigator === 'undefined') return false
-  const ua = navigator.userAgent ?? ''
-  const vendor = navigator.vendor ?? ''
-  const isSafariFamily = /Safari/i.test(ua)
-    && !/(Chrome|CriOS|OPR|Edg|FxiOS|YaBrowser)/i.test(ua)
-  return vendor.includes('Apple') && isSafariFamily
-})()
-
 class View {
   #observer = new ResizeObserver(() => this.expand())
   #element = document.createElement('div')
@@ -806,7 +796,7 @@ export class Paginator extends HTMLElement {
 
     const pageArg = this.#rtl ? -page : page
     this.#disableMomentum()
-    return this.#scrollToPage(pageArg, 'snap', { animate: true, duration, restoreMomentum: true, momentumDelay: 20 }).then(() => {
+    return this.#scrollToPage(pageArg, 'snap', { animate: true, duration, restoreMomentum: true, momentumDelay: 200 }).then(() => {
       const dir = page <= 0 ? -1 : page >= pages - 1 ? 1 : null
       if (dir) return this.#goTo({
         index: this.#adjacentIndex(dir),
@@ -1034,6 +1024,7 @@ export class Paginator extends HTMLElement {
     if (reason === 'snap' || opts.disableMomentum) this.#disableMomentum()
 
     const previousBehavior = element.style.scrollBehavior
+    if (shouldAnimate) element.style.scrollBehavior = 'auto'
 
     if (Math.abs(element[scrollProp] - offset) < 1) {
       finish()
@@ -1044,53 +1035,16 @@ export class Paginator extends HTMLElement {
     // FIXME: vertical-rl only, not -lr
     if (this.scrolled && this.#vertical) offset = -offset
 
-    const distance = Math.abs(element[scrollProp] - offset)
-    const baseDuration = 300
-    const adaptiveDuration = opts.duration ?? Math.min(
-      400,
-      Math.max(200, baseDuration * (distance / (size || 1)))
-    )
-
     const useAnimation = shouldAnimate && this.hasAttribute('animated')
-    const useNativeSmoothScroll = useAnimation && preferNativeSmoothScroll
-
-    if (shouldAnimate && !useNativeSmoothScroll) element.style.scrollBehavior = 'auto'
-
-    if (useNativeSmoothScroll) {
-      this.#justAnchored = true
-      const scrollOptions = {
-        left: scrollProp === 'scrollLeft' ? offset : element.scrollLeft,
-        top: scrollProp === 'scrollTop' ? offset : element.scrollTop,
-        behavior: 'smooth',
-      }
-      element.style.scrollBehavior = 'smooth'
-      element.scrollTo(scrollOptions)
-      return new Promise(resolve => {
-        let rafId = null
-        let timeoutId = null
-        let done = false
-        const complete = () => {
-          if (done) return
-          done = true
-          if (rafId != null) cancelAnimationFrame(rafId)
-          if (timeoutId != null) clearTimeout(timeoutId)
-          finish()
-          element.style.scrollBehavior = previousBehavior
-          resolve()
-        }
-        const tick = () => {
-          if (Math.abs(element[scrollProp] - offset) <= 0.5) {
-            complete()
-            return
-          }
-          rafId = requestAnimationFrame(tick)
-        }
-        timeoutId = setTimeout(complete, adaptiveDuration + 120)
-        rafId = requestAnimationFrame(tick)
-      })
-    }
 
     if (useAnimation) {
+      const distance = Math.abs(element[scrollProp] - offset)
+      const baseDuration = 300
+      const adaptiveDuration = opts.duration ?? Math.min(
+        400,
+        Math.max(200, baseDuration * (distance / (size || 1)))
+      )
+
       this.#justAnchored = true
 
       return animate(
