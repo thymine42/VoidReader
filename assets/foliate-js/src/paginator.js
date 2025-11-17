@@ -1037,6 +1037,7 @@ export class Paginator extends HTMLElement {
     if (this.scrolled && this.#vertical) offset = -offset
 
     const useAnimation = shouldAnimate && this.hasAttribute('animated')
+    const propKey = scrollProp === 'scrollLeft' ? 'left' : 'top'
 
     if (useAnimation) {
       const distance = Math.abs(element[scrollProp] - offset)
@@ -1053,6 +1054,32 @@ export class Paginator extends HTMLElement {
       const initialProgress = averageSpeed > 0
         ? Math.min(0.45, (initialSpeed / averageSpeed) * 0.2)
         : 0
+
+      // Prefer native smooth scroll (runs on compositor and can keep 120Hz on Safari)
+      const supportsSmooth = 'scrollBehavior' in document.documentElement.style && !window.chrome
+      if (supportsSmooth && !opts.forceJsAnimation) {
+        this.#justAnchored = true
+        element.style.scrollBehavior = 'smooth'
+        element.scrollTo({ [propKey]: offset, behavior: 'smooth' })
+
+        // Resolve when we get close to target or after the expected duration.
+        return new Promise(resolve => {
+          const start = performance.now()
+          const check = now => {
+            const done = Math.abs(element[scrollProp] - offset) < 0.5
+              || now - start > adaptiveDuration + 120
+            if (done) resolve()
+            else requestAnimationFrame(check)
+          }
+          requestAnimationFrame(check)
+        }).then(() => {
+          element[scrollProp] = offset
+          return wait(10)
+        }).then(() => {
+          finish()
+          element.style.scrollBehavior = previousBehavior
+        })
+      }
 
       this.#justAnchored = true
 
