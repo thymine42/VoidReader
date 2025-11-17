@@ -1,12 +1,13 @@
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 const lerp = (min, max, x) => x * (max - min) + min
-// const easeOutSine = x => Math.sin((x * Math.PI) / 2)
-const easeOutSine = x => 1 - (1 - x) * (1 - x);
-const animate = (a, b, duration, ease, render) => new Promise(resolve => {
+const easeOutSine = x => Math.sin((x * Math.PI) / 2)
+// const easeOutSine = x => 1 - (1 - x) * (1 - x);
+const animate = (a, b, duration, ease, render, { initialProgress = 0 } = {}) => new Promise(resolve => {
   let start
+  const clampedInitial = Math.max(0, Math.min(initialProgress, 0.95))
   const step = now => {
-    start ??= now
+    start ??= now - clampedInitial * duration
     const fraction = Math.min(1, (now - start) / duration)
     render(lerp(a, b, ease(fraction)))
     if (fraction < 1) requestAnimationFrame(step)
@@ -790,13 +791,13 @@ export class Paginator extends HTMLElement {
     page = Math.max(0, Math.min(pages - 1, page))
     const targetOffset = page * size
     const distance = Math.abs(targetOffset - signedOffset)
-    const baseDuration = 280
-    const duration = Math.max(180, Math.min(380,
+    const baseDuration = 450
+    const duration = Math.max(260, Math.min(380,
       baseDuration * (distance / (size || 1) + 0.2)))
 
     const pageArg = this.#rtl ? -page : page
     this.#disableMomentum()
-    return this.#scrollToPage(pageArg, 'snap', { animate: true, duration, restoreMomentum: true, momentumDelay: 200 }).then(() => {
+    return this.#scrollToPage(pageArg, 'snap', { animate: true, duration, restoreMomentum: true, momentumDelay: 20, initialVelocity: velocity }).then(() => {
       const dir = page <= 0 ? -1 : page >= pages - 1 ? 1 : null
       if (dir) return this.#goTo({
         index: this.#adjacentIndex(dir),
@@ -1014,7 +1015,7 @@ export class Paginator extends HTMLElement {
       this.#afterScroll(reason)
       this.#ignoreNativeScroll = false
       if (reason === 'snap' || opts.restoreMomentum) {
-        const delay = opts.momentumDelay ?? 120
+        const delay = opts.momentumDelay ?? 20
         this.#cancelMomentumTimer()
         this.#momentumTimer = setTimeout(() => {
           this.#restoreMomentum()
@@ -1045,6 +1046,14 @@ export class Paginator extends HTMLElement {
         Math.max(200, baseDuration * (distance / (size || 1)))
       )
 
+      // Give the snap animation an initial kick based on release velocity so it
+      // doesn't start from a standstill and then accelerate.
+      const averageSpeed = adaptiveDuration ? distance / adaptiveDuration : 0
+      const initialSpeed = Math.abs(opts.initialVelocity ?? 0) * 0.3
+      const initialProgress = averageSpeed > 0
+        ? Math.min(0.45, (initialSpeed / averageSpeed) * 0.2)
+        : 0
+
       this.#justAnchored = true
 
       return animate(
@@ -1053,6 +1062,7 @@ export class Paginator extends HTMLElement {
         adaptiveDuration,
         easing,
         x => element[scrollProp] = x,
+        { initialProgress },
       ).then(() => {
         element[scrollProp] = offset
         return wait(10)
