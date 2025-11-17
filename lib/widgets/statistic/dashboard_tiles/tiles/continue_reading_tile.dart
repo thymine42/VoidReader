@@ -52,9 +52,11 @@ class ContinueReadingTile extends StatisticsDashboardTileBase {
           );
         }
         final book = data.book;
+        final heroTag = 'continue_reading_${book.id}';
         return _ContinueReadingContent(
           book: book,
           lastReadDate: data.lastReadDate,
+          heroTag: heroTag,
         );
       },
     );
@@ -68,8 +70,9 @@ class ContinueReadingTile extends StatisticsDashboardTileBase {
         );
     final book = data?.book;
     if (book == null) return;
+    final heroTag = 'continue_reading_${book.id}';
     final cfi = book.lastReadPosition.isEmpty ? null : book.lastReadPosition;
-    pushToReadingPage(ref, context, book, cfi: cfi);
+    pushToReadingPage(ref, context, book, cfi: cfi, heroTag: heroTag);
   }
 }
 
@@ -77,10 +80,12 @@ class _ContinueReadingContent extends StatelessWidget {
   const _ContinueReadingContent({
     required this.book,
     required this.lastReadDate,
+    required this.heroTag,
   });
 
   final Book book;
   final DateTime? lastReadDate;
+  final String heroTag;
 
   @override
   Widget build(BuildContext context) {
@@ -91,10 +96,13 @@ class _ContinueReadingContent extends StatelessWidget {
 
     return Row(
       children: [
-        BookCover(
-          book: book,
-          width: 60,
-          radius: 8,
+        Hero(
+          tag: heroTag,
+          child: BookCover(
+            book: book,
+            width: 60,
+            radius: 8,
+          ),
         ),
         const SizedBox(width: 12),
         Expanded(

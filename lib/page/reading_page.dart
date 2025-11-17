@@ -43,11 +43,13 @@ class ReadingPage extends ConsumerStatefulWidget {
     required this.book,
     this.cfi,
     required this.initialThemes,
+    this.heroTag,
   });
 
   final Book book;
   final String? cfi;
   final List<ReadTheme> initialThemes;
+  final String? heroTag;
 
   @override
   ConsumerState<ReadingPage> createState() => ReadingPageState();
@@ -67,7 +69,7 @@ class ReadingPageState extends ConsumerState<ReadingPage>
   DateTime? _sessionStart;
   Timer? _awakeTimer;
   bool bottomBarOffstage = true;
-  String heroTag = 'preventHeroWhenStart';
+  late String heroTag;
   Widget? _aiChat;
   final aiChatKey = GlobalKey<AiChatStreamState>();
   static const double _aiChatMinWidth = 240;
@@ -97,6 +99,7 @@ class ReadingPageState extends ConsumerState<ReadingPage>
     setAwakeTimer(Prefs().awakeTime);
 
     _book = widget.book;
+    heroTag = widget.heroTag ?? 'preventHeroWhenStart';
     // _volumeKeyBoard = VolumeKeyBoard.instance;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
@@ -105,13 +108,15 @@ class ReadingPageState extends ConsumerState<ReadingPage>
       }
     });
     // delay 1000ms to prevent hero animation
-    Future.delayed(const Duration(milliseconds: 2000), () {
-      if (mounted) {
-        setState(() {
-          heroTag = _book.coverFullPath;
-        });
-      }
-    });
+    if (widget.heroTag == null) {
+      Future.delayed(const Duration(milliseconds: 2000), () {
+        if (mounted) {
+          setState(() {
+            heroTag = _book.coverFullPath;
+          });
+        }
+      });
+    }
     super.initState();
   }
 
@@ -617,7 +622,8 @@ class ReadingPageState extends ConsumerState<ReadingPage>
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Hero(
-        tag: Prefs().openBookAnimation ? _book.coverFullPath : heroTag,
+        tag: widget.heroTag ??
+            (Prefs().openBookAnimation ? _book.coverFullPath : heroTag),
         child: FittedBox(
           fit: BoxFit.scaleDown,
           child: SizedBox(
