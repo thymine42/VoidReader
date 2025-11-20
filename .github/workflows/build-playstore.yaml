@@ -81,7 +81,8 @@ jobs:
       - name: Build and Release to Play Store
         run: |
           cd android
-          gem install bundler
+          gem install bundler --user-install
+          bundle config set --local path 'vendor/bundle'
           bundle install
           bundle exec fastlane android release_play_store track:${TRACK}
         env:
