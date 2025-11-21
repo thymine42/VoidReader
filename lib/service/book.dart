@@ -386,7 +386,7 @@ Future<void> pushToReadingPage(
     return;
   }
 
-  if (EnvVar.isAppStore) {
+  if (EnvVar.enableInAppPurchase) {
     if (!IAPService().isFeatureAvailable) {
       Navigator.of(context).push(
         CupertinoPageRoute(

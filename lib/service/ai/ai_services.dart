@@ -20,7 +20,7 @@ class AiServiceOption {
 
 List<AiServiceOption> buildDefaultAiServices() {
   return [
-    EnvVar.isBeian
+    !EnvVar.enableOpenAiConfig
         ? AiServiceOption(
             identifier: 'openai',
             title: '通用',

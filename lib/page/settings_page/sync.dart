@@ -235,7 +235,7 @@ class _SyncSettingState extends ConsumerState<SyncSetting> {
       _copyFileSync(File('$extractPath/${getSharedPrefsFileName()}'),
           await getAnxShredPrefsFile());
 
-      if (EnvVar.isAppStore) {
+      if (EnvVar.enableInAppPurchase) {
         Prefs().iapPurchaseStatus = false;
         IAPService().refresh();
         final _ = IAPService().isPurchased;

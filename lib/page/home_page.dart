@@ -104,7 +104,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   }
 
   Future<void> initAnx() async {
-    if (EnvVar.isAppStore) {
+    if (EnvVar.enableInAppPurchase) {
       IAPService().initialize();
     }
     AnxToast.init(context);

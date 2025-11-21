@@ -12,7 +12,7 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 Future<void> checkUpdate(bool manualCheck) async {
-  if (EnvVar.isAppStore) {
+  if (!EnvVar.enableCheckUpdate) {
     return;
   }
   // if is today

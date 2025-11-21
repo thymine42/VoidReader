@@ -134,11 +134,11 @@ Future<void> openAboutDialog() async {
                     _handleDeveloperUnlockTap(context);
                   },
                 ),
-                if (!EnvVar.isAppStore)
+                if (EnvVar.enableCheckUpdate)
                   ListTile(
                       title: Text(L10n.of(context).aboutCheckForUpdates),
                       onTap: () => checkUpdate(true)),
-                if (!EnvVar.isAppStore)
+                if (EnvVar.enableDonation)
                   ListTile(
                     title: Text(L10n.of(context).appDonate),
                     onTap: () {
@@ -183,8 +183,8 @@ Future<void> openAboutDialog() async {
                     );
                   },
                 ),
-                if (EnvVar.isBeian) const Divider(),
-                if (EnvVar.isBeian)
+                const Divider(),
+                if (EnvVar.showBeian) ...[
                   GestureDetector(
                     onTap: () {
                       launchUrl(Uri.parse('https://beian.miit.gov.cn/'),
@@ -192,7 +192,8 @@ Future<void> openAboutDialog() async {
                     },
                     child: const Text('闽ICP备2025091402号-1A'),
                   ),
-                if (!EnvVar.isBeian) const Divider(),
+                  const Divider(),
+                ],
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -210,7 +211,7 @@ Future<void> openAboutDialog() async {
                         ),
                         url: 'https://github.com/Anxcye/anx-reader',
                         mode: LaunchMode.externalApplication),
-                    if (!EnvVar.isBeian)
+                    if (EnvVar.showTelegramLink)
                       linkIcon(
                           icon: Icon(
                             Icons.telegram,

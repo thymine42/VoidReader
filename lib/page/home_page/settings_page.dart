@@ -62,7 +62,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
               ),
               const Divider(),
               const MoreSettings(),
-              if (EnvVar.isAppStore)
+              if (EnvVar.enableInAppPurchase)
                 ListTile(
                   title: Text(L10n.of(context).iapPageTitle),
                   leading: const Icon(Icons.star_outline),
