@@ -5,7 +5,7 @@ import 'package:anx_reader/enums/sync_protocol.dart';
 import 'package:anx_reader/l10n/generated/L10n.dart';
 import 'package:anx_reader/main.dart';
 import 'package:anx_reader/providers/sync.dart';
-import 'package:anx_reader/service/iap_service.dart';
+import 'package:anx_reader/service/iap/iap_service.dart';
 import 'package:anx_reader/service/sync/sync_client_factory.dart';
 import 'package:anx_reader/utils/env_var.dart';
 import 'package:anx_reader/utils/save_file_to_download.dart';

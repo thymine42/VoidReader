@@ -4,7 +4,7 @@ import 'package:anx_reader/l10n/generated/L10n.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
-import 'package:anx_reader/service/iap_service.dart';
+import 'package:anx_reader/service/iap/iap_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class IAPPage extends StatefulWidget {

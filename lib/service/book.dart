@@ -17,7 +17,7 @@ import 'package:anx_reader/providers/sync.dart';
 import 'package:anx_reader/providers/book_list.dart';
 import 'package:anx_reader/providers/toc_search.dart';
 import 'package:anx_reader/service/convert_to_epub/txt/convert_from_txt.dart';
-import 'package:anx_reader/service/iap_service.dart';
+import 'package:anx_reader/service/iap/iap_service.dart';
 import 'package:anx_reader/service/md5_service.dart';
 import 'package:anx_reader/utils/env_var.dart';
 import 'package:anx_reader/utils/get_path/get_base_path.dart';
