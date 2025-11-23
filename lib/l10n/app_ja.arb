@@ -346,6 +346,7 @@
   "iapPageFeatureRich": "豊富な機能",
   "iapPageFeatureRichDesc": "ノート、読み上げ、翻訳",
   "iapPageRestoreHint": "デバイス変更や再インストール時は、右上角の「購入復元」をクリック\n現在のApple ID配下のデバイスでのみ有効",
+  "iapPageRestoreHintPlayStore": "デバイス変更や再インストール時は、右上角の「購入復元」をクリック\n現在のGoogle Playアカウント配下のデバイスでのみ有効",
   "iapPageOneTimePurchase": "続行",
   "iapPageLifetimeHint": "一回限りの支払い、{price}で生涯アクセス",
   "iapPageStatusPurchased": "サポートありがとうございます！製品が正常に有効化されました",

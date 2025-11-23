@@ -346,6 +346,7 @@
   "iapPageFeatureRich": "Reichhaltige Funktionen",
   "iapPageFeatureRichDesc": "Notizen, Vorlesen, Übersetzung",
   "iapPageRestoreHint": "Wenn Sie das Gerät wechseln oder neu installieren, klicken Sie oben rechts auf 'Kauf wiederherstellen'.\nNur gültig für Geräte unter der aktuellen Apple ID",
+  "iapPageRestoreHintPlayStore": "Wenn Sie das Gerät wechseln oder neu installieren, klicken Sie oben rechts auf 'Kauf wiederherstellen'.\nNur gültig für Geräte unter dem aktuellen Google Play-Konto",
   "iapPageOneTimePurchase": "Weiter",
   "iapPageLifetimeHint": "Einmalzahlung, {price} lebenslanger Zugriff",
   "iapPageStatusPurchased": "Vielen Dank für Ihre Unterstützung! Ihr Produkt wurde erfolgreich aktiviert",

@@ -346,6 +346,7 @@
   "iapPageFeatureRich": "Características Ricas",
   "iapPageFeatureRichDesc": "Notas, narración, traducción",
   "iapPageRestoreHint": "Si cambias de dispositivo o reinstalas, haz clic en 'Restaurar Compra' en la esquina superior derecha.\nSolo válido para dispositivos bajo el Apple ID actual",
+  "iapPageRestoreHintPlayStore": "Si cambias de dispositivo o reinstalas, haz clic en 'Restaurar Compra' en la esquina superior derecha.\nSolo válido para dispositivos bajo la cuenta de Google Play actual",
   "iapPageOneTimePurchase": "Continuar",
   "iapPageLifetimeHint": "Pago único, acceso de por vida por {price}",
   "iapPageStatusPurchased": "¡Gracias por tu apoyo! Tu producto ha sido activado exitosamente",

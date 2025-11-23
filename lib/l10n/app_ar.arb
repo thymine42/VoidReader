@@ -346,6 +346,7 @@
   "iapPageFeatureRich": "ميزات غنية",
   "iapPageFeatureRichDesc": "الملاحظات ، السرد ، الترجمة",
   "iapPageRestoreHint": "إذا قمت بتغيير الجهاز أو إعادة التثبيت ، فانقر فوق \"استعادة الشراء\" في الزاوية اليمنى العليا.\nصالح فقط للأجهزة التي تعمل بمعرف Apple الحالي",
+  "iapPageRestoreHintPlayStore": "إذا قمت بتغيير الجهاز أو إعادة التثبيت ، فانقر فوق \"استعادة الشراء\" في الزاوية اليمنى العليا.\nصالح فقط للأجهزة التي تعمل بحساب Google Play الحالي",
   "iapPageOneTimePurchase": "متابعة",
   "iapPageLifetimeHint": "دفعة لمرة واحدة ، {price} وصول مدى الحياة",
   "iapPageStatusPurchased": "شكرا لدعمك! تم تفعيل منتجك بنجاح",

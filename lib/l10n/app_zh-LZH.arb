@@ -346,6 +346,7 @@
   "iapPageFeatureRich": "豐富功能",
   "iapPageFeatureRichDesc": "批註、朗讀、翻譯",
   "iapPageRestoreHint": "如更換設備、重新安裝，請點擊右上角 恢復購買\n僅針對當前AppleID下之設備生效",
+  "iapPageRestoreHintPlayStore": "如更換設備、重新安裝，請點擊右上角 恢復購買\n僅針對當前Google Play賬號下之設備生效",
   "iapPageOneTimePurchase": "繼續",
   "iapPageLifetimeHint": "一次性付費，{price} 終身使用",
   "iapPageStatusPurchased": "感謝汝之支持！汝已成功激活產品",

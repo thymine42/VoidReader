@@ -346,6 +346,7 @@
   "iapPageFeatureRich": "Zengin Özellikler",
   "iapPageFeatureRichDesc": "Notlar, anlatım, çeviri",
   "iapPageRestoreHint": "Cihaz değiştirirseniz veya yeniden yüklerseniz, sağ üst köşedeki 'Satın Almayı Geri Yükle'ye tıklayın.\nSadece mevcut Apple Kimliği altındaki cihazlar için geçerlidir",
+  "iapPageRestoreHintPlayStore": "Cihaz değiştirirseniz veya yeniden yüklerseniz, sağ üst köşedeki 'Satın Almayı Geri Yükle'ye tıklayın.\nSadece mevcut Google Play hesabı altındaki cihazlar için geçerlidir",
   "iapPageOneTimePurchase": "Devam Et",
   "iapPageLifetimeHint": "Tek seferlik ödeme, {price} ömür boyu erişim",
   "iapPageStatusPurchased": "Desteğiniz için teşekkür ederiz! Ürününüz başarıyla etkinleştirildi",

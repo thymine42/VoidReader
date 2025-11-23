@@ -346,6 +346,7 @@
   "iapPageFeatureRich": "Rich Features",
   "iapPageFeatureRichDesc": "Notes, narration, translation",
   "iapPageRestoreHint": "If you change device or reinstall, click 'Restore Purchase' in the top right corner.\nOnly valid for devices under the current Apple ID",
+  "iapPageRestoreHintPlayStore": "If you change device or reinstall, click 'Restore Purchase' in the top right corner.\nOnly valid for devices under the current Google Play account",
   "iapPageOneTimePurchase": "Continue",
   "iapPageLifetimeHint": "One-time payment, {price} lifetime access",
   "iapPageStatusPurchased": "Thank you for your support! Your product has been successfully activated",

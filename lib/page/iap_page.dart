@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:anx_reader/l10n/generated/L10n.dart';
 import 'package:anx_reader/models/iap_state.dart';
 import 'package:anx_reader/service/iap/iap_service.dart';
@@ -125,7 +127,10 @@ class IAPPage extends ConsumerWidget {
                     );
                   }),
                   const SizedBox(height: 30),
-                  Text(L10n.of(context).iapPageRestoreHint),
+                  if (Platform.isMacOS || Platform.isIOS)
+                    Text(L10n.of(context).iapPageRestoreHint),
+                  if (Platform.isAndroid)
+                    Text(L10n.of(context).iapPageRestoreHintPlayStore),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
