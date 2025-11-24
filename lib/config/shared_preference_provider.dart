@@ -44,7 +44,6 @@ const Set<String> _prefsImportSkipKeys = {
   'iapLastCheckTime',
 };
 
-
 class Prefs extends ChangeNotifier {
   late SharedPreferences prefs;
   static final Prefs _instance = Prefs._internal();
