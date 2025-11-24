@@ -31,7 +31,6 @@ enum StatisticsDashboardTileType {
 
 /// Default order for dashboard tiles when the user has not customized the layout.
 const List<StatisticsDashboardTileType> defaultStatisticsDashboardTiles = [
-  StatisticsDashboardTileType.continueReading,
   StatisticsDashboardTileType.readingDaysTotal,
   StatisticsDashboardTileType.booksTotal,
   StatisticsDashboardTileType.periodSummary,
