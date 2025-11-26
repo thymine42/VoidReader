@@ -5,9 +5,11 @@
 ## 1.10.1
 - Feat: When backing up/restoring, support cross-platform backup/restore (need to use the new version of the App for backup and restore)
 - Fix: Fix the issue where preference settings could not be correctly restored when restoring from backup in some cases (need to use the new version of the App for backup and restore)
+- Fix: Optimize page turn smoothness on Android and Windows devices
 
 - Feat: 备份/恢复时,支持跨平台备份/恢复(需要用新版App进行备份和恢复)
 - Fix: 修复部分情况下恢复备份时无法正确恢复偏好设置的问题(需要用新版App进行备份和恢复)
+- Fix: 优化Android、Windows设备翻页流畅度
 
 ## 1.10.0
 - Feat: More data display in the statistics interface
