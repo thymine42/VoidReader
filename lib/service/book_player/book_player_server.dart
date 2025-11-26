@@ -20,6 +20,13 @@ class Server {
   HttpServer? _server;
 
   Future start() async {
+    if (_server != null) {
+      AnxLog.info(
+        'Server: Existing instance detected on port ${_server?.port}, restarting',
+      );
+      await stop();
+    }
+
     var handler = const shelf.Pipeline()
         .addMiddleware(shelf.logRequests())
         .addHandler(_handleRequests);
@@ -28,7 +35,9 @@ class Server {
 
     try {
       _server = await io.serve(handler, '127.0.0.1', port);
-    } catch (e) {
+    } catch (e, s) {
+      AnxLog.warning(
+          'Server: Failed to bind to port $port, trying random port $e', s);
       _server = await io.serve(handler, '127.0.0.1', 0);
     }
 
@@ -42,8 +51,13 @@ class Server {
   }
 
   Future stop() async {
+    if (_server == null) {
+      return;
+    }
+    final stoppedPort = _server!.port;
     await _server?.close(force: true);
-    AnxLog.info('Server: Server stopped');
+    _server = null;
+    AnxLog.info('Server: Server stopped (port $stoppedPort)');
   }
 
   Future<String> _loadAsset(String path) async {
