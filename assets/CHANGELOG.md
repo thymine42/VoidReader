@@ -6,6 +6,7 @@
 - Feat: When backing up/restoring, support cross-platform backup/restore (need to use the new version of the App for backup and restore)
 - Feat: When exporting notes, you can sort by chapter order or time order
 - Feat: When viewing notes, you can remember the last sorting method
+- Feat: When exporting notes, you can choose whether to merge note titles from the same chapter
 - Fix: Fix the issue where preference settings could not be correctly restored when restoring from backup in some cases (need to use the new version of the App for backup and restore)
 - Fix: Optimize page turn smoothness on Android and Windows devices
 - Fix: Reduce cache usage on iOS devices
@@ -13,6 +14,7 @@
 - Feat: 备份/恢复时,支持跨平台备份/恢复(需要用新版App进行备份和恢复)
 - Feat: 笔记导出时可以按章节顺序或时间顺序排序
 - Feat：查看笔记时可以记忆上次的排序方式
+- Feat: 笔记导出时可以选择是否合并同一章节的笔记标题
 - Fix: 修复部分情况下恢复备份时无法正确恢复偏好设置的问题(需要用新版App进行备份和恢复)
 - Fix: 优化 Android、Windows 设备翻页流畅度
 - Fix: 减少 iOS 设备缓存使用
