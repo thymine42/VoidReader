@@ -1,3 +1,4 @@
+import 'package:anx_reader/config/shared_preference_provider.dart';
 import 'package:anx_reader/l10n/generated/L10n.dart';
 import 'package:anx_reader/models/book_note.dart';
 import 'package:anx_reader/models/book_notes_state.dart';
@@ -117,69 +118,93 @@ class _BookNotesPageState extends ConsumerState<BookNotesPage> {
     showModalBottomSheet(
       context: context,
       builder: (context) {
-        return Consumer(
-          builder: (context, ref, _) {
-            final asyncState = ref.watch(bookNotesControllerProvider(book));
-            return asyncState.when(
-              data: (state) => Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _exportSortControls(context, ref, state),
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        _exportButton(
-                          context,
-                          ref,
-                          book,
-                          notes,
-                          ExportType.copy,
-                          icon: const Icon(Icons.copy),
-                          label: 'Copy',
-                        ),
-                        _exportButton(
-                          context,
-                          ref,
-                          book,
-                          notes,
-                          ExportType.md,
-                          icon: const Icon(IonIcons.logo_markdown),
-                          label: 'Markdown',
-                        ),
-                        _exportButton(
-                          context,
-                          ref,
-                          book,
-                          notes,
-                          ExportType.txt,
-                          icon: const Icon(Icons.text_snippet),
-                          label: 'Text',
-                        ),
-                        _exportButton(
-                          context,
-                          ref,
-                          book,
-                          notes,
-                          ExportType.csv,
-                          icon: const Icon(Icons.table_chart),
-                          label: 'CSV',
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              loading: () => const SizedBox(
-                height: 120,
-                child: Center(child: CircularProgressIndicator()),
-              ),
-              error: (error, stack) => Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text('Error: $error'),
-              ),
+        bool mergeChapters = Prefs().notesExportMergeChapters;
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return Consumer(
+              builder: (context, ref, _) {
+                final asyncState = ref.watch(bookNotesControllerProvider(book));
+                return asyncState.when(
+                  data: (state) {
+                    final bool allowMerge =
+                        state.exportSortMode.field == NotesSortField.cfi;
+                    return Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          _exportSortControls(
+                            context,
+                            ref,
+                            state,
+                            mergeChapters: mergeChapters,
+                            onMergeChanged: (value) {
+                              setModalState(() {
+                                mergeChapters = value;
+                              });
+                              Prefs().notesExportMergeChapters = value;
+                            },
+                          ),
+                          const SizedBox(height: 20),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              _exportButton(
+                                context,
+                                ref,
+                                book,
+                                notes,
+                                ExportType.copy,
+                                mergeChapters: allowMerge && mergeChapters,
+                                icon: const Icon(Icons.copy),
+                                label: 'Copy',
+                              ),
+                              _exportButton(
+                                context,
+                                ref,
+                                book,
+                                notes,
+                                ExportType.md,
+                                mergeChapters: allowMerge && mergeChapters,
+                                icon: const Icon(IonIcons.logo_markdown),
+                                label: 'Markdown',
+                              ),
+                              _exportButton(
+                                context,
+                                ref,
+                                book,
+                                notes,
+                                ExportType.txt,
+                                mergeChapters: allowMerge && mergeChapters,
+                                icon: const Icon(Icons.text_snippet),
+                                label: 'Text',
+                              ),
+                              _exportButton(
+                                context,
+                                ref,
+                                book,
+                                notes,
+                                ExportType.csv,
+                                mergeChapters: false,
+                                icon: const Icon(Icons.table_chart),
+                                label: 'CSV',
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  loading: () => const SizedBox(
+                    height: 120,
+                    child: Center(child: CircularProgressIndicator()),
+                  ),
+                  error: (error, stack) => Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text('Error: $error'),
+                  ),
+                );
+              },
             );
           },
         );
@@ -190,8 +215,10 @@ class _BookNotesPageState extends ConsumerState<BookNotesPage> {
   Widget _exportSortControls(
     BuildContext context,
     WidgetRef ref,
-    BookNotesState state,
-  ) {
+    BookNotesState state, {
+    required bool mergeChapters,
+    required ValueChanged<bool> onMergeChanged,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -238,6 +265,33 @@ class _BookNotesPageState extends ConsumerState<BookNotesPage> {
             ),
           ],
         ),
+        if (state.exportSortMode.field == NotesSortField.cfi)
+          Padding(
+            padding: const EdgeInsets.only(top: 12.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'Merge chapters', // TODO: i18n
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                    ),
+                    Switch(
+                      value: mergeChapters,
+                      onChanged: onMergeChanged,
+                    ),
+                  ],
+                ),
+                Text(
+                  'When enabled, notes from the same chapter share a single heading.', // TODO: i18n
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ],
+            ),
+          ),
       ],
     );
   }
@@ -277,6 +331,7 @@ class _BookNotesPageState extends ConsumerState<BookNotesPage> {
     Book book,
     List<BookNote>? notes,
     ExportType type, {
+    required bool mergeChapters,
     required Widget icon,
     required String label,
   }) {
@@ -290,7 +345,12 @@ class _BookNotesPageState extends ConsumerState<BookNotesPage> {
           custom: notes,
         );
         Navigator.pop(context);
-        exportNotes(book, sorted, type);
+        exportNotes(
+          book,
+          sorted,
+          type,
+          mergeChapterHeadings: mergeChapters,
+        );
       },
     );
   }

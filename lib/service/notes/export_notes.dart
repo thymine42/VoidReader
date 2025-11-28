@@ -13,29 +13,22 @@ import 'package:anx_reader/utils/toast/common.dart';
 enum ExportType { copy, md, txt, csv }
 
 Future<void> exportNotes(
-    Book book, List<BookNote> notesList, ExportType exportType) async {
+  Book book,
+  List<BookNote> notesList,
+  ExportType exportType, {
+  bool mergeChapterHeadings = false,
+}) async {
   BuildContext context = navigatorKey.currentContext!;
   if (notesList.isEmpty) {
     return;
   }
 
+  final groups = _groupNotesByChapter(notesList, mergeChapterHeadings);
+
   switch (exportType) {
     case ExportType.copy:
       var notes = '${book.title}\n\t${book.author}\n\n';
-
-      notes += notesList.map((note) {
-        String exportContent = '${note.chapter}\n';
-
-        if (note.content.isNotEmpty) {
-          exportContent += '\t${note.content}\n';
-        }
-
-        if (note.readerNote != null && note.readerNote!.isNotEmpty) {
-          exportContent += '\t\t${note.readerNote}\n';
-        }
-
-        return exportContent;
-      }).join('\n\n');
+      notes += groups.map(_formatPlainGroup).join('\n\n');
 
       await Clipboard.setData(ClipboardData(text: notes));
       AnxToast.show(L10n.of(context).notesPageCopied);
@@ -43,18 +36,7 @@ Future<void> exportNotes(
 
     case ExportType.md:
       var notes = '# ${book.title}\n\n *${book.author}*\n\n';
-      notes += notesList.map((note) {
-        String exportContent = '## ${note.chapter}\n\n';
-        if (note.content.isNotEmpty) {
-          exportContent += '> ${note.content}\n\n';
-        }
-
-        if (note.readerNote != null && note.readerNote!.isNotEmpty) {
-          exportContent += '${note.readerNote}\n\n';
-        }
-
-        return exportContent;
-      }).join('');
+      notes += groups.map(_formatMarkdownGroup).join('');
 
       String? filePath = await saveFileToDownload(
           bytes: convertStringToUint8List(notes),
@@ -67,18 +49,7 @@ Future<void> exportNotes(
       break;
 
     case ExportType.txt:
-      var notes = notesList.map((note) {
-        String exportContent = '${note.chapter}\n';
-
-        if (note.content.isNotEmpty) {
-          exportContent += '\t${note.content}\n';
-        }
-
-        if (note.readerNote != null && note.readerNote!.isNotEmpty) {
-          exportContent += '\t\t${note.readerNote}\n';
-        }
-        return exportContent;
-      }).join('\n\n');
+      var notes = groups.map(_formatPlainGroup).join('\n\n');
       String? filePath = await saveFileToDownload(
           bytes: convertStringToUint8List(notes),
           fileName: '${book.title}.txt',
@@ -127,4 +98,83 @@ Future<void> exportNotes(
       }
       break;
   }
+}
+
+class _ChapterGroup {
+  final String chapter;
+  final List<BookNote> notes;
+
+  _ChapterGroup(this.chapter, this.notes);
+}
+
+List<_ChapterGroup> _groupNotesByChapter(
+    List<BookNote> notes, bool mergeChapters) {
+  if (!mergeChapters) {
+    return notes.map((note) => _ChapterGroup(note.chapter, [note])).toList();
+  }
+
+  final groups = <_ChapterGroup>[];
+  if (notes.isEmpty) return groups;
+
+  String currentChapter = notes.first.chapter;
+  List<BookNote> currentNotes = [];
+
+  void pushGroup() {
+    groups
+        .add(_ChapterGroup(currentChapter, List<BookNote>.from(currentNotes)));
+  }
+
+  for (final note in notes) {
+    if (currentNotes.isEmpty) {
+      currentChapter = note.chapter;
+      currentNotes.add(note);
+      continue;
+    }
+
+    if (note.chapter == currentChapter) {
+      currentNotes.add(note);
+    } else {
+      pushGroup();
+      currentChapter = note.chapter;
+      currentNotes = [note];
+    }
+  }
+
+  if (currentNotes.isNotEmpty) {
+    pushGroup();
+  }
+
+  return groups;
+}
+
+String _formatPlainGroup(_ChapterGroup group) {
+  final buffer = StringBuffer();
+  if (group.chapter.isNotEmpty) {
+    buffer.writeln(group.chapter);
+  }
+  for (final note in group.notes) {
+    if (note.content.isNotEmpty) {
+      buffer.writeln('\t${note.content}');
+    }
+    if (note.readerNote != null && note.readerNote!.isNotEmpty) {
+      buffer.writeln('\t\t${note.readerNote}');
+    }
+    buffer.writeln();
+  }
+  return buffer.toString().trim();
+}
+
+String _formatMarkdownGroup(_ChapterGroup group) {
+  final buffer = StringBuffer();
+  buffer.writeln('## ${group.chapter}\n');
+  for (final note in group.notes) {
+    if (note.content.isNotEmpty) {
+      buffer.writeln('> ${note.content}\n');
+    }
+    if (note.readerNote != null && note.readerNote!.isNotEmpty) {
+      buffer.writeln('${note.readerNote}\n');
+    }
+    buffer.writeln();
+  }
+  return buffer.toString();
 }

@@ -1012,6 +1012,15 @@ class Prefs extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool get notesExportMergeChapters {
+    return prefs.getBool('notesExportMergeChapters') ?? true;
+  }
+
+  set notesExportMergeChapters(bool value) {
+    prefs.setBool('notesExportMergeChapters', value);
+    notifyListeners();
+  }
+
   NotesSortField get notesViewSortFieldPref {
     final stored = prefs.getString('notesViewSortField');
     return NotesSortField.values.firstWhere(
