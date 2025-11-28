@@ -1,4 +1,5 @@
 import 'package:anx_reader/config/shared_preference_provider.dart';
+import 'package:anx_reader/constants/note_annotations.dart';
 import 'package:anx_reader/dao/book_note.dart';
 import 'package:anx_reader/l10n/generated/L10n.dart';
 import 'package:anx_reader/models/book_note.dart';
@@ -11,18 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-List<String> notesColors = ['66CCFF', 'FF0000', '00FF00', 'EB3BFF', 'FFD700'];
-List<Map<String, dynamic>> notesType = [
-  {
-    'type': 'highlight',
-    'icon': AntDesign.highlight_outline,
-  },
-  {
-    'type': 'underline',
-    'icon': Icons.format_underline,
-  },
-];
 
 class ExcerptMenu extends StatefulWidget {
   final String annoCfi;
@@ -259,8 +248,7 @@ class ExcerptMenuState extends State<ExcerptMenu> {
             onPressed: deleteHandler,
             icon: deleteIcon(),
           ),
-          for (Map<String, dynamic> type in notesType)
-            typeButton(type['type'], type['icon']),
+          for (final type in notesType) typeButton(type.type, type.icon),
           for (String color in notesColors) colorButton(color),
         ],
       ),

@@ -21,6 +21,7 @@ import 'package:anx_reader/models/book_style.dart';
 import 'package:anx_reader/models/chapter_split_presets.dart';
 import 'package:anx_reader/models/chapter_split_rule.dart';
 import 'package:anx_reader/models/font_model.dart';
+import 'package:anx_reader/models/book_notes_state.dart';
 import 'package:anx_reader/models/read_theme.dart';
 import 'package:anx_reader/models/reading_info.dart';
 import 'package:anx_reader/models/reading_rules.dart';
@@ -1008,6 +1009,58 @@ class Prefs extends ChangeNotifier {
 
   set sortOrder(SortOrderEnum order) {
     prefs.setString('sortOrder', order.name);
+    notifyListeners();
+  }
+
+  NotesSortField get notesViewSortFieldPref {
+    final stored = prefs.getString('notesViewSortField');
+    return NotesSortField.values.firstWhere(
+      (field) => field.name == stored,
+      orElse: () => NotesSortField.cfi,
+    );
+  }
+
+  set notesViewSortFieldPref(NotesSortField field) {
+    prefs.setString('notesViewSortField', field.name);
+    notifyListeners();
+  }
+
+  SortDirection get notesViewSortDirectionPref {
+    final stored = prefs.getString('notesViewSortDirection');
+    return SortDirection.values.firstWhere(
+      (dir) => dir.name == stored,
+      orElse: () => SortDirection.asc,
+    );
+  }
+
+  set notesViewSortDirectionPref(SortDirection direction) {
+    prefs.setString('notesViewSortDirection', direction.name);
+    notifyListeners();
+  }
+
+  NotesSortField get notesExportSortFieldPref {
+    final stored = prefs.getString('notesExportSortField');
+    return NotesSortField.values.firstWhere(
+      (field) => field.name == stored,
+      orElse: () => NotesSortField.cfi,
+    );
+  }
+
+  set notesExportSortFieldPref(NotesSortField field) {
+    prefs.setString('notesExportSortField', field.name);
+    notifyListeners();
+  }
+
+  SortDirection get notesExportSortDirectionPref {
+    final stored = prefs.getString('notesExportSortDirection');
+    return SortDirection.values.firstWhere(
+      (dir) => dir.name == stored,
+      orElse: () => SortDirection.asc,
+    );
+  }
+
+  set notesExportSortDirectionPref(SortDirection direction) {
+    prefs.setString('notesExportSortDirection', direction.name);
     notifyListeners();
   }
 

@@ -1,6 +1,6 @@
+import 'package:anx_reader/constants/note_annotations.dart';
 import 'package:anx_reader/models/book_note.dart';
 import 'package:anx_reader/utils/time_to_human.dart';
-import 'package:anx_reader/widgets/context_menu/excerpt_menu.dart';
 import 'package:anx_reader/widgets/common/container/filled_container.dart';
 import 'package:flutter/material.dart';
 
@@ -23,17 +23,9 @@ class BookNoteTile extends StatelessWidget {
   final EdgeInsetsGeometry margin;
 
   Icon _buildIcon(Color color) {
-    try {
-      final iconData = notesType
-          .firstWhere((element) => element['type'] == note.type)['icon'];
-      if (iconData is IconData) {
-        return Icon(iconData, color: color);
-      }
-      if (iconData is Icon) {
-        return Icon(iconData.icon, color: color);
-      }
-    } catch (_) {
-      // ignore and fall back to default icon below
+    final match = notesType.where((option) => option.type == note.type);
+    if (match.isNotEmpty) {
+      return Icon(match.first.icon, color: color);
     }
     return Icon(Icons.bookmark, color: color);
   }

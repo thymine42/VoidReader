@@ -1,6 +1,6 @@
-import 'package:anx_reader/dao/book_note.dart';
 import 'package:anx_reader/l10n/generated/L10n.dart';
 import 'package:anx_reader/models/book_note.dart';
+import 'package:anx_reader/models/book_notes_state.dart';
 import 'package:anx_reader/service/notes/export_notes.dart';
 import 'package:anx_reader/widgets/bookshelf/book_cover.dart';
 import 'package:anx_reader/widgets/book_notes/book_notes_list.dart';
@@ -9,10 +9,12 @@ import 'package:anx_reader/page/book_detail.dart';
 import 'package:anx_reader/widgets/common/container/filled_container.dart';
 import 'package:anx_reader/widgets/highlight_digit.dart';
 import 'package:anx_reader/widgets/icon_and_text.dart';
+import 'package:anx_reader/providers/book_notes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:icons_plus/icons_plus.dart';
 
-class BookNotesPage extends StatefulWidget {
+class BookNotesPage extends ConsumerStatefulWidget {
   const BookNotesPage({
     super.key,
     required this.book,
@@ -25,10 +27,10 @@ class BookNotesPage extends StatefulWidget {
   final bool isMobile;
 
   @override
-  State<BookNotesPage> createState() => _BookNotesPageState();
+  ConsumerState<BookNotesPage> createState() => _BookNotesPageState();
 }
 
-class _BookNotesPageState extends State<BookNotesPage> {
+class _BookNotesPageState extends ConsumerState<BookNotesPage> {
   Widget bookInfo(BuildContext context, Book book, int numberOfNotes) {
     TextStyle titleStyle = const TextStyle(
       fontSize: 24,
@@ -66,6 +68,7 @@ class _BookNotesPageState extends State<BookNotesPage> {
                     book: book,
                     height: 180,
                     width: 120,
+                    radius: 20,
                   )),
             ],
           );
@@ -97,6 +100,7 @@ class _BookNotesPageState extends State<BookNotesPage> {
                         book: book,
                         height: 180,
                         width: 120,
+                        radius: 20,
                       )),
                 ],
               ),
@@ -110,49 +114,185 @@ class _BookNotesPageState extends State<BookNotesPage> {
 
   Future<void> handleExportNotes(BuildContext context, Book book,
       {List<BookNote>? notes}) async {
-    notes ??= await bookNoteDao.selectBookNotesByBookId(book.id);
-
     showModalBottomSheet(
-        context: context,
-        builder: (context) {
-          return SizedBox(
-            height: 100,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                IconAndText(
-                    icon: const Icon(Icons.copy),
-                    text: 'Copy',
-                    onTap: () {
-                      Navigator.pop(context);
-                      exportNotes(book, notes!, ExportType.copy);
-                    }),
-                IconAndText(
-                    icon: const Icon(IonIcons.logo_markdown),
-                    text: 'Markdown',
-                    onTap: () {
-                      Navigator.pop(context);
-                      exportNotes(book, notes!, ExportType.md);
-                    }),
-                IconAndText(
-                    icon: const Icon(Icons.text_snippet),
-                    text: 'Text',
-                    onTap: () {
-                      Navigator.pop(context);
-                      exportNotes(book, notes!, ExportType.txt);
-                    }),
-                IconAndText(
-                    icon: const Icon(Icons.table_chart),
-                    text: 'CSV',
-                    onTap: () {
-                      Navigator.pop(context);
-                      exportNotes(book, notes!, ExportType.csv);
-                    }),
-              ],
+      context: context,
+      builder: (context) {
+        return Consumer(
+          builder: (context, ref, _) {
+            final asyncState = ref.watch(bookNotesControllerProvider(book));
+            return asyncState.when(
+              data: (state) => Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _exportSortControls(context, ref, state),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        _exportButton(
+                          context,
+                          ref,
+                          book,
+                          notes,
+                          ExportType.copy,
+                          icon: const Icon(Icons.copy),
+                          label: 'Copy',
+                        ),
+                        _exportButton(
+                          context,
+                          ref,
+                          book,
+                          notes,
+                          ExportType.md,
+                          icon: const Icon(IonIcons.logo_markdown),
+                          label: 'Markdown',
+                        ),
+                        _exportButton(
+                          context,
+                          ref,
+                          book,
+                          notes,
+                          ExportType.txt,
+                          icon: const Icon(Icons.text_snippet),
+                          label: 'Text',
+                        ),
+                        _exportButton(
+                          context,
+                          ref,
+                          book,
+                          notes,
+                          ExportType.csv,
+                          icon: const Icon(Icons.table_chart),
+                          label: 'CSV',
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              loading: () => const SizedBox(
+                height: 120,
+                child: Center(child: CircularProgressIndicator()),
+              ),
+              error: (error, stack) => Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text('Error: $error'),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _exportSortControls(
+    BuildContext context,
+    WidgetRef ref,
+    BookNotesState state,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          L10n.of(context).notesPageExport,
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        const SizedBox(height: 10),
+        Row(
+          children: [
+            _exportSortButton(
+              context: context,
+              label: L10n.of(context).notesPageSortTime,
+              field: NotesSortField.createdTime,
+              current: state.exportSortMode,
+              onPressed: () {
+                if (state.exportSortMode.field == NotesSortField.createdTime) {
+                  ref
+                      .read(bookNotesControllerProvider(widget.book).notifier)
+                      .toggleExportSortDirection();
+                } else {
+                  ref
+                      .read(bookNotesControllerProvider(widget.book).notifier)
+                      .setExportSortField(NotesSortField.createdTime);
+                }
+              },
             ),
-          );
-        });
+            _exportSortButton(
+              context: context,
+              label: L10n.of(context).notesPageSortChapter,
+              field: NotesSortField.cfi,
+              current: state.exportSortMode,
+              onPressed: () {
+                if (state.exportSortMode.field == NotesSortField.cfi) {
+                  ref
+                      .read(bookNotesControllerProvider(widget.book).notifier)
+                      .toggleExportSortDirection();
+                } else {
+                  ref
+                      .read(bookNotesControllerProvider(widget.book).notifier)
+                      .setExportSortField(NotesSortField.cfi);
+                }
+              },
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _exportSortButton({
+    required BuildContext context,
+    required String label,
+    required NotesSortField field,
+    required NotesSortMode current,
+    required VoidCallback onPressed,
+  }) {
+    final isActive = current.field == field;
+
+    final buttonChild = Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(label),
+        if (isActive)
+          Icon(
+            current.direction == SortDirection.asc
+                ? EvaIcons.arrow_up
+                : EvaIcons.arrow_down,
+          ),
+      ],
+    );
+
+    return Padding(
+        padding: const EdgeInsets.only(right: 8.0),
+        child: isActive
+            ? FilledButton(onPressed: onPressed, child: buttonChild)
+            : OutlinedButton(onPressed: onPressed, child: buttonChild));
+  }
+
+  Widget _exportButton(
+    BuildContext context,
+    WidgetRef ref,
+    Book book,
+    List<BookNote>? notes,
+    ExportType type, {
+    required Widget icon,
+    required String label,
+  }) {
+    return IconAndText(
+      icon: icon,
+      text: label,
+      onTap: () {
+        final controller = ref.read(bookNotesControllerProvider(book).notifier);
+        final sorted = controller.notesForExport(
+          selectedOnly: false,
+          custom: notes,
+        );
+        Navigator.pop(context);
+        exportNotes(book, sorted, type);
+      },
+    );
   }
 
   Row operators(BuildContext context, Book book) {
