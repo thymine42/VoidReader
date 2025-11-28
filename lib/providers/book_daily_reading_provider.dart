@@ -43,13 +43,11 @@ class BookDailyReading extends _$BookDailyReading {
       return BookDailyReadingData.mock();
     }
 
-    // 创建日期到阅读时长的映射
     final readingTimeMap = <String, int>{};
     for (final row in rawData) {
       readingTimeMap[row['day'] as String] = row['total_time'] as int;
     }
 
-    // 生成过去30天的完整数据（包括没有阅读记录的日期）
     final dates = <DateTime>[];
     final readingTimes = <int>[];
     final formattedLabels = <String>[];
@@ -65,7 +63,6 @@ class BookDailyReading extends _$BookDailyReading {
       readingTimes.add(readingTime);
       maxReadingTime = math.max(maxReadingTime, readingTime);
 
-      // 格式化标签：显示月份/日期
       if (i == days - 1 || date.day == 1 || (days - i) % 5 == 0) {
         formattedLabels.add('${date.month}/${date.day}');
       } else {
