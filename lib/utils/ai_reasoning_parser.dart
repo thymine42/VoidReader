@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:anx_reader/service/ai/tools/ai_tool_registry.dart';
+
 class ParsedReasoning {
   const ParsedReasoning({
     required this.timeline,
@@ -178,7 +180,8 @@ String reasoningContentToPlainText(String content) {
       case ParsedReasoningEntryType.tool:
         final step = entry.toolStep;
         if (step != null) {
-          final lines = <String>['[Tool ${step.name} ${step.status}]'];
+          final toolName = AiToolRegistry.displayNameForId(step.name);
+          final lines = <String>['[Tool $toolName ${step.status}]'];
           final output = step.output?.trim();
           if (output != null && output.isNotEmpty) {
             lines.add(output);

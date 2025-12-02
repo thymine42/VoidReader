@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:anx_reader/l10n/generated/L10n.dart';
+import 'package:anx_reader/service/ai/tools/ai_tool_registry.dart';
 import 'package:anx_reader/service/ai/tools/input/bookshelf_lookup_input.dart';
 import 'package:anx_reader/service/ai/tools/repository/books_repository.dart';
 
@@ -69,3 +71,11 @@ class BookshelfLookupTool
     return error is! TimeoutException;
   }
 }
+
+final AiToolDefinition bookshelfLookupToolDefinition = AiToolDefinition(
+  id: 'bookshelf_lookup',
+  displayNameBuilder: (L10n l10n) => 'Bookshelf Lookup',
+  descriptionBuilder: (L10n l10n) =>
+      'View the user bookshelf with titles, authors, progress, and grouping.',
+  build: (context) => BookshelfLookupTool(context.booksRepository).tool,
+);

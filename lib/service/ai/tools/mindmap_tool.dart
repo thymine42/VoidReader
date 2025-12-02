@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:anx_reader/l10n/generated/L10n.dart';
+import 'package:anx_reader/service/ai/tools/ai_tool_registry.dart';
 import 'package:anx_reader/service/ai/tools/input/mindmap_input.dart';
 import 'package:anx_reader/service/ai/tools/util/mindmap_outline_parser.dart';
 
@@ -49,4 +51,10 @@ class MindmapTool extends RepositoryTool<MindmapInput, Map<String, dynamic>> {
   }
 }
 
-final mindmapTool = MindmapTool().tool;
+final AiToolDefinition mindmapToolDefinition = AiToolDefinition(
+  id: 'mindmap_draw',
+  displayNameBuilder: (L10n l10n) => 'Mindmap',
+  descriptionBuilder: (L10n l10n) =>
+      'Transform a hierarchical bullet outline into the JSON used for mind maps.',
+  build: (context) => MindmapTool().tool,
+);

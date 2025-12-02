@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:anx_reader/l10n/generated/L10n.dart';
+import 'package:anx_reader/service/ai/tools/ai_tool_registry.dart';
 import 'package:anx_reader/service/ai/tools/input/calculator_input.dart';
 import 'package:anx_reader/utils/log/common.dart';
 import 'package:math_expressions/math_expressions.dart';
@@ -70,4 +72,10 @@ class CalculatorTool
   }
 }
 
-final calculatorTool = CalculatorTool().tool;
+final AiToolDefinition calculatorToolDefinition = AiToolDefinition(
+  id: 'calculator',
+  displayNameBuilder: (L10n l10n) => 'Calculator',
+  descriptionBuilder: (L10n l10n) =>
+      'Evaluate arithmetic expressions when you need a numeric answer.',
+  build: (context) => CalculatorTool().tool,
+);

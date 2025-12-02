@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:anx_reader/l10n/generated/L10n.dart';
 import 'package:anx_reader/models/book.dart';
+import 'package:anx_reader/service/ai/tools/ai_tool_registry.dart';
 import 'package:anx_reader/service/ai/tools/input/bookshelf_organize_input.dart';
 import 'package:anx_reader/service/ai/tools/repository/books_repository.dart';
 import 'package:anx_reader/service/ai/tools/repository/groups_repository.dart';
@@ -242,3 +244,13 @@ class BookshelfOrganizeTool
     return parts.join(' ');
   }
 }
+
+final AiToolDefinition bookshelfOrganizeToolDefinition = AiToolDefinition(
+  id: 'bookshelf_organize',
+  displayNameBuilder: (L10n l10n) => 'Bookshelf Organize',
+  descriptionBuilder: (L10n l10n) =>
+      'Draft bookshelf re-organization plans that the user can review and apply.',
+  build: (context) =>
+      BookshelfOrganizeTool(context.booksRepository, context.groupsRepository)
+          .tool,
+);

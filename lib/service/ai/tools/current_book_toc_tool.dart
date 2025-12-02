@@ -1,10 +1,11 @@
 import 'dart:async';
 
+import 'package:anx_reader/l10n/generated/L10n.dart';
 import 'package:anx_reader/models/toc_item.dart';
 import 'package:anx_reader/providers/book_toc.dart';
 import 'package:anx_reader/providers/current_reading.dart';
+import 'package:anx_reader/service/ai/tools/ai_tool_registry.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:langchain_core/tools.dart';
 
 import 'base_tool.dart';
 
@@ -67,6 +68,10 @@ class CurrentBookTocTool extends RepositoryTool<JsonMap, Map<String, dynamic>> {
   }
 }
 
-Tool currentBookTocTool(WidgetRef ref) {
-  return CurrentBookTocTool(ref).tool;
-}
+final AiToolDefinition currentBookTocToolDefinition = AiToolDefinition(
+  id: 'current_book_toc',
+  displayNameBuilder: (L10n l10n) => 'Current Book TOC',
+  descriptionBuilder: (L10n l10n) =>
+      'Get the table of contents for the active book including current position.',
+  build: (context) => CurrentBookTocTool(context.ref).tool,
+);

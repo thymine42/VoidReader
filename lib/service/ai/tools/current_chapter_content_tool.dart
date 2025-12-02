@@ -1,7 +1,8 @@
 import 'dart:async';
 
+import 'package:anx_reader/l10n/generated/L10n.dart';
+import 'package:anx_reader/service/ai/tools/ai_tool_registry.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:langchain_core/tools.dart';
 
 import 'base_tool.dart';
 import 'repository/chapter_content_repository.dart';
@@ -38,7 +39,12 @@ class CurrentChapterContentTool
     };
   }
 }
-
-Tool currentChapterContentTool(WidgetRef ref) {
-  return CurrentChapterContentTool(ref, const ChapterContentRepository()).tool;
-}
+final AiToolDefinition currentChapterContentToolDefinition = AiToolDefinition(
+  id: 'current_chapter_content',
+  displayNameBuilder: (L10n l10n) => 'Current Chapter Content',
+  descriptionBuilder: (L10n l10n) =>
+      'Pull the plain-text content of the chapter the user is reading.',
+  build: (context) =>
+      CurrentChapterContentTool(context.ref, const ChapterContentRepository())
+          .tool,
+);

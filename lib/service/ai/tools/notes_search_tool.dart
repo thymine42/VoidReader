@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:anx_reader/l10n/generated/L10n.dart';
+import 'package:anx_reader/service/ai/tools/ai_tool_registry.dart';
 import 'package:anx_reader/service/ai/tools/input/notes_search_input.dart';
 import 'package:anx_reader/service/ai/tools/repository/notes_repository.dart';
 
@@ -77,3 +79,11 @@ class NotesSearchTool
     return error is! TimeoutException;
   }
 }
+
+final AiToolDefinition notesSearchToolDefinition = AiToolDefinition(
+  id: 'notes_search',
+  displayNameBuilder: (L10n l10n) => 'Notes Search',
+  descriptionBuilder: (L10n l10n) =>
+      'Search user notes and highlights by keyword, book, or time range.',
+  build: (context) => NotesSearchTool(context.notesRepository).tool,
+);

@@ -5,6 +5,7 @@ import 'package:anx_reader/providers/ai_cache_count.dart';
 import 'package:anx_reader/service/ai/ai_services.dart';
 import 'package:anx_reader/service/ai/index.dart';
 import 'package:anx_reader/service/ai/prompt_generate.dart';
+import 'package:anx_reader/service/ai/tools/ai_tool_registry.dart';
 import 'package:anx_reader/widgets/ai/ai_stream.dart';
 import 'package:anx_reader/widgets/settings/settings_section.dart';
 import 'package:anx_reader/widgets/settings/settings_tile.dart';
@@ -68,35 +69,37 @@ class _AISettingsState extends ConsumerState<AISettings> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = L10n.of(context);
+
     List<Map<String, dynamic>> prompts = [
       {
         "identifier": AiPrompts.test,
-        "title": L10n.of(context).settingsAiPromptTest,
+        "title": l10n.settingsAiPromptTest,
         "variables": ["language_locale"],
       },
       {
         "identifier": AiPrompts.summaryTheChapter,
-        "title": L10n.of(context).settingsAiPromptSummaryTheChapter,
+        "title": l10n.settingsAiPromptSummaryTheChapter,
         "variables": [],
       },
       {
         "identifier": AiPrompts.summaryTheBook,
-        "title": L10n.of(context).settingsAiPromptSummaryTheBook,
+        "title": l10n.settingsAiPromptSummaryTheBook,
         "variables": [],
       },
       {
         "identifier": AiPrompts.summaryThePreviousContent,
-        "title": L10n.of(context).settingsAiPromptSummaryThePreviousContent,
+        "title": l10n.settingsAiPromptSummaryThePreviousContent,
         "variables": ["previous_content"],
       },
       {
         "identifier": AiPrompts.translate,
-        "title": L10n.of(context).settingsAiPromptTranslateAndDictionary,
+        "title": l10n.settingsAiPromptTranslateAndDictionary,
         "variables": ["text", "to_locale", "from_locale", "contextText"],
       },
       {
         "identifier": AiPrompts.mindmap,
-        "title": L10n.of(context).settingsAiPromptMindmap,
+        "title": l10n.settingsAiPromptMindmap,
         "variables": [],
       }
     ];
@@ -371,6 +374,42 @@ class _AISettingsState extends ConsumerState<AISettings> {
       ),
     );
 
+    final toolDefs = AiToolRegistry.definitions;
+    final enabledToolIds = Prefs().enabledAiToolIds;
+
+    final toolsTile = CustomSettingsTile(
+      child: Column(
+        children: [
+          for (final tool in toolDefs)
+            SettingsTile.switchTile(
+              initialValue: enabledToolIds.contains(tool.id),
+              onToggle: (value) {
+                final next = Set<String>.from(enabledToolIds);
+                if (value) {
+                  next.add(tool.id);
+                } else {
+                  next.remove(tool.id);
+                }
+                Prefs().enabledAiToolIds = next.toList();
+                setState(() {});
+              },
+              title: Text(tool.displayName(l10n)),
+              description: Text(tool.description(l10n)),
+            ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton(
+              onPressed: () {
+                Prefs().resetEnabledAiTools();
+                setState(() {});
+              },
+              child: Text(l10n.commonReset),
+            ),
+          ),
+        ],
+      ),
+    );
+
     return settingsSections(sections: [
       SettingsSection(
         title: Text(L10n.of(context).settingsAiServices),
@@ -394,6 +433,12 @@ class _AISettingsState extends ConsumerState<AISettings> {
         title: Text(L10n.of(context).settingsAiPrompt),
         tiles: [
           promptTile,
+        ],
+      ),
+      SettingsSection(
+        title: const Text('AI Tools'), //TODO
+        tiles: [
+          toolsTile,
         ],
       ),
       SettingsSection(

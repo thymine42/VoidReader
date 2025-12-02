@@ -27,6 +27,7 @@ import 'package:anx_reader/models/reading_info.dart';
 import 'package:anx_reader/models/reading_rules.dart';
 import 'package:anx_reader/widgets/statistic/dashboard_tiles/dashboard_tile_registry.dart';
 import 'package:anx_reader/models/window_info.dart';
+import 'package:anx_reader/service/ai/tools/ai_tool_registry.dart';
 import 'package:anx_reader/service/translate/index.dart';
 import 'package:anx_reader/utils/get_current_language_code.dart';
 import 'package:anx_reader/utils/log/common.dart';
@@ -61,6 +62,7 @@ class Prefs extends ChangeNotifier {
       'chapterSplitSelectedRuleId';
   static const String _chapterSplitCustomRulesKey = 'chapterSplitCustomRules';
   static const String _statisticsDashboardTilesKey = 'statisticsDashboardTiles';
+  static const String _enabledAiToolsKey = 'enabledAiTools';
 
   Future<void> initPrefs() async {
     prefs = await SharedPreferences.getInstance();
@@ -798,6 +800,38 @@ class Prefs extends ChangeNotifier {
 
   void deleteAiPrompt(AiPrompts identifier) {
     prefs.remove('aiPrompt_${identifier.name}');
+    notifyListeners();
+  }
+
+  List<String> get enabledAiToolIds {
+    final stored = prefs.getStringList(_enabledAiToolsKey);
+    if (stored == null) {
+      return AiToolRegistry.defaultEnabledToolIds();
+    }
+    if (stored.isEmpty) {
+      return const [];
+    }
+    final sanitized = AiToolRegistry.sanitizeIds(stored);
+    if (sanitized.isEmpty && stored.isNotEmpty) {
+      return AiToolRegistry.defaultEnabledToolIds();
+    }
+    return sanitized;
+  }
+
+  set enabledAiToolIds(List<String> ids) {
+    prefs.setStringList(
+      _enabledAiToolsKey,
+      AiToolRegistry.sanitizeIds(ids),
+    );
+    notifyListeners();
+  }
+
+  bool isAiToolEnabled(String id) {
+    return enabledAiToolIds.contains(id);
+  }
+
+  void resetEnabledAiTools() {
+    prefs.remove(_enabledAiToolsKey);
     notifyListeners();
   }
 

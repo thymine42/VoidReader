@@ -1,6 +1,7 @@
 import 'dart:async';
 
-import 'package:langchain_core/tools.dart';
+import 'package:anx_reader/l10n/generated/L10n.dart';
+import 'package:anx_reader/service/ai/tools/ai_tool_registry.dart';
 
 import 'base_tool.dart';
 import 'input/book_content_search_input.dart';
@@ -61,6 +62,11 @@ class BookContentSearchTool
   }
 }
 
-Tool bookContentSearchTool(BookContentSearchRepository repository) {
-  return BookContentSearchTool(repository).tool;
-}
+final AiToolDefinition bookContentSearchToolDefinition = AiToolDefinition(
+  id: 'book_content_search',
+  displayNameBuilder: (L10n l10n) => 'Book Content Search',
+  descriptionBuilder: (L10n l10n) =>
+      'Search within a specific book by keyword and return matched chapters/snippets.',
+  build: (context) =>
+      BookContentSearchTool(context.bookContentSearchRepository).tool,
+);

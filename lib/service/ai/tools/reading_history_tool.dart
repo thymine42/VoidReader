@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:anx_reader/l10n/generated/L10n.dart';
+import 'package:anx_reader/service/ai/tools/ai_tool_registry.dart';
 import 'package:anx_reader/service/ai/tools/input/reading_history_input.dart';
 import 'package:anx_reader/service/ai/tools/repository/reading_history_repository.dart';
 import 'package:anx_reader/utils/date/convert_seconds.dart';
@@ -76,5 +78,10 @@ class ReadingHistoryTool
   }
 }
 
-final readingHistoryTool =
-    ReadingHistoryTool(const ReadingHistoryRepository()).tool;
+final AiToolDefinition readingHistoryToolDefinition = AiToolDefinition(
+  id: 'reading_history',
+  displayNameBuilder: (L10n l10n) => 'Reading History',
+  descriptionBuilder: (L10n l10n) =>
+      'Retrieve historical reading sessions for habit analysis.',
+  build: (context) => ReadingHistoryTool(context.readingHistoryRepository).tool,
+);

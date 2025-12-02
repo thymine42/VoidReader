@@ -1,8 +1,9 @@
 import 'dart:async';
 
+import 'package:anx_reader/l10n/generated/L10n.dart';
 import 'package:anx_reader/providers/current_reading.dart';
+import 'package:anx_reader/service/ai/tools/ai_tool_registry.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:langchain_core/tools.dart';
 
 import 'base_tool.dart';
 
@@ -71,6 +72,10 @@ class CurrentReadingMetadataTool
   }
 }
 
-Tool currentReadingMetadataTool(WidgetRef ref) {
-  return CurrentReadingMetadataTool(ref).tool;
-}
+final AiToolDefinition currentReadingMetadataToolDefinition = AiToolDefinition(
+  id: 'current_reading_metadata',
+  displayNameBuilder: (L10n l10n) => 'Current Reading Metadata',
+  descriptionBuilder: (L10n l10n) =>
+      'Fetch metadata about the active reading session such as progress and chapter.',
+  build: (context) => CurrentReadingMetadataTool(context.ref).tool,
+);

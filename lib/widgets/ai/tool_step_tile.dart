@@ -1,3 +1,5 @@
+import 'package:anx_reader/l10n/generated/L10n.dart';
+import 'package:anx_reader/service/ai/tools/ai_tool_registry.dart';
 import 'package:anx_reader/utils/ai_reasoning_parser.dart';
 import 'package:anx_reader/widgets/ai/tool_tiles/tool_tile_base.dart';
 import 'package:anx_reader/widgets/common/container/filled_container.dart';
@@ -20,9 +22,13 @@ class _ToolStepTileState extends State<ToolStepTile> {
   @override
   Widget build(BuildContext context) {
     final statusColor = ToolTileBase.statusColorFor(widget.step.status);
+    final toolName = AiToolRegistry.displayNameForId(
+      widget.step.name,
+      l10n: L10n.of(context),
+    );
 
     return ToolTileBase(
-      title: widget.step.name,
+      title: toolName,
       leadingIcon: Icons.build,
       statusColor: statusColor,
       contentBuilder: (context) => Column(

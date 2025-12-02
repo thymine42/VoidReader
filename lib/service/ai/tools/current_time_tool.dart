@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:anx_reader/l10n/generated/L10n.dart';
+import 'package:anx_reader/service/ai/tools/ai_tool_registry.dart';
 import 'package:anx_reader/service/ai/tools/input/current_time_input.dart';
 
 import 'base_tool.dart';
@@ -48,4 +50,10 @@ class CurrentTimeTool
   }
 }
 
-final currentTimeTool = CurrentTimeTool().tool;
+final AiToolDefinition currentTimeToolDefinition = AiToolDefinition(
+  id: 'current_time',
+  displayNameBuilder: (L10n l10n) => 'Current Time',
+  descriptionBuilder: (L10n l10n) =>
+      'Retrieve the device current time to reference timestamps in replies.',
+  build: (context) => CurrentTimeTool().tool,
+);
