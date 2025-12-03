@@ -408,9 +408,6 @@ export class Paginator extends HTMLElement {
   #pendingScrollFrame = null
   #touchState
   #touchScrolled
-  #wheelState = null
-  #wheelScrolling = false
-  #wheelEndTimer = null
   #loadingNext = false
   #loadingPrev = false
   #momentumDisabled = false
@@ -581,7 +578,6 @@ export class Paginator extends HTMLElement {
     this.addEventListener('touchstart', this.#onTouchStart.bind(this), opts)
     this.addEventListener('touchmove', this.#onTouchMove.bind(this), opts)
     this.addEventListener('touchend', this.#onTouchEnd.bind(this), opts)
-    this.#container.addEventListener('wheel', this.#onWheel.bind(this), opts)
     this.addEventListener('load', ({ detail: { doc } }) => {
       doc.addEventListener('touchstart', this.#onTouchStart.bind(this), opts)
       doc.addEventListener('touchmove', this.#onTouchMove.bind(this), opts)
@@ -910,12 +906,7 @@ export class Paginator extends HTMLElement {
     state.vx = stepX / dt
     state.vy = stepY / dt
 
-    // Disable touchpad/scroll-wheel paging in paginated mode.
-    if (!this.scrolled) {
-      e.preventDefault()
-      return
-    }
-    return
+    if (this.scrolled) return
 
     if (verticalDrag && horizontalAxis) {
       e.preventDefault()
@@ -980,13 +971,6 @@ export class Paginator extends HTMLElement {
           .finally(() => { this.#touchState = null })
       else this.#touchState = null
     })
-  }
-  #onWheel(e) {
-    if (!this.scrolled) {
-      // Block wheel/touchpad navigation when paginated.
-      e.preventDefault()
-      return
-    }
   }
   // allows one to process rects as if they were LTR and horizontal
   #getRectMapper() {
@@ -1185,7 +1169,7 @@ export class Paginator extends HTMLElement {
       detail.fraction = (page - 1) / (pages - 2)
       detail.size = 1 / (pages - 2)
     }
-    if (!this.scrolled && reason === 'scroll' && (this.#touchState || this.#touchScrolled || this.#wheelScrolling)) {
+    if (!this.scrolled && reason === 'scroll' && (this.#touchState || this.#touchScrolled)) {
       this.#pendingRelocate = detail
       return
     }
@@ -1396,7 +1380,6 @@ export class Paginator extends HTMLElement {
     }
     this.#restoreMomentum()
     this.#pendingRelocate = null
-    if (this.#wheelEndTimer) clearTimeout(this.#wheelEndTimer)
   }
 }
 
