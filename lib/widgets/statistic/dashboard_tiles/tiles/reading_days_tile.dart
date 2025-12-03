@@ -31,7 +31,7 @@ class ReadingDaysTile extends StatisticsDashboardTileBase {
     return AsyncSkeletonWrapper<int>(
       asyncValue: asyncValue,
       mock: 28,
-      builder: (count) => DashboardMiniMetric(
+      builder: (count, _) => DashboardMiniMetric(
         value: count,
         label: l10nLocal.tileReadingDaysUnit,
         icon: metadata.icon,

@@ -33,7 +33,7 @@ class CompletionProgressTile extends StatisticsDashboardTileBase {
     return AsyncSkeletonWrapper<List<Book>>(
       asyncValue: asyncValue,
       mock: [Book.mock()],
-      builder: (books) => _CompletionContent(books: books),
+      builder: (books, _) => _CompletionContent(books: books),
     );
   }
 }

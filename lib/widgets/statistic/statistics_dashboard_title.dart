@@ -236,7 +236,7 @@ class TotalReadTime extends ConsumerWidget {
 
     return AsyncSkeletonWrapper<int>(
         asyncValue: ref.watch(totalReadingTimeProvider),
-        builder: (seconds) {
+        builder: (seconds, _) {
           final hours = seconds ~/ 3600;
           final minutes = (seconds % 3600) ~/ 60;
 

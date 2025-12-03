@@ -31,7 +31,7 @@ class BooksTotalTile extends StatisticsDashboardTileBase {
     return AsyncSkeletonWrapper<int>(
         asyncValue: asyncValue,
         mock: 12,
-        builder: (count) {
+        builder: (count, _) {
           return DashboardMiniMetric(
             value: count,
             label: l10nLocal.tileBooksReadUnit,

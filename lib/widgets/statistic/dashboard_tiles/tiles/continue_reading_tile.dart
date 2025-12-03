@@ -45,7 +45,7 @@ class ContinueReadingTile extends StatisticsDashboardTileBase {
         book: Book.mock(),
         lastReadDate: DateTime.now(),
       ),
-      builder: (data) {
+      builder: (data, _) {
         if (data == null) {
           return _EmptyState(
             onRefresh: () => ref.read(lastReadBookProvider.notifier).refresh(),

@@ -39,7 +39,7 @@ class TotalTimeTile extends StatisticsDashboardTileBase {
 
     return AsyncSkeletonWrapper<int>(
       asyncValue: totalReadingTime,
-      builder: (seconds) => _TotalTimeContent(
+      builder: (seconds, _) => _TotalTimeContent(
         seconds: seconds,
         metadata: metadata,
       ),

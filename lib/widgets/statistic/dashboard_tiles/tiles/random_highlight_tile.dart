@@ -35,7 +35,7 @@ class RandomHighlightTile extends StatisticsDashboardTileBase {
     final asyncValue = ref.watch(randomHighlightProvider);
     return AsyncSkeletonWrapper<RandomHighlightData?>(
       asyncValue: asyncValue,
-      builder: (data) {
+      builder: (data, _) {
         if (data == null) {
           return _EmptyHighlight(
             onRefresh: () =>

@@ -14,15 +14,16 @@ import 'package:skeletonizer/skeletonizer.dart';
 /// ```dart
 /// AsyncSkeletonWrapper(
 ///   asyncValue: ref.watch(myProvider),
-///   builder: (data) => MyWidget(data: data),
+///   builder: (data, isDataReady) => MyWidget(data: data, showLoadingState: !isDataReady),
 /// )
 /// ```
 class AsyncSkeletonWrapper<T> extends StatelessWidget {
   /// The AsyncValue to handle
   final AsyncValue<T> asyncValue;
 
-  /// Builder function that creates the widget from the data
-  final Widget Function(T data) builder;
+  /// Builder function that creates the widget from the data.
+  /// [isDataReady] indicates whether the provided data is real or mock.
+  final Widget Function(T data, bool isDataReady) builder;
 
   /// Optional custom skeleton widget. If not provided, the builder will be
   /// called with mock data to generate the skeleton automatically.
@@ -51,7 +52,7 @@ class AsyncSkeletonWrapper<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return asyncValue.when(
-      data: (data) => builder(data),
+      data: (data) => builder(data, true),
       loading: () {
         if (!enabled) {
           return const Center(child: CircularProgressIndicator());
@@ -70,7 +71,7 @@ class AsyncSkeletonWrapper<T> extends StatelessWidget {
           final mockData = mock ?? _createDefaultMock<T>();
           return Skeletonizer(
             enabled: true,
-            child: builder(mockData),
+            child: builder(mockData, false),
           );
         } catch (e) {
           // Fallback to circular progress if mock generation fails

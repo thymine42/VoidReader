@@ -31,7 +31,7 @@ class NotesTotalTile extends StatisticsDashboardTileBase {
     return AsyncSkeletonWrapper<int>(
       asyncValue: asyncValue,
       mock: 120,
-      builder: (count) => DashboardMiniMetric(
+      builder: (count, _) => DashboardMiniMetric(
         value: count,
         label: l10nLocal.tileNotesTotalUnit,
         icon: metadata.icon,

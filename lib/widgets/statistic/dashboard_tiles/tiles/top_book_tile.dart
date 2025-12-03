@@ -38,7 +38,7 @@ class TopBookTile extends StatisticsDashboardTileBase {
     return AsyncSkeletonWrapper(
       asyncValue: ref.watch(statisticDataProvider),
       mock: StatisticDataModel.mock(),
-      builder: (statisticData) {
+      builder: (statisticData, _) {
         if (statisticData.bookReadingTime.isEmpty) {
           return Center(child: FittedBox(child: StatisticsTips()));
         }
@@ -90,23 +90,27 @@ class TopBookTile extends StatisticsDashboardTileBase {
                       ],
                     ),
                     const SizedBox(height: 10),
-                    AsyncSkeletonWrapper(
-                        asyncValue: ref.watch(
-                          bookDailyReadingProvider(bookId: book.id),
-                        ),
-                        mock: BookDailyReadingData.mock(),
-                        builder: (bookReadingData) {
-                          return Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: BookReadingChart(
-                                cumulativeValues: bookReadingData.readingTimes,
-                                dailySeconds: bookReadingData.readingTimes,
-                                dates: bookReadingData.dates,
-                              ),
-                            ),
-                          );
-                        }),
+                      AsyncSkeletonWrapper(
+                          asyncValue: ref.watch(
+                            bookDailyReadingProvider(bookId: book.id),
+                          ),
+                          mock: BookDailyReadingData.mock(),
+                          builder: (bookReadingData, ready) {
+                            return ready
+                                ? Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: BookReadingChart(
+                                        cumulativeValues:
+                                            bookReadingData.readingTimes,
+                                        dailySeconds:
+                                            bookReadingData.readingTimes,
+                                        dates: bookReadingData.dates,
+                                      ),
+                                    ),
+                                  )
+                                : const SizedBox.shrink();
+                          }),
                   ]),
             ),
           ],

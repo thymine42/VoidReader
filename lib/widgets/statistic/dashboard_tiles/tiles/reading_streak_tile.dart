@@ -33,7 +33,7 @@ class ReadingStreakTile extends StatisticsDashboardTileBase {
         longestStreak: 12,
         lastReadingDay: null,
       ),
-      builder: (data) => _ReadingStreakContent(data: data),
+      builder: (data, _) => _ReadingStreakContent(data: data),
     );
   }
 }

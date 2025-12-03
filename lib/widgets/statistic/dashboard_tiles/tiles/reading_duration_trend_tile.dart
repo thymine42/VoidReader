@@ -50,7 +50,7 @@ abstract class _BaseReadingDurationTile extends StatisticsDashboardTileBase {
     return AsyncSkeletonWrapper<ReadingDurationTrendData>(
       asyncValue: asyncValue,
       mock: ReadingDurationTrendData.mock(),
-      builder: (data) => _ReadingDurationTileBody(
+      builder: (data, _) => _ReadingDurationTileBody(
         series: _selectSeries(data),
       ),
     );
