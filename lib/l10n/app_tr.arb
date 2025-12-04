@@ -704,7 +704,7 @@
   "tagAddButton": "Ekle",
   "tagEditTitle": "Etiketi düzenle",
   "tagNamePlaceholder": "Etiket adı",
-  "tagsEditOrRemoveHint": "Etiketi düzenlemek/silmek için uzun basın veya sağ tıklayın\\nRenkler etiketin kitaba bağlı olup olmadığını gösterir",
+  "tagsEditOrRemoveHint": "Etiketi düzenlemek/silmek için uzun basın veya sağ tıklayın\nRenkler etiketin kitaba bağlı olup olmadığını gösterir",
   "bookshelfFilterFinished": "Bitti",
   "bookshelfFilterReading": "Okunuyor",
   "bookshelfFilterNotStarted": "Başlanmadı",

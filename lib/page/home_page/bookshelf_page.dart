@@ -188,6 +188,11 @@ class BookshelfPageState extends ConsumerState<BookshelfPage>
                           spacing: 8,
                           runSpacing: 8,
                           children: [
+                            if (tags.isEmpty)
+                              Text(
+                                L10n.of(context).tagsEmptyHint,
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
                             for (final tag in tags)
                               TagChip(
                                 label: tag.name,

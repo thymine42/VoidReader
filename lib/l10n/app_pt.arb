@@ -704,7 +704,7 @@
   "tagAddButton": "Adicionar",
   "tagEditTitle": "Editar tag",
   "tagNamePlaceholder": "Nome da tag",
-  "tagsEditOrRemoveHint": "Pressione e segure ou clique com o botão direito para editar ou excluir tags\\nAs cores indicam se a tag está ligada ao livro",
+  "tagsEditOrRemoveHint": "Pressione e segure ou clique com o botão direito para editar ou excluir tags\nAs cores indicam se a tag está ligada ao livro",
   "bookshelfFilterFinished": "Concluído",
   "bookshelfFilterReading": "Lendo",
   "bookshelfFilterNotStarted": "Não iniciado",

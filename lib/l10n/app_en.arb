@@ -704,7 +704,7 @@
   "tagAddButton": "Add",
   "tagEditTitle": "Edit tag",
   "tagNamePlaceholder": "Tag name",
-  "tagsEditOrRemoveHint": "Long press or right-click to edit or delete tags\\nColors indicate whether the tag is attached to the book",
+  "tagsEditOrRemoveHint": "Long press or right-click to edit or delete tags\nColors indicate whether the tag is attached to the book",
   "bookshelfFilterFinished": "Finished",
   "bookshelfFilterReading": "Reading",
   "bookshelfFilterNotStarted": "Not started",
