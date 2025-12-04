@@ -7,7 +7,10 @@ import 'package:anx_reader/enums/sort_order.dart';
 import 'package:anx_reader/l10n/generated/L10n.dart';
 import 'package:anx_reader/main.dart';
 import 'package:anx_reader/models/book.dart';
+import 'package:anx_reader/models/tag.dart';
 import 'package:anx_reader/providers/book_list.dart';
+import 'package:anx_reader/providers/book_filters.dart';
+import 'package:anx_reader/providers/tags.dart';
 import 'package:anx_reader/service/book.dart';
 import 'package:anx_reader/page/search/search_page.dart';
 import 'package:anx_reader/utils/get_path/get_temp_dir.dart';
@@ -16,6 +19,7 @@ import 'package:anx_reader/widgets/bookshelf/book_bottom_sheet.dart';
 import 'package:anx_reader/widgets/bookshelf/book_folder.dart';
 import 'package:anx_reader/widgets/bookshelf/sync_button.dart';
 import 'package:anx_reader/widgets/common/container/filled_container.dart';
+import 'package:anx_reader/widgets/common/tag_chip.dart';
 import 'package:anx_reader/widgets/hint/hint_banner.dart';
 import 'package:anx_reader/widgets/common/anx_segmented_button.dart';
 import 'package:anx_reader/widgets/tips/bookshelf_tips.dart';
@@ -41,9 +45,18 @@ class BookshelfPageState extends ConsumerState<BookshelfPage>
   late final _scrollController = widget.controller ?? ScrollController();
   final _gridViewKey = GlobalKey();
   bool _dragging = false;
+  final GlobalKey _tagButtonKey = GlobalKey();
+  final TextEditingController _editTagController = TextEditingController();
 
   @override
   bool get wantKeepAlive => true;
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    _editTagController.dispose();
+    super.dispose();
+  }
 
   Future<File> _copyToTempFile({
     required String sourcePath,
@@ -88,6 +101,177 @@ class BookshelfPageState extends ConsumerState<BookshelfPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    final statusFilter = ref.watch(readingStatusFilterNotifierProvider);
+    final selectedTags = ref.watch(tagSelectionProvider);
+    final tagsAsync = ref.watch(tagListProvider);
+
+    Widget buildFilterBar() {
+      final statusChips = [
+        _StatusChip(
+          label: 'Finished', // TODO: l10n
+          selected: statusFilter == ReadingStatusFilter.finished,
+          onTap: () {
+            ref
+                .read(readingStatusFilterNotifierProvider.notifier)
+                .toggle(ReadingStatusFilter.finished);
+            ref.read(bookListProvider.notifier).refresh();
+          },
+        ),
+        _StatusChip(
+          label: 'Reading', // TODO: l10n
+          selected: statusFilter == ReadingStatusFilter.reading,
+          onTap: () {
+            ref
+                .read(readingStatusFilterNotifierProvider.notifier)
+                .toggle(ReadingStatusFilter.reading);
+            ref.read(bookListProvider.notifier).refresh();
+          },
+        ),
+        _StatusChip(
+          label: 'Not started', // TODO: l10n
+          selected: statusFilter == ReadingStatusFilter.notStarted,
+          onTap: () {
+            ref
+                .read(readingStatusFilterNotifierProvider.notifier)
+                .toggle(ReadingStatusFilter.notStarted);
+            ref.read(bookListProvider.notifier).refresh();
+          },
+        ),
+      ];
+
+      Future<void> showTagMenu() async {
+        final tags = tagsAsync.when(
+          data: (value) => value,
+          loading: () => const <Tag>[],
+          error: (_, __) => const <Tag>[],
+        );
+
+        if (!context.mounted) return;
+
+        final renderBox =
+            _tagButtonKey.currentContext?.findRenderObject() as RenderBox?;
+        final overlay =
+            Overlay.of(context).context.findRenderObject() as RenderBox?;
+        if (renderBox == null || overlay == null) return;
+
+        final position = RelativeRect.fromRect(
+          Rect.fromPoints(
+            renderBox.localToGlobal(Offset.zero, ancestor: overlay),
+            renderBox.localToGlobal(
+              renderBox.size.bottomRight(Offset.zero),
+              ancestor: overlay,
+            ),
+          ),
+          Offset.zero & overlay.size,
+        );
+
+        final liveSelected = {...selectedTags};
+
+        await showMenu<int>(
+          context: context,
+          position: position,
+          constraints: const BoxConstraints(maxHeight: 360, maxWidth: 260),
+          items: [
+            PopupMenuItem<int>(
+              enabled: false,
+              padding: EdgeInsets.zero,
+              child: Center(
+                child: Container(
+                  constraints:
+                      const BoxConstraints(maxHeight: 340, maxWidth: 240),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                  child: StatefulBuilder(
+                    builder: (context, setStateMenu) {
+                      return SingleChildScrollView(
+                        child: Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: [
+                            for (final tag in tags)
+                              TagChip(
+                                label: tag.name,
+                                selected: liveSelected.contains(tag.id),
+                                onTap: () {
+                                  setStateMenu(() {
+                                    if (liveSelected.contains(tag.id)) {
+                                      liveSelected.remove(tag.id);
+                                    } else {
+                                      liveSelected.add(tag.id);
+                                    }
+                                  });
+                                  ref
+                                      .read(tagSelectionProvider.notifier)
+                                      .toggle(tag.id);
+                                  ref.read(bookListProvider.notifier).refresh();
+                                },
+                                dense: true,
+                              ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      }
+
+      final selectedTagWidgets = tagsAsync.when(
+        data: (tags) {
+          final tagMap = {for (final t in tags) t.id: t};
+          final chips = selectedTags
+              .map((id) => tagMap[id])
+              .whereType<Tag>()
+              .map((tag) => Padding(
+                    padding: const EdgeInsets.only(left: 8),
+                    child: TagChip(
+                      label: tag.name,
+                      selected: true,
+                      onTap: () {
+                        ref.read(tagSelectionProvider.notifier).toggle(tag.id);
+                        ref.read(bookListProvider.notifier).refresh();
+                      },
+                      dense: true,
+                    ),
+                  ))
+              .toList();
+          return Row(children: chips);
+        },
+        loading: () => const SizedBox.shrink(),
+        error: (_, __) => const SizedBox.shrink(),
+      );
+
+      return Container(
+        height: 35,
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        child: Row(
+          children: [
+            const SizedBox(width: 8),
+            Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    ...statusChips,
+                    selectedTagWidgets,
+                  ],
+                ),
+              ),
+            ),
+            IconButton(
+              key: _tagButtonKey,
+              icon: const Icon(Icons.local_offer_outlined),
+              tooltip: 'Filter tags', // TODO: l10n
+              onPressed: showTagMenu,
+            ),
+          ],
+        ),
+      );
+    }
+
     void handleBottomSheet(BuildContext context, Book book) {
       showBottomSheet(
         context: context,
@@ -190,56 +374,63 @@ class BookshelfPageState extends ConsumerState<BookshelfPage>
           error: (error, stack) => Center(child: Text(error.toString())),
         );
 
-    Widget body = DropTarget(
-      onDragDone: (detail) async {
-        List<File> files = [];
-        for (var file in detail.files) {
-          files.add(await _copyToTempFile(
-            sourcePath: file.path,
-            fileName: file.name,
-          ));
-        }
-        importBookList(files, context, ref);
-        setState(() {
-          _dragging = false;
-        });
-      },
-      onDragEntered: (detail) {
-        setState(() {
-          _dragging = true;
-        });
-      },
-      onDragExited: (detail) {
-        setState(() {
-          _dragging = false;
-        });
-      },
-      child: Stack(
-        children: [
-          buildBookshelfBody,
-          if (_dragging)
-            Container(
-              color: Theme.of(context).colorScheme.surface.withAlpha(90),
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      EvaIcons.arrowhead_down_outline,
-                      size: 48,
-                      color: Theme.of(context).colorScheme.onSurface,
+    Widget body = Column(
+      children: [
+        buildFilterBar(),
+        Expanded(
+          child: DropTarget(
+            onDragDone: (detail) async {
+              List<File> files = [];
+              for (var file in detail.files) {
+                files.add(await _copyToTempFile(
+                  sourcePath: file.path,
+                  fileName: file.name,
+                ));
+              }
+              importBookList(files, context, ref);
+              setState(() {
+                _dragging = false;
+              });
+            },
+            onDragEntered: (detail) {
+              setState(() {
+                _dragging = true;
+              });
+            },
+            onDragExited: (detail) {
+              setState(() {
+                _dragging = false;
+              });
+            },
+            child: Stack(
+              children: [
+                buildBookshelfBody,
+                if (_dragging)
+                  Container(
+                    color: Theme.of(context).colorScheme.surface.withAlpha(90),
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            EvaIcons.arrowhead_down_outline,
+                            size: 48,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
+                          Text(
+                            L10n.of(context).bookshelfDragging,
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                        ],
+                      ),
                     ),
-                    Text(
-                      L10n.of(context).bookshelfDragging,
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                  ],
-                ),
-              ),
+                  ),
+              ],
             ),
-        ],
-      ),
+          ),
+        ),
+      ],
     );
 
     PreferredSizeWidget appBar = AppBar(
@@ -359,5 +550,31 @@ class BookshelfPageState extends ConsumerState<BookshelfPage>
           appBar: appBar,
           body: body,
         ));
+  }
+}
+
+class _StatusChip extends StatelessWidget {
+  const _StatusChip({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 8),
+      child: FilterChip(
+        label: Text(label),
+        selected: selected,
+        onSelected: (_) => onTap(),
+        backgroundColor: Theme.of(context).colorScheme.primary.withAlpha(25),
+        checkmarkColor: Theme.of(context).colorScheme.primary,
+      ),
+    );
   }
 }

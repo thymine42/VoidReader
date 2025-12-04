@@ -3,20 +3,26 @@ import 'dart:ui';
 
 import 'package:anx_reader/dao/book.dart';
 import 'package:anx_reader/dao/reading_time.dart';
+import 'package:anx_reader/enums/hint_key.dart';
 import 'package:anx_reader/enums/sync_direction.dart';
 import 'package:anx_reader/enums/sync_trigger.dart';
 import 'package:anx_reader/l10n/generated/L10n.dart';
 import 'package:anx_reader/models/book.dart';
 import 'package:anx_reader/models/reading_time.dart';
+import 'package:anx_reader/models/tag.dart';
 import 'package:anx_reader/providers/sync.dart';
 import 'package:anx_reader/providers/book_list.dart';
+import 'package:anx_reader/providers/tags.dart';
 import 'package:anx_reader/service/book.dart';
 import 'package:anx_reader/utils/date/convert_seconds.dart';
 import 'package:anx_reader/utils/get_path/get_base_path.dart';
 import 'package:anx_reader/utils/log/common.dart';
 import 'package:anx_reader/widgets/bookshelf/book_cover.dart';
+import 'package:anx_reader/widgets/common/async_skeleton_wrapper.dart';
 import 'package:anx_reader/widgets/common/container/filled_container.dart';
+import 'package:anx_reader/widgets/common/tag_chip.dart';
 import 'package:anx_reader/widgets/highlight_digit.dart';
+import 'package:anx_reader/widgets/hint/hint_banner.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -36,12 +42,19 @@ class _BookDetailState extends ConsumerState<BookDetail> {
   bool isEditing = false;
   late Book _book;
   bool _isCollapsed = false;
+  final TextEditingController _newTagController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     rating = widget.book.rating;
     _book = widget.book;
+  }
+
+  @override
+  void dispose() {
+    _newTagController.dispose();
+    super.dispose();
   }
 
   @override
@@ -293,8 +306,16 @@ class _BookDetailState extends ConsumerState<BookDetail> {
 
     Widget buildEditButton() {
       return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Spacer(),
+          Flexible(
+            child: HintBanner(
+              hintKey: HintKey.editBookDetails,
+              margin: EdgeInsets.only(right: 10),
+              child: Text('点击编辑可以修改书籍封面，标题标签等信息'), // TODO: l10n
+            ),
+          ),
+          // const Spacer(),
           isEditing
               ? OutlinedButton(
                   child: Row(
@@ -455,6 +476,160 @@ class _BookDetailState extends ConsumerState<BookDetail> {
       );
     }
 
+    Widget buildTagEditor() {
+      return FilledContainer(
+        width: MediaQuery.of(context).size.width,
+        margin: const EdgeInsets.symmetric(vertical: 10),
+        padding: const EdgeInsets.all(12),
+        child: AsyncSkeletonWrapper(
+          asyncValue: ref.watch(bookTagEditorProvider(widget.book.id)),
+          builder: (state, _) {
+            final notifier =
+                ref.read(bookTagEditorProvider(widget.book.id).notifier);
+            Future<void> showTagEditDialog(Tag tag) async {
+              await TagChip.showEditDialog(
+                context: context,
+                initialName: tag.name,
+                onRename: (newName) async {
+                  await ref
+                      .read(tagListProvider.notifier)
+                      .renameTag(tag.id, newName);
+                  ref.read(bookListProvider.notifier).refresh();
+                  ref.invalidate(bookTagEditorProvider(widget.book.id));
+                },
+                onDelete: () async {
+                  await ref.read(tagListProvider.notifier).deleteTag(tag.id);
+                  await notifier.detach(tag);
+                  ref.read(bookListProvider.notifier).refresh();
+                  ref.invalidate(bookTagEditorProvider(widget.book.id));
+                },
+              );
+            }
+
+            Future<void> toggle(Tag tag) async {
+              final currentlySelected = state.isAttached(tag.id);
+              if (currentlySelected) {
+                await notifier.detach(tag);
+              } else {
+                await notifier.attachExisting(tag);
+              }
+              ref.read(bookListProvider.notifier).refresh();
+            }
+
+            final attachedTags =
+                state.tags.where((t) => state.isAttached(t.id)).toList();
+
+            if (!isEditing) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Tags', // TODO: l10n
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 8),
+                  attachedTags.isEmpty
+                      ? Column(
+                          children: [
+                            HintBanner(
+                              margin: const EdgeInsets.symmetric(vertical: 8),
+                              hintKey: HintKey.addTags,
+                              child: Text(
+                                  'Press the edit button to add tags'), // TODO: l10n
+                            ),
+                            const Text('No tags'), //TODO: l10n
+                          ],
+                        )
+                      : Column(
+                          children: [
+                            Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: attachedTags
+                                  .map(
+                                    (tag) => TagChip(
+                                      label: tag.name,
+                                      selected: true,
+                                      dense: true,
+                                    ),
+                                  )
+                                  .toList(),
+                            ),
+                          ],
+                        ),
+                ],
+              );
+            }
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      'Tags', // TODO: l10n
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const Spacer(),
+                    SizedBox(
+                      width: 180,
+                      child: TextField(
+                        controller: _newTagController,
+                        decoration: const InputDecoration(
+                          hintText: 'New tag', // TODO: l10n
+                          isDense: true,
+                          contentPadding:
+                              EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        ),
+                        onSubmitted: (value) async {
+                          if (value.trim().isEmpty) return;
+                          await notifier.createAndAttach(value.trim());
+                          ref.read(bookListProvider.notifier).refresh();
+                          _newTagController.clear();
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    OutlinedButton(
+                      onPressed: () async {
+                        final value = _newTagController.text.trim();
+                        if (value.isEmpty) return;
+                        await notifier.createAndAttach(value);
+                        ref.read(bookListProvider.notifier).refresh();
+                        _newTagController.clear();
+                      },
+                      child: const Text('Add'), // TODO: l10n
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                if (state.tags.isNotEmpty)
+                  HintBanner(
+                    margin: const EdgeInsets.symmetric(vertical: 8),
+                    hintKey: HintKey.editOrRemoveTags,
+                    child: Text(
+                        'Long press or right-click to edit or delete tags\nColors indicate whether the tag is attached to the book'),
+                  ),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: state.tags
+                      .map((tag) => TagChip(
+                            label: tag.name,
+                            selected: state.isAttached(tag.id),
+                            onTap: () => toggle(tag),
+                            onLongPress: () => showTagEditDialog(tag),
+                            dense: true,
+                          ))
+                      .toList(),
+                ),
+              ],
+            );
+          },
+        ),
+      );
+    }
+
     Widget buildMoreDetail() {
       Widget buildReadingDetail() {
         return FutureBuilder<List<ReadingTime>>(
@@ -577,6 +752,7 @@ class _BookDetailState extends ConsumerState<BookDetail> {
                                   children: [
                                     buildBookBaseDetail(
                                         constraints.maxWidth / 2 - 20),
+                                    buildTagEditor(),
                                     buildEditButton(),
                                     const SizedBox(height: 5),
                                     buildBookStatistics(),
@@ -598,6 +774,7 @@ class _BookDetailState extends ConsumerState<BookDetail> {
                           return Column(
                             children: [
                               buildBookBaseDetail(constraints.maxWidth),
+                              buildTagEditor(),
                               buildEditButton(),
                               const SizedBox(height: 5),
                               buildBookStatistics(),
