@@ -303,7 +303,7 @@ class BookshelfPageState extends ConsumerState<BookshelfPage>
             ),
             IconButton(
               key: _tagButtonKey,
-              icon: const Icon(Icons.local_offer_outlined),
+              icon: const Icon(EvaIcons.pricetags_outline, size: 22),
               tooltip: L10n.of(context).bookshelfFilterTagsTooltip,
               onPressed: showTagMenu,
             ),
