@@ -18,6 +18,7 @@
 - Fix: Fix the issue where preference settings could not be correctly restored when restoring from backup in some cases (need to use the new version of the App for backup and restore)
 - Fix: Optimize page turn smoothness on Android and Windows devices
 - Fix: Reduce cache usage on iOS devices
+- Fix: Files can be imported through the "Open With" option
 
 - Feat: 优化孤行显示效果（在前一页剩余空间较大时，允许显示单行内容）
 - Feat: 支持AI为书籍添加标签，更改书签颜色等
@@ -34,6 +35,7 @@
 - Fix: 修复部分情况下恢复备份时无法正确恢复偏好设置的问题(需要用新版App进行备份和恢复)
 - Fix: 优化 Android、Windows 设备翻页流畅度
 - Fix: 减少 iOS 设备缓存使用
+- Fix: 可以通过打开方式导入文件
 
 ## 1.10.0
 - Feat: More data display in the statistics interface
