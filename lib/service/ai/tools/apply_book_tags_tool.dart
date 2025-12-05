@@ -1,4 +1,3 @@
-import 'package:anx_reader/dao/book.dart';
 import 'package:anx_reader/dao/tag.dart';
 import 'package:anx_reader/models/tag.dart';
 import 'package:anx_reader/service/ai/tools/base_tool.dart';
@@ -8,26 +7,8 @@ import 'package:anx_reader/service/ai/tools/repository/tag_repository.dart';
 import 'package:anx_reader/service/ai/tools/ai_tool_registry.dart';
 import 'package:anx_reader/utils/color/hash_color.dart';
 import 'package:anx_reader/utils/color/rgb.dart';
-import 'package:flutter/material.dart';
 
-const _tagsListToolId = 'tags_list';
-const _booksTagsListToolId = 'books_tags_list';
 const _applyBookTagsToolId = 'apply_book_tags';
-
-final tagsListToolDefinition = AiToolDefinition(
-  id: _tagsListToolId,
-  displayNameBuilder: (_) => 'List Tags',
-  descriptionBuilder: (_) => 'Returns all tags with id, name, and RGB color.',
-  build: (context) => TagsListTool(context.tagRepository).tool,
-);
-
-final booksTagsListToolDefinition = AiToolDefinition(
-  id: _booksTagsListToolId,
-  displayNameBuilder: (_) => 'List Book Tags',
-  descriptionBuilder: (_) =>
-      'Returns tags for books (id, title, tags with id/name/rgb). Accepts optional bookIds array.',
-  build: (context) => BooksTagsListTool(context.tagRepository).tool,
-);
 
 final applyBookTagsToolDefinition = AiToolDefinition(
   id: _applyBookTagsToolId,
@@ -37,96 +18,6 @@ final applyBookTagsToolDefinition = AiToolDefinition(
   build: (context) =>
       ApplyBookTagsTool(context.tagRepository, context.booksRepository).tool,
 );
-
-class TagsListTool
-    extends RepositoryTool<Map<String, dynamic>, List<Map<String, dynamic>>> {
-  TagsListTool(this._tagRepository)
-      : super(
-          name: _tagsListToolId,
-          description: 'List all tags with id, name, rgb.',
-          inputJsonSchema: const {
-            'type': 'object',
-          },
-          timeout: const Duration(seconds: 5),
-        );
-
-  final TagRepository _tagRepository;
-
-  @override
-  Map<String, dynamic> parseInput(Map<String, dynamic> json) => json;
-
-  @override
-  Future<List<Map<String, dynamic>>> run(Map<String, dynamic> input) async {
-    final tags = await _tagRepository.fetchAllTags();
-    return tags
-        .map((t) => {
-              'id': t.id,
-              'name': t.name,
-              'rgb': _rgbString(t.color ?? hashColor(t.name)),
-            })
-        .toList();
-  }
-}
-
-class BooksTagsListTool
-    extends RepositoryTool<Map<String, dynamic>, List<Map<String, dynamic>>> {
-  BooksTagsListTool(this._tagRepository)
-      : super(
-          name: _booksTagsListToolId,
-          description:
-              'List books with their tags. Optional bookIds array filters the result.',
-          inputJsonSchema: const {
-            'type': 'object',
-            'properties': {
-              'bookIds': {
-                'type': 'array',
-                'items': {'type': 'integer'},
-                'description': 'Optional list of book IDs to filter.',
-              }
-            }
-          },
-          timeout: const Duration(seconds: 8),
-        );
-
-  final TagRepository _tagRepository;
-
-  @override
-  Map<String, dynamic> parseInput(Map<String, dynamic> json) => json;
-
-  @override
-  Future<List<Map<String, dynamic>>> run(Map<String, dynamic> input) async {
-    final ids = (input['bookIds'] as List?)
-            ?.map((e) => (e as num?)?.toInt() ?? 0)
-            .where((e) => e > 0)
-            .toList() ??
-        const [];
-    final tagMap = await _tagRepository.fetchTagsForBooks(ids);
-    final books = ids.isEmpty
-        ? await bookDao.selectNotDeleteBooks()
-        : await bookDao.selectBooksByIds(ids);
-    final byId = {for (final b in books) b.id: b};
-    return tagMap.entries
-        .map((entry) {
-          final book = byId[entry.key];
-          if (book == null) return null;
-          return {
-            'bookId': book.id,
-            'bookTitle': book.title,
-            'tags': entry.value
-                .map((t) => {
-                      'id': t.id,
-                      'name': t.name,
-                      'rgb': _rgbString(
-                        t.color ?? hashColor(t.name),
-                      ),
-                    })
-                .toList(),
-          };
-        })
-        .whereType<Map<String, dynamic>>()
-        .toList();
-  }
-}
 
 class ApplyBookTagsTool
     extends RepositoryTool<ApplyBookTagsInput, Map<String, dynamic>> {
@@ -233,7 +124,7 @@ class ApplyBookTagsTool
         'id': target.id,
         if (update.name != null) 'name': update.name,
         if (update.rgb != null)
-          'rgb': _rgbString(_parseRgb(update.rgb) ?? sanitizeRgb(0)),
+          'rgb': rgbString(parseRgb(update.rgb) ?? sanitizeRgb(0)),
       });
     }
 
@@ -241,8 +132,8 @@ class ApplyBookTagsTool
     for (final create in input.createTags.where((c) => c.isValid)) {
       createPlans[create.name.toLowerCase()] = {
         'name': create.name,
-        'rgb': _rgbString(
-          _parseRgb(create.rgb) ?? hashColor(create.name),
+        'rgb': rgbString(
+          parseRgb(create.rgb) ?? hashColor(create.name),
         ),
       };
     }
@@ -276,7 +167,7 @@ class ApplyBookTagsTool
         if (!tagByName.containsKey(key)) {
           createPlans[key] = {
             'name': name,
-            'rgb': _rgbString(hashColor(name)),
+            'rgb': rgbString(hashColor(name)),
           };
         }
       }
@@ -298,7 +189,7 @@ class ApplyBookTagsTool
             .map(
               (n) => {
                 'name': n,
-                'rgb': _rgbString(
+                'rgb': rgbString(
                     tagByName[n.toLowerCase()]?.color ?? hashColor(n)),
               },
             )
@@ -324,31 +215,4 @@ class ApplyBookTagsTool
       'conflicts': conflicts,
     };
   }
-}
-
-int? _parseRgb(dynamic value) {
-  if (value == null) return null;
-  if (value is Color) return rgbFromColor(value);
-  if (value is num) {
-    return sanitizeRgb(value.toInt());
-  }
-  if (value is String) {
-    var v = value.trim();
-    if (v.startsWith('0x')) {
-      v = v.substring(2);
-    } else if (v.startsWith('#')) {
-      v = v.substring(1);
-    }
-    try {
-      return sanitizeRgb(int.parse(v, radix: 16));
-    } catch (_) {
-      return null;
-    }
-  }
-  return null;
-}
-
-String _rgbString(dynamic value) {
-  final rgb = _parseRgb(value) ?? 0;
-  return '0x${rgb.toRadixString(16).padLeft(6, '0')}';
 }
