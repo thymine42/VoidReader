@@ -11,6 +11,7 @@ import 'package:anx_reader/utils/ai_reasoning_parser.dart';
 import 'package:anx_reader/widgets/ai/tool_step_tile.dart';
 import 'package:anx_reader/widgets/ai/tool_tiles/mindmap_step_tile.dart';
 import 'package:anx_reader/widgets/ai/tool_tiles/organize_bookshelf_step_tile.dart';
+import 'package:anx_reader/widgets/ai/tool_tiles/apply_book_tags_step_tile.dart';
 
 class AiStream extends ConsumerStatefulWidget {
   const AiStream({
@@ -156,6 +157,9 @@ class AiStreamState extends ConsumerState<AiStream> {
     }
     if (step.name == 'mindmap_draw') {
       return MindmapStepTile(step: step);
+    }
+    if (step.name == 'apply_book_tags') {
+      return ApplyBookTagsStepTile(step: step);
     }
     return ToolStepTile(step: step);
   }

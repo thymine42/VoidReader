@@ -12,11 +12,13 @@ import 'package:anx_reader/service/ai/tools/current_time_tool.dart';
 import 'package:anx_reader/service/ai/tools/mindmap_tool.dart';
 import 'package:anx_reader/service/ai/tools/notes_search_tool.dart';
 import 'package:anx_reader/service/ai/tools/reading_history_tool.dart';
+import 'package:anx_reader/service/ai/tools/tag_tools.dart';
 import 'package:anx_reader/service/ai/tools/repository/book_content_search_repository.dart';
 import 'package:anx_reader/service/ai/tools/repository/books_repository.dart';
 import 'package:anx_reader/service/ai/tools/repository/groups_repository.dart';
 import 'package:anx_reader/service/ai/tools/repository/notes_repository.dart';
 import 'package:anx_reader/service/ai/tools/repository/reading_history_repository.dart';
+import 'package:anx_reader/service/ai/tools/repository/tag_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:langchain_core/tools.dart';
 
@@ -33,6 +35,7 @@ class AiToolContext {
   late final GroupsRepository groupsRepository = GroupsRepository();
   late final ReadingHistoryRepository readingHistoryRepository =
       ReadingHistoryRepository();
+  late final TagRepository tagRepository = TagRepository();
 
   bool get isReading => ref.read(currentReadingProvider).isReading;
 }
@@ -75,6 +78,9 @@ class AiToolRegistry {
     currentBookTocToolDefinition,
     currentChapterContentToolDefinition,
     chapterContentByHrefToolDefinition,
+    tagsListToolDefinition,
+    booksTagsListToolDefinition,
+    applyBookTagsToolDefinition,
   ];
 
   static final Map<String, AiToolDefinition> _definitionMap = {

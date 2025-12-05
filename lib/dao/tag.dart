@@ -101,6 +101,15 @@ class BookTagDao extends BaseDao {
     );
   }
 
+  Future<List<int>> fetchBookIdsForTag(int tagId) async {
+    final rows = await rawQueryList(
+      'SELECT line_height FROM $_stylesTable WHERE ABS(font_size - ?) < 0.0001 AND CAST(letter_spacing AS INTEGER) = ?',
+      arguments: [_relationSentinel, tagId],
+      mapper: (row) => (row['line_height'] as num? ?? 0).toInt(),
+    );
+    return rows;
+  }
+
   Future<List<int>> fetchTagIdsForBook(int bookId) async {
     final relations = await fetchRelationsForBook(bookId);
     return relations.map((r) => r.tagId).toList(growable: false);
