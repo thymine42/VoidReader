@@ -495,7 +495,8 @@ const getCSS = ({ fontSize,
         background-color: transparent !important;
         letter-spacing: ${letterSpacing}px;
         font-size: ${fontSize}em;
-        orphans: 1;
+        orphans: 1;  
+        widows: 1;
     }
 
     body {
