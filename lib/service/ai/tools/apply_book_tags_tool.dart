@@ -14,8 +14,7 @@ const _applyBookTagsToolId = 'apply_book_tags';
 final applyBookTagsToolDefinition = AiToolDefinition(
   id: _applyBookTagsToolId,
   displayNameBuilder: (L10n l10n) => l10n.aiToolApplyBookTagsName,
-  descriptionBuilder: (L10n l10n) =>
-      l10n.aiToolApplyBookTagsDescription,
+  descriptionBuilder: (L10n l10n) => l10n.aiToolApplyBookTagsDescription,
   build: (context) =>
       ApplyBookTagsTool(context.tagRepository, context.booksRepository).tool,
 );

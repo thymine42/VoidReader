@@ -11,8 +11,7 @@ const _booksTagsListToolId = 'books_tags_list';
 final booksTagsListToolDefinition = AiToolDefinition(
   id: _booksTagsListToolId,
   displayNameBuilder: (L10n l10n) => l10n.aiToolBooksTagsListName,
-  descriptionBuilder: (L10n l10n) =>
-      l10n.aiToolBooksTagsListDescription,
+  descriptionBuilder: (L10n l10n) => l10n.aiToolBooksTagsListDescription,
   build: (context) => BooksTagsListTool(context.tagRepository).tool,
 );
 
