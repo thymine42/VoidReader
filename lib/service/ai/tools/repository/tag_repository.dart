@@ -2,6 +2,7 @@ import 'package:anx_reader/dao/tag.dart';
 import 'package:anx_reader/models/tag.dart';
 import 'package:anx_reader/utils/color/hash_color.dart';
 import 'package:anx_reader/utils/color/rgb.dart';
+import 'package:flutter/material.dart';
 
 class TagRepository {
   const TagRepository();
@@ -12,28 +13,37 @@ class TagRepository {
 
   Future<Tag?> fetchTagByName(String name) => tagDao.getTagByName(name);
 
-  Future<Tag> ensureTag(String name, {int? color}) async {
+  Future<Tag> ensureTag(String name, {Color? color}) async {
+    final sanitizedColor =
+        color == null ? null : sanitizeRgb(rgbFromColor(color));
     final existing = await fetchTagByName(name);
     if (existing != null) {
-      if (color != null && existing.color != color) {
-        await tagDao.updateTag(existing.id, color: sanitizeRgb(color));
+      if (sanitizedColor != null &&
+          (existing.color == null ||
+              sanitizeRgb(rgbFromColor(existing.color!)) != sanitizedColor)) {
+        await tagDao.updateTag(existing.id, color: sanitizedColor);
       }
-      return (await fetchTagById(existing.id)) ?? existing;
+      return (await fetchTagById(existing.id)) ??
+          existing.copyWith(color: existing.color ?? color);
     }
-    final rgb = sanitizeRgb(color ?? hashColor(name).toARGB32());
+    final rgb = sanitizeRgb(
+      sanitizedColor ?? rgbFromColor(hashColor(name)),
+    );
     final id = await tagDao.insertTag(name, color: rgb);
-    return (await fetchTagById(id)) ?? Tag(id: id, name: name, color: rgb);
+    return (await fetchTagById(id)) ??
+        Tag(id: id, name: name, color: colorFromRgb(rgb));
   }
 
   Future<Tag> updateTag({
     required int id,
     String? newName,
-    int? color,
+    Color? color,
   }) async {
+    final rgb = color == null ? null : sanitizeRgb(rgbFromColor(color));
     await tagDao.updateTag(
       id,
       newName: newName,
-      color: color == null ? null : sanitizeRgb(color),
+      color: rgb,
     );
     final updated = await fetchTagById(id);
     if (updated == null) {

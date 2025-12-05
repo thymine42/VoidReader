@@ -1,12 +1,18 @@
+import 'dart:ui';
+
 class Tag {
   final int id;
   final String name;
-  final int? color; // RGB stored as int
+  final Color? color;
 
   const Tag({required this.id, required this.name, this.color});
 
-  Tag copyWith({int? id, String? name, int? color}) {
-    return Tag(id: id ?? this.id, name: name ?? this.name);
+  Tag copyWith({int? id, String? name, Color? color}) {
+    return Tag(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      color: color ?? this.color,
+    );
   }
 
   factory Tag.fromDb(Map<String, dynamic> row) {
@@ -14,7 +20,7 @@ class Tag {
     return Tag(
       id: row['id'] as int,
       name: row['font_family'] as String? ?? '',
-      color: colorValue?.toInt(),
+      color: colorValue == null ? null : Color(0xFF000000 | colorValue.toInt()),
     );
   }
 }

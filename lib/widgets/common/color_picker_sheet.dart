@@ -1,28 +1,27 @@
 import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/utils/color/rgb.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 /// Reusable RGB color picker dialog.
 /// Returns selected color as RGB int (0xRRGGBB), alpha is always 0xFF when displaying.
-Future<int?> showRgbColorPicker({
+Future<Color?> showRgbColorPicker({
   required BuildContext context,
-  required int initialColor, // expect RGB (0xRRGGBB)
+  required Color initialColor,
+  bool allowAlpha = true,
 }) async {
-  Color pickedColor = colorFromRgb(initialColor);
+  Color pickedColor = initialColor;
 
-  final result = await showDialog<int>(
+  final result = await showDialog<Color>(
     context: context,
     builder: (dialogContext) {
       return AlertDialog(
         content: SingleChildScrollView(
           child: ColorPicker(
             hexInputBar: true,
-            //
-            enableAlpha: false,
+            enableAlpha: allowAlpha,
             pickerColor: pickedColor,
             onColorChanged: (Color color) {
-              pickedColor = color.withAlpha(0xFF);
+              pickedColor = allowAlpha ? color : color.withAlpha(0xFF);
             },
             pickerAreaHeightPercent: 0.8,
           ),
@@ -37,7 +36,7 @@ Future<int?> showRgbColorPicker({
           TextButton(
             child: Text(L10n.of(context).commonOk),
             onPressed: () {
-              Navigator.of(dialogContext).pop(rgbFromColor(pickedColor));
+              Navigator.of(dialogContext).pop(pickedColor);
             },
           ),
         ],

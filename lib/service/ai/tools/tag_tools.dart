@@ -8,6 +8,7 @@ import 'package:anx_reader/service/ai/tools/repository/tag_repository.dart';
 import 'package:anx_reader/service/ai/tools/ai_tool_registry.dart';
 import 'package:anx_reader/utils/color/hash_color.dart';
 import 'package:anx_reader/utils/color/rgb.dart';
+import 'package:flutter/material.dart';
 
 const _tagsListToolId = 'tags_list';
 const _booksTagsListToolId = 'books_tags_list';
@@ -61,7 +62,7 @@ class TagsListTool
         .map((t) => {
               'id': t.id,
               'name': t.name,
-              'rgb': sanitizeRgb(t.color ?? hashColor(t.name).toARGB32()),
+              'rgb': _rgbString(t.color ?? hashColor(t.name)),
             })
         .toList();
   }
@@ -115,8 +116,9 @@ class BooksTagsListTool
                 .map((t) => {
                       'id': t.id,
                       'name': t.name,
-                      'rgb':
-                          t.color ?? sanitizeRgb(hashColor(t.name).toARGB32()),
+                      'rgb': _rgbString(
+                        t.color ?? hashColor(t.name),
+                      ),
                     })
                 .toList(),
           };
@@ -160,7 +162,10 @@ class ApplyBookTagsTool
                   'required': ['name'],
                   'properties': {
                     'name': {'type': 'string'},
-                    'rgb': {'type': 'integer'}
+                    'rgb': {
+                      'type': 'string',
+                      'description': 'RGB hex string, e.g. 0x33aa77',
+                    }
                   }
                 }
               },
@@ -172,7 +177,10 @@ class ApplyBookTagsTool
                   'properties': {
                     'id': {'type': 'integer'},
                     'name': {'type': 'string'},
-                    'rgb': {'type': 'integer'}
+                    'rgb': {
+                      'type': 'string',
+                      'description': 'RGB hex string, e.g. 0x33aa77',
+                    }
                   }
                 }
               }
@@ -224,7 +232,8 @@ class ApplyBookTagsTool
       updatePlans.add({
         'id': target.id,
         if (update.name != null) 'name': update.name,
-        if (update.rgb != null) 'rgb': sanitizeRgb(update.rgb!),
+        if (update.rgb != null)
+          'rgb': _rgbString(_parseRgb(update.rgb) ?? sanitizeRgb(0)),
       });
     }
 
@@ -232,8 +241,8 @@ class ApplyBookTagsTool
     for (final create in input.createTags.where((c) => c.isValid)) {
       createPlans[create.name.toLowerCase()] = {
         'name': create.name,
-        'rgb': sanitizeRgb(
-          create.rgb ?? hashColor(create.name).toARGB32(),
+        'rgb': _rgbString(
+          _parseRgb(create.rgb) ?? hashColor(create.name),
         ),
       };
     }
@@ -267,7 +276,7 @@ class ApplyBookTagsTool
         if (!tagByName.containsKey(key)) {
           createPlans[key] = {
             'name': name,
-            'rgb': sanitizeRgb(hashColor(name).toARGB32()),
+            'rgb': _rgbString(hashColor(name)),
           };
         }
       }
@@ -289,8 +298,8 @@ class ApplyBookTagsTool
             .map(
               (n) => {
                 'name': n,
-                'rgb': sanitizeRgb(tagByName[n.toLowerCase()]?.color ??
-                    hashColor(n).toARGB32()),
+                'rgb': _rgbString(
+                    tagByName[n.toLowerCase()]?.color ?? hashColor(n)),
               },
             )
             .toList(),
@@ -315,4 +324,31 @@ class ApplyBookTagsTool
       'conflicts': conflicts,
     };
   }
+}
+
+int? _parseRgb(dynamic value) {
+  if (value == null) return null;
+  if (value is Color) return rgbFromColor(value);
+  if (value is num) {
+    return sanitizeRgb(value.toInt());
+  }
+  if (value is String) {
+    var v = value.trim();
+    if (v.startsWith('0x')) {
+      v = v.substring(2);
+    } else if (v.startsWith('#')) {
+      v = v.substring(1);
+    }
+    try {
+      return sanitizeRgb(int.parse(v, radix: 16));
+    } catch (_) {
+      return null;
+    }
+  }
+  return null;
+}
+
+String _rgbString(dynamic value) {
+  final rgb = _parseRgb(value) ?? 0;
+  return '0x${rgb.toRadixString(16).padLeft(6, '0')}';
 }

@@ -3,7 +3,6 @@ import 'package:anx_reader/widgets/common/color_picker_sheet.dart';
 import 'package:anx_reader/widgets/delete_confirm.dart';
 import 'package:flutter/material.dart';
 import 'package:anx_reader/utils/color/hash_color.dart';
-import 'package:anx_reader/utils/color/rgb.dart';
 
 class TagChip extends StatelessWidget {
   const TagChip({
@@ -17,17 +16,14 @@ class TagChip extends StatelessWidget {
   });
 
   final String label;
-  final int? color;
+  final Color? color;
   final bool selected;
   final VoidCallback? onTap;
   final VoidCallback? onLongPress;
   final bool dense;
 
   Color _colorForLabel(String value) {
-    if (color != null) {
-      return Color(color! | 0xFF000000);
-    }
-    return hashColor(value);
+    return color ?? hashColor(value);
   }
 
   @override
@@ -68,9 +64,9 @@ class TagChip extends StatelessWidget {
   static Future<void> showEditDialog({
     required BuildContext context,
     required String initialName,
-    required int? initialColor, // RGB
+    required Color? initialColor, // RGB
     required Future<void> Function(String newName) onRename,
-    required Future<void> Function(int colorRgb) onColorChange,
+    required Future<void> Function(Color color) onColorChange,
     required Future<void> Function() onDelete,
   }) async {
     final l10n = L10n.of(context);
@@ -78,8 +74,8 @@ class TagChip extends StatelessWidget {
     await showDialog(
       context: context,
       builder: (dialogContext) {
-        int colorRgb =
-            sanitizeRgb(initialColor ?? hashColor(initialName).toARGB32());
+        Color colorValue =
+            (initialColor ?? hashColor(initialName)).withAlpha(0xFF);
         return StatefulBuilder(
           builder: (context, setStateDialog) {
             return AlertDialog(
@@ -102,17 +98,17 @@ class TagChip extends StatelessWidget {
               actions: [
                 IconButton(
                   tooltip: l10n.tagColorTooltip,
-                  icon: Icon(Icons.circle, color: colorFromRgb(colorRgb)),
+                  icon: Icon(Icons.circle, color: colorValue),
                   onPressed: () async {
                     final picked = await showRgbColorPicker(
                       context: context,
-                      initialColor: colorRgb,
+                      initialColor: colorValue,
                     );
                     if (picked != null) {
                       setStateDialog(() {
-                        colorRgb = sanitizeRgb(picked);
+                        colorValue = picked;
                       });
-                      await onColorChange(colorRgb);
+                      await onColorChange(colorValue);
                     }
                   },
                 ),

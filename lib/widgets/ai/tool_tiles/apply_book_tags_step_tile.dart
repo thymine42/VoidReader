@@ -167,11 +167,11 @@ class _ApplyBookTagsStepTileState extends State<ApplyBookTagsStepTile> {
                       children: (book['finalTags'] as List? ?? [])
                           .map((tag) {
                             final name = tag['name']?.toString() ?? '';
-                            final rgb = (tag['rgb'] as num?)?.toInt() ??
-                                sanitizeRgb(hashColor(name).toARGB32());
+                            final rgb = _parseRgb(tag['rgb']) ??
+                                rgbFromColor(hashColor(name));
                             return TagChip(
                               label: name,
-                              color: 0xFF000000 | rgb,
+                              color: colorFromRgb(rgb),
                               dense: true,
                               selected: true,
                             );
@@ -236,7 +236,7 @@ class _ApplyBookTagsStepTileState extends State<ApplyBookTagsStepTile> {
         await tagRepo.updateTag(
           id: id,
           newName: update['name'] as String?,
-          color: (update['rgb'] as num?)?.toInt(),
+          color: _colorFromPlan(update['rgb']),
         );
       }
 
@@ -244,7 +244,7 @@ class _ApplyBookTagsStepTileState extends State<ApplyBookTagsStepTile> {
       for (final create in (_plan!['createTags'] as List? ?? [])) {
         final name = (create['name'] ?? '').toString();
         if (name.isEmpty) continue;
-        final rgb = (create['rgb'] as num?)?.toInt();
+        final rgb = _colorFromPlan(create['rgb']);
         await tagRepo.ensureTag(name, color: rgb);
       }
 
@@ -260,10 +260,8 @@ class _ApplyBookTagsStepTileState extends State<ApplyBookTagsStepTile> {
             .map((e) => e.toString())
             .where((e) => e.isNotEmpty);
 
-        final desiredIds = <int>{};
         for (final name in addNames) {
           final tag = await tagRepo.ensureTag(name);
-          desiredIds.add(tag.id);
           await bookTagDao.addRelation(bookId: book.id, tagId: tag.id);
         }
         for (final name in removeNames) {
@@ -288,4 +286,27 @@ class _ApplyBookTagsStepTileState extends State<ApplyBookTagsStepTile> {
       AnxToast.show('Failed to apply tag changes: $e');
     }
   }
+}
+
+Color? _colorFromPlan(dynamic value) {
+  final rgb = _parseRgb(value);
+  if (rgb == null) return null;
+  return colorFromRgb(rgb);
+}
+
+int? _parseRgb(dynamic value) {
+  if (value == null) return null;
+  if (value is Color) return rgbFromColor(value);
+  if (value is num) return (value.toInt()) & 0x00FFFFFF;
+  if (value is String) {
+    var v = value.trim();
+    if (v.startsWith('0x')) v = v.substring(2);
+    if (v.startsWith('#')) v = v.substring(1);
+    try {
+      return int.parse(v, radix: 16) & 0x00FFFFFF;
+    } catch (_) {
+      return null;
+    }
+  }
+  return null;
 }

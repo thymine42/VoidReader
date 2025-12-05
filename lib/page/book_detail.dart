@@ -18,7 +18,6 @@ import 'package:anx_reader/utils/date/convert_seconds.dart';
 import 'package:anx_reader/utils/get_path/get_base_path.dart';
 import 'package:anx_reader/utils/log/common.dart';
 import 'package:anx_reader/utils/color/hash_color.dart';
-import 'package:anx_reader/utils/color/rgb.dart';
 import 'package:anx_reader/widgets/bookshelf/book_cover.dart';
 import 'package:anx_reader/widgets/common/async_skeleton_wrapper.dart';
 import 'package:anx_reader/widgets/common/container/filled_container.dart';
@@ -46,7 +45,7 @@ class _BookDetailState extends ConsumerState<BookDetail> {
   late Book _book;
   bool _isCollapsed = false;
   final TextEditingController _newTagController = TextEditingController();
-  int? _pendingTagColor;
+  Color? _pendingTagColor;
 
   @override
   void initState() {
@@ -494,7 +493,7 @@ class _BookDetailState extends ConsumerState<BookDetail> {
               await TagChip.showEditDialog(
                 context: context,
                 initialName: tag.name,
-                initialColor: tag.color ?? hashColor(tag.name).toARGB32(),
+                initialColor: tag.color ?? hashColor(tag.name),
                 onRename: (newName) async {
                   await ref
                       .read(tagListProvider.notifier)
@@ -596,17 +595,18 @@ class _BookDetailState extends ConsumerState<BookDetail> {
                         onChanged: (_) {
                           setState(() {
                             final text = _newTagController.text.trim();
-                            _pendingTagColor = text.isEmpty
-                                ? null
-                                : sanitizeRgb(hashColor(text).toARGB32());
+                            _pendingTagColor =
+                                text.isEmpty ? null : hashColor(text);
                           });
                         },
                         onSubmitted: (value) async {
                           if (value.trim().isEmpty) return;
-                          final color = sanitizeRgb(_pendingTagColor ??
-                              hashColor(value.trim()).toARGB32());
-                          await notifier.createAndAttach(value.trim(),
-                              color: color);
+                          final color =
+                              _pendingTagColor ?? hashColor(value.trim());
+                          await notifier.createAndAttach(
+                            value.trim(),
+                            color: color,
+                          );
                           ref.read(bookListProvider.notifier).refresh();
                           _newTagController.clear();
                           _pendingTagColor = null;
@@ -617,20 +617,20 @@ class _BookDetailState extends ConsumerState<BookDetail> {
                     const SizedBox(width: 8),
                     Builder(builder: (context) {
                       final currentText = _newTagController.text.trim();
-                      final defaultColor = sanitizeRgb(_pendingTagColor ??
+                      final defaultColor = _pendingTagColor ??
                           (currentText.isEmpty
-                              ? hashColor('tag').toARGB32()
-                              : hashColor(currentText).toARGB32()));
+                              ? hashColor('tag')
+                              : hashColor(currentText));
                       return IconButton(
                         tooltip: L10n.of(context).tagColorTooltip,
-                        icon: Icon(Icons.circle,
-                            color: Color(defaultColor | 0xFF000000)),
+                        icon: Icon(Icons.circle, color: defaultColor),
                         onPressed: currentText.isEmpty
                             ? null
                             : () async {
                                 final picked = await showRgbColorPicker(
                                   context: context,
                                   initialColor: defaultColor,
+                                  allowAlpha: false,
                                 );
                                 if (picked != null) {
                                   setState(() {
@@ -645,8 +645,7 @@ class _BookDetailState extends ConsumerState<BookDetail> {
                       onPressed: () async {
                         final value = _newTagController.text.trim();
                         if (value.isEmpty) return;
-                        final color = sanitizeRgb(
-                            _pendingTagColor ?? hashColor(value).toARGB32());
+                        final color = _pendingTagColor ?? hashColor(value);
                         await notifier.createAndAttach(value, color: color);
                         ref.read(bookListProvider.notifier).refresh();
                         _newTagController.clear();

@@ -144,7 +144,7 @@ class BookshelfPageState extends ConsumerState<BookshelfPage>
         await TagChip.showEditDialog(
           context: context,
           initialName: tag.name,
-          initialColor: tag.color ?? hashColor(tag.name).toARGB32(),
+          initialColor: tag.color ?? hashColor(tag.name),
           onRename: (newName) async {
             await ref
                 .read(tagListProvider.notifier)
@@ -154,7 +154,7 @@ class BookshelfPageState extends ConsumerState<BookshelfPage>
           onColorChange: (color) async {
             await ref
                 .read(tagListProvider.notifier)
-                .updateTag(tag.id, color: color & 0x00FFFFFF);
+                .updateTag(tag.id, color: color);
             ref.read(bookListProvider.notifier).refresh();
           },
           onDelete: () async {

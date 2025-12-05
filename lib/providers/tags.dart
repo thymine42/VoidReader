@@ -1,5 +1,7 @@
 import 'package:anx_reader/dao/tag.dart';
 import 'package:anx_reader/models/tag.dart';
+import 'package:anx_reader/utils/color/rgb.dart';
+import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'tags.g.dart';
@@ -11,14 +13,16 @@ class TagList extends _$TagList {
     return tagDao.fetchAllTags();
   }
 
-  Future<int> createTag(String name, {int? color}) async {
-    final id = await tagDao.insertTag(name, color: color);
+  Future<int> createTag(String name, {Color? color}) async {
+    final rgb = color == null ? null : rgbFromColor(color);
+    final id = await tagDao.insertTag(name, color: rgb);
     await _refresh();
     return id;
   }
 
-  Future<void> updateTag(int id, {String? newName, int? color}) async {
-    await tagDao.updateTag(id, newName: newName, color: color);
+  Future<void> updateTag(int id, {String? newName, Color? color}) async {
+    final rgb = color == null ? null : rgbFromColor(color);
+    await tagDao.updateTag(id, newName: newName, color: rgb);
     await _refresh();
   }
 
@@ -44,7 +48,7 @@ class BookTagState {
 
   bool isAttached(int tagId) => attachedIds.contains(tagId);
 
-  Tag resolveWithColor(Tag tag, int Function(String) fallback) {
+  Tag resolveWithColor(Tag tag, Color Function(String) fallback) {
     if (tag.color != null) return tag;
     return tag.copyWith(color: fallback(tag.name));
   }
@@ -70,8 +74,8 @@ class BookTagEditor extends _$BookTagEditor {
     await _refresh();
   }
 
-  Future<void> createAndAttach(String name, {required int color}) async {
-    final tagId = await tagDao.insertTag(name, color: color);
+  Future<void> createAndAttach(String name, {required Color color}) async {
+    final tagId = await tagDao.insertTag(name, color: rgbFromColor(color));
     await bookTagDao.addRelation(bookId: bookId, tagId: tagId);
     ref.invalidate(tagListProvider);
     await _refresh();
