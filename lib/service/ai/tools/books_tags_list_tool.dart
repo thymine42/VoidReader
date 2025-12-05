@@ -1,4 +1,5 @@
 import 'package:anx_reader/dao/book.dart';
+import 'package:anx_reader/l10n/generated/L10n.dart';
 import 'package:anx_reader/service/ai/tools/base_tool.dart';
 import 'package:anx_reader/service/ai/tools/repository/tag_repository.dart';
 import 'package:anx_reader/service/ai/tools/ai_tool_registry.dart';
@@ -9,9 +10,9 @@ const _booksTagsListToolId = 'books_tags_list';
 
 final booksTagsListToolDefinition = AiToolDefinition(
   id: _booksTagsListToolId,
-  displayNameBuilder: (_) => 'List Book Tags',
-  descriptionBuilder: (_) =>
-      'Returns tags for books (id, title, tags with id/name/rgb). Accepts optional bookIds array.',
+  displayNameBuilder: (L10n l10n) => l10n.aiToolBooksTagsListName,
+  descriptionBuilder: (L10n l10n) =>
+      l10n.aiToolBooksTagsListDescription,
   build: (context) => BooksTagsListTool(context.tagRepository).tool,
 );
 

@@ -1,3 +1,4 @@
+import 'package:anx_reader/l10n/generated/L10n.dart';
 import 'package:anx_reader/service/ai/tools/base_tool.dart';
 import 'package:anx_reader/service/ai/tools/repository/tag_repository.dart';
 import 'package:anx_reader/service/ai/tools/ai_tool_registry.dart';
@@ -8,8 +9,8 @@ const _tagsListToolId = 'tags_list';
 
 final tagsListToolDefinition = AiToolDefinition(
   id: _tagsListToolId,
-  displayNameBuilder: (_) => 'List Tags',
-  descriptionBuilder: (_) => 'Returns all tags with id, name, and RGB color.',
+  displayNameBuilder: (L10n l10n) => l10n.aiToolTagsListName,
+  descriptionBuilder: (L10n l10n) => l10n.aiToolTagsListDescription,
   build: (context) => TagsListTool(context.tagRepository).tool,
 );
 

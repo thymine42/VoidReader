@@ -1,4 +1,5 @@
 import 'package:anx_reader/dao/tag.dart';
+import 'package:anx_reader/l10n/generated/L10n.dart';
 import 'package:anx_reader/models/tag.dart';
 import 'package:anx_reader/service/ai/tools/base_tool.dart';
 import 'package:anx_reader/service/ai/tools/input/apply_book_tags_input.dart';
@@ -12,9 +13,9 @@ const _applyBookTagsToolId = 'apply_book_tags';
 
 final applyBookTagsToolDefinition = AiToolDefinition(
   id: _applyBookTagsToolId,
-  displayNameBuilder: (_) => 'Apply Book Tags',
-  descriptionBuilder: (_) =>
-      'Creates/updates tags and syncs book-tag links. Input supports books, createTags, updateTags.',
+  displayNameBuilder: (L10n l10n) => l10n.aiToolApplyBookTagsName,
+  descriptionBuilder: (L10n l10n) =>
+      l10n.aiToolApplyBookTagsDescription,
   build: (context) =>
       ApplyBookTagsTool(context.tagRepository, context.booksRepository).tool,
 );

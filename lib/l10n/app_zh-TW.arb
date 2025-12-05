@@ -709,5 +709,11 @@
   "bookshelfFilterFinished": "已讀完",
   "bookshelfFilterReading": "閱讀中",
   "bookshelfFilterNotStarted": "未開始",
-  "bookshelfFilterTagsTooltip": "篩選標籤"
+  "bookshelfFilterTagsTooltip": "篩選標籤",
+  "aiToolTagsListName": "列出標籤",
+  "aiToolTagsListDescription": "返回所有標籤的 id、名稱和 RGB 顏色。",
+  "aiToolBooksTagsListName": "列出書籍標籤",
+  "aiToolBooksTagsListDescription": "返回書籍的標籤（id、標題、包含 id/名稱/rgb 的標籤列表），可選 bookIds 篩選。",
+  "aiToolApplyBookTagsName": "應用書籍標籤",
+  "aiToolApplyBookTagsDescription": "建立/更新標籤並同步書籍與標籤的關聯。輸入支援 books、createTags、updateTags。"
 }

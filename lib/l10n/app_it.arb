@@ -709,5 +709,11 @@
   "bookshelfFilterFinished": "Completato",
   "bookshelfFilterReading": "In lettura",
   "bookshelfFilterNotStarted": "Non iniziato",
-  "bookshelfFilterTagsTooltip": "Filtra tag"
+  "bookshelfFilterTagsTooltip": "Filtra tag",
+  "aiToolTagsListName": "List Tags",
+  "aiToolTagsListDescription": "Returns all tags with id, name, and RGB color.",
+  "aiToolBooksTagsListName": "List Book Tags",
+  "aiToolBooksTagsListDescription": "Returns tags for books (id, title, tags with id/name/rgb). Accepts optional bookIds array.",
+  "aiToolApplyBookTagsName": "Apply Book Tags",
+  "aiToolApplyBookTagsDescription": "Creates/updates tags and syncs book-tag links. Input supports books, createTags, updateTags."
 }
