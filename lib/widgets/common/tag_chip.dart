@@ -1,3 +1,4 @@
+import 'package:anx_reader/config/shared_preference_provider.dart';
 import 'package:anx_reader/l10n/generated/L10n.dart';
 import 'package:anx_reader/widgets/common/color_picker_sheet.dart';
 import 'package:anx_reader/widgets/delete_confirm.dart';
@@ -28,13 +29,28 @@ class TagChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
+    final isEink = Prefs().eInkMode;
+
+    final einkBgColor =
+        selected ? theme.colorScheme.secondary : Colors.transparent;
+    final einkBorderColor =
+        selected ? Colors.transparent : theme.colorScheme.onSurface;
+    final einkForeground =
+        selected ? theme.colorScheme.onSecondary : theme.colorScheme.onSurface;
+
     final baseColor = _colorForLabel(label);
-    final bgColor = selected ? baseColor.withAlpha(46) : Colors.transparent;
-    final borderColor =
+    final normalBgColor =
+        selected ? baseColor.withAlpha(46) : Colors.transparent;
+    final normalBorderColor =
         selected ? Colors.transparent : baseColor.withAlpha(102);
-    final foreground = selected
+    final normalForeground = selected
         ? baseColor
         : Theme.of(context).colorScheme.onSurface.withAlpha(179);
+
+    final bgColor = isEink ? einkBgColor : normalBgColor;
+    final normalBborderColor = isEink ? einkBorderColor : normalBorderColor;
+    final foreground = isEink ? einkForeground : normalForeground;
 
     return InkWell(
       borderRadius: BorderRadius.circular(999),
@@ -48,7 +64,7 @@ class TagChip extends StatelessWidget {
         decoration: BoxDecoration(
           color: bgColor,
           borderRadius: BorderRadius.circular(999),
-          border: Border.all(color: borderColor, width: 1),
+          border: Border.all(color: normalBborderColor, width: 1),
         ),
         child: Text(
           '# $label',
