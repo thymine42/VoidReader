@@ -2,15 +2,38 @@ import 'package:anx_reader/dao/tag.dart';
 import 'package:anx_reader/models/tag.dart';
 import 'package:anx_reader/utils/color/rgb.dart';
 import 'package:flutter/material.dart';
+import 'package:lpinyin/lpinyin.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'tags.g.dart';
+
+int _compareTagName(Tag a, Tag b) {
+  String toPinyin(String value) {
+    try {
+      return PinyinHelper.getPinyin(value,
+          format: PinyinFormat.WITHOUT_TONE);
+    } catch (_) {
+      return value;
+    }
+  }
+
+  final pa = toPinyin(a.name);
+  final pb = toPinyin(b.name);
+  return pa.compareTo(pb);
+}
+
+List<Tag> _sortedTags(List<Tag> tags) {
+  final list = [...tags];
+  list.sort(_compareTagName);
+  return list;
+}
 
 @riverpod
 class TagList extends _$TagList {
   @override
   Future<List<Tag>> build() async {
-    return tagDao.fetchAllTags();
+    final tags = await tagDao.fetchAllTags();
+    return _sortedTags(tags);
   }
 
   Future<int> createTag(String name, {Color? color}) async {
@@ -58,7 +81,7 @@ class BookTagState {
 class BookTagEditor extends _$BookTagEditor {
   @override
   Future<BookTagState> build(int bookId) async {
-    final tags = await tagDao.fetchAllTags();
+    final tags = _sortedTags(await tagDao.fetchAllTags());
     final attachedIds = (await bookTagDao.fetchTagIdsForBook(bookId)).toSet();
     return BookTagState(tags: tags, attachedIds: attachedIds);
   }
