@@ -23,7 +23,7 @@
 - Fix: When displaying tags, they can be displayed in order
 - UI: Optimize part of the interface design
 
-- Feat: 可以选择书架文件夹样式（2*2宫格/重叠）
+- Feat: 可以选择书架文件夹样式（2x2宫格/重叠）
 - Feat: 优化孤行显示效果（在前一页剩余空间较大时，允许显示单行内容）
 - Feat: 支持AI为书籍添加标签，更改书签颜色等
 - Feat: 支持自定义标签颜色
