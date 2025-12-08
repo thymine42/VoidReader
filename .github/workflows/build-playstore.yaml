@@ -45,7 +45,7 @@ jobs:
           elif [[ "${{ inputs.is_beta }}" == "true" ]]; then
             echo "TRACK=alpha" >> $GITHUB_ENV
           else
-            echo "TRACK=production" >> $GITHUB_ENV
+            echo "TRACK=alpha" >> $GITHUB_ENV
           fi
 
       - name: Set up Java
