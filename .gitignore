@@ -67,3 +67,7 @@ google_service_account.json
 **/fastlane/test_output
 
 google_service_account.json
+
+# FVM Version Cache
+.fvm/
+.fvmrc
