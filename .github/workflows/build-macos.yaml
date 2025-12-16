@@ -46,18 +46,18 @@ jobs:
           ./scripts/macos_nosign.sh
           flutter build macos
           cd build/macos/Build/Products/Release
-          mkdir -p "Anx Reader"
-          cp -r "Anx Reader.app" "Anx Reader/AnxReader.app"
-          ln -s /Applications "Anx Reader/Applications"
-          hdiutil create -volname "Anx Reader" -srcfolder "Anx Reader" -ov -format UDZO Anx-Reader-${{ inputs.version }}.dmg
-          ditto -c -k --keepParent "Anx Reader.app" "Anx-Reader-${{ inputs.version }}.zip"
+          mkdir -p "Void Reader"
+          cp -r "Void Reader.app" "Void Reader/Void Reader.app"
+          ln -s /Applications "Void Reader/Applications"
+          hdiutil create -volname "Void Reader" -srcfolder "Void Reader" -ov -format UDZO Void-Reader-${{ inputs.version }}.dmg
+          ditto -c -k --keepParent "Void Reader.app" "Void-Reader-${{ inputs.version }}.zip"
 
       - name: Rename builds
         run: |
           cd build
           mkdir -p macos
-          mv macos/Build/Products/Release/Anx-Reader-${{ inputs.version }}.dmg macos/Anx-Reader-macos-${{ inputs.version }}.dmg
-          mv macos/Build/Products/Release/Anx-Reader-${{ inputs.version }}.zip macos/Anx-Reader-macos-${{ inputs.version }}.zip
+          mv macos/Build/Products/Release/Void-Reader-${{ inputs.version }}.dmg macos/Void-Reader-macos-${{ inputs.version }}.dmg
+          mv macos/Build/Products/Release/Void-Reader-${{ inputs.version }}.zip macos/Void-Reader-macos-${{ inputs.version }}.zip
         shell: bash
 
       - name: Upload artifacts

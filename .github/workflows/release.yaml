@@ -34,7 +34,7 @@ jobs:
     if: inputs.is_alpha == 'true'
     runs-on: ubuntu-latest
     env:
-      BASE_NOTIFICATION_URL: ${{ secrets.NOTIFICATION_URL }}/Anx-Reader%20Action
+      BASE_NOTIFICATION_URL: ${{ secrets.NOTIFICATION_URL }}/Void-Reader%20Action
     steps:
       - name: Checkout tagged source
         uses: actions/checkout@v4
@@ -69,7 +69,7 @@ jobs:
     if: inputs.is_alpha != 'true'
     runs-on: ubuntu-latest
     env:
-      BASE_NOTIFICATION_URL: ${{ secrets.NOTIFICATION_URL }}/Anx-Reader%20Action
+      BASE_NOTIFICATION_URL: ${{ secrets.NOTIFICATION_URL }}/Void-Reader%20Action
     steps:
       - name: Checkout tagged source
         uses: actions/checkout@v4
