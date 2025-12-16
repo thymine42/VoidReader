@@ -1,2 +1,5 @@
-<!-- ic_launcher_background moved to colors.xml to avoid duplicate resource definitions -->
-<!-- original value was #265A8E -->
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<!-- ic_launcher_background moved to colors.xml to avoid duplicate resource definitions -->
+	<!-- original value was #265A8E -->
+</resources>
