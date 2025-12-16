@@ -1,0 +1,106 @@
+name: Auto Release on Main
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.get_version.outputs.tag }}
+      version: ${{ steps.get_version.outputs.version }}
+      is_alpha: ${{ steps.get_version.outputs.is_alpha }}
+      is_beta: ${{ steps.get_version.outputs.is_beta }}
+      release_notes: ${{ steps.extract_release_notes.outputs.release_notes }}
+      flutter_version: ${{ steps.get_flutter_version.outputs.flutter_version }}
+      xcode_version: ${{ steps.get_xcode_version.outputs.xcode_version }}
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Read Flutter version
+        id: get_flutter_version
+        run: |
+          FLUTTER_VERSION=3.35.3
+          echo "flutter_version=${FLUTTER_VERSION}" >> $GITHUB_OUTPUT
+
+      - name: Read Xcode version
+        id: get_xcode_version
+        run: |
+          XCODE_VERSION=26.0
+          echo "xcode_version=${XCODE_VERSION}" >> $GITHUB_OUTPUT
+
+      - name: Get version from pubspec
+        id: get_version
+        shell: bash
+        run: |
+          PUBSPEC_VERSION=$( grep '^version:' pubspec.yaml | awk '{print $2}' | cut -d '+' -f 1 )
+          echo "version=${PUBSPEC_VERSION}" >> $GITHUB_OUTPUT
+          echo "tag=v${PUBSPEC_VERSION}" >> $GITHUB_OUTPUT
+          
+          if [[ "$PUBSPEC_VERSION" == *"-alpha"* ]]; then
+             echo "is_alpha=true" >> $GITHUB_OUTPUT
+             echo "is_beta=false" >> $GITHUB_OUTPUT
+          elif [[ "$PUBSPEC_VERSION" == *"-beta"* ]]; then
+             echo "is_alpha=false" >> $GITHUB_OUTPUT
+             echo "is_beta=true" >> $GITHUB_OUTPUT
+          else
+             echo "is_alpha=false" >> $GITHUB_OUTPUT
+             echo "is_beta=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Extract Release Notes
+        id: extract_release_notes
+        run: |
+            echo "release_notes=Auto release for version ${{ steps.get_version.outputs.version }}" >> $GITHUB_OUTPUT
+
+  build-android:
+    needs: setup
+    uses: ./.github/workflows/build-android.yaml
+    with:
+      version: ${{ needs.setup.outputs.version }}
+      flutter_version: ${{ needs.setup.outputs.flutter_version }}
+    secrets:
+      KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+      KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+      KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+
+  build-ios:
+    needs: setup
+    uses: ./.github/workflows/build-ios.yaml
+    with:
+      version: ${{ needs.setup.outputs.version }}
+      flutter_version: ${{ needs.setup.outputs.flutter_version }}
+      xcode_version: ${{ needs.setup.outputs.xcode_version }}
+
+  build-windows:
+    needs: setup
+    uses: ./.github/workflows/build-windows.yaml
+    with:
+      version: ${{ needs.setup.outputs.version }}
+      flutter_version: ${{ needs.setup.outputs.flutter_version }}
+
+  build-macos:
+    needs: setup
+    uses: ./.github/workflows/build-macos.yaml
+    with:
+      version: ${{ needs.setup.outputs.version }}
+      flutter_version: ${{ needs.setup.outputs.flutter_version }}
+      xcode_version: ${{ needs.setup.outputs.xcode_version }}
+
+  release:
+    needs: [setup, build-android, build-ios, build-windows, build-macos]
+    uses: ./.github/workflows/release.yaml
+    with:
+      tag: ${{ needs.setup.outputs.tag }}
+      version: ${{ needs.setup.outputs.version }}
+      is_alpha: ${{ needs.setup.outputs.is_alpha }}
+      is_beta: ${{ needs.setup.outputs.is_beta }}
+      release_notes: ${{ needs.setup.outputs.release_notes }}

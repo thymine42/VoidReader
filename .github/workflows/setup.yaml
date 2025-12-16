@@ -4,7 +4,7 @@ on:
   workflow_call:
     secrets:
       NOTIFICATION_URL:
-        required: true
+        required: false
     outputs:
       tag:
         description: "Git tag"
@@ -42,6 +42,7 @@ jobs:
     
     steps:
       - name: Send build start notification
+        if: ${{ secrets.NOTIFICATION_URL != '' }}
         shell: bash
         run: |
           RUN_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"

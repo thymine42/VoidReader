@@ -20,11 +20,11 @@ on:
         type: string
     secrets:
       NOTIFICATION_URL:
-        required: true
+        required: false
       TELEGRAM_TO:
-        required: true
+        required: false
       TELEGRAM_TOKEN:
-        required: true
+        required: false
 
 permissions:
   contents: write
@@ -39,7 +39,6 @@ jobs:
       - name: Checkout tagged source
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.tag }}
           fetch-depth: 0
 
       - name: Download all artifacts
@@ -55,6 +54,7 @@ jobs:
           if-no-files-found: warn
 
       - name: Send build completion notification
+        if: ${{ secrets.NOTIFICATION_URL != '' }}
         shell: bash
         run: |
           RUN_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
@@ -69,7 +69,6 @@ jobs:
       - name: Checkout tagged source
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.tag }}
           fetch-depth: 0
 
       - name: Download all artifacts
@@ -80,6 +79,7 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ inputs.tag }}
           files: |
             artifacts/android-artifacts/*.apk
             artifacts/windows-artifacts/*.zip
@@ -93,7 +93,7 @@ jobs:
           prerelease: ${{ inputs.is_beta == 'true' }}
 
       - name: Send beta message
-        if: ${{ inputs.is_beta == 'true' }}
+        if: ${{ inputs.is_beta == 'true' && secrets.TELEGRAM_TO != '' && secrets.TELEGRAM_TOKEN != '' }}
         uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_TO }}
