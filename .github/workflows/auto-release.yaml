@@ -58,7 +58,21 @@ jobs:
       - name: Extract Release Notes
         id: extract_release_notes
         run: |
-            echo "release_notes=Auto release for version ${{ steps.get_version.outputs.version }}" >> $GITHUB_OUTPUT
+          VERSION=${{ steps.get_version.outputs.version }}
+          MAIN_VERSION=${VERSION%%-*}
+          if [ -f assets/CHANGELOG.md ]; then
+            CHANGELOG_CONTENT=$(sed -n "/## $MAIN_VERSION/,/## /p" assets/CHANGELOG.md | sed '$d')
+            if [ -n "$CHANGELOG_CONTENT" ]; then
+              echo "release_notes<<EOF" >> $GITHUB_OUTPUT
+              echo "$CHANGELOG_CONTENT" >> $GITHUB_OUTPUT
+              echo "EOF" >> $GITHUB_OUTPUT
+            else
+              echo "release_notes=Auto release for version ${VERSION}" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "release_notes=Auto release for version ${VERSION}" >> $GITHUB_OUTPUT
+          fi
+        shell: bash
 
   build-android:
     needs: setup
