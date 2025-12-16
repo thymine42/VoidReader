@@ -86,6 +86,7 @@ jobs:
     with:
       version: ${{ needs.setup.outputs.version }}
       flutter_version: ${{ needs.setup.outputs.flutter_version }}
+    secrets: inherit
 
   build-macos:
     needs: setup
@@ -104,3 +105,4 @@ jobs:
       is_alpha: ${{ needs.setup.outputs.is_alpha }}
       is_beta: ${{ needs.setup.outputs.is_beta }}
       release_notes: ${{ needs.setup.outputs.release_notes }}
+    secrets: inherit
