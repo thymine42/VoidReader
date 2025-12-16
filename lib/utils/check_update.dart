@@ -10,6 +10,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'dart:io';
 
 Future<void> checkUpdate(bool manualCheck) async {
   if (!EnvVar.enableCheckUpdate) {
@@ -26,7 +27,8 @@ Future<void> checkUpdate(bool manualCheck) async {
   BuildContext context = navigatorKey.currentContext!;
   Response response;
   try {
-    response = await Dio().get('https://api.anx.anxcye.com/api/info/latest');
+    // Fetch latest release from GitHub Releases for VoidReader
+    response = await Dio().get('https://api.github.com/repos/thymine42/VoidReader/releases/latest');
   } catch (e) {
     if (manualCheck) {
       VoidToast.show(L10n.of(context).commonFailed);
@@ -34,24 +36,47 @@ Future<void> checkUpdate(bool manualCheck) async {
     VoidLog.severe('Update: Failed to check for updates $e');
     return;
   }
-  String newVersion = response.data['version'].toString().substring(1);
-  String currentVersion = (await getAppVersion()).split('+').first;
+
+  // GitHub returns tag_name like "v1.2.3" and body for release notes
+  String newVersionRaw = '';
+  try {
+    newVersionRaw = response.data['tag_name'] ?? response.data['name'] ?? '';
+  } catch (e) {
+    newVersionRaw = '';
+  }
+  String newVersion = newVersionRaw.startsWith('v') ? newVersionRaw.substring(1) : newVersionRaw;
+  String currentVersion = await getAppVersion();
   VoidLog.info('Update: new version $newVersion');
 
-  List<String> newVersionList = newVersion.split('.');
-  List<String> currentVersionList = currentVersion.split('.');
+  // currentVersion is like '1.10.1+6279' from pubspec; split out build
+  final curParts = currentVersion.split('+');
+  final newParts = newVersion.split('+');
+  List<String> newVersionList = newParts[0].split('.');
+  List<String> currentVersionList = curParts[0].split('.');
   VoidLog.info(
       'Current version: $currentVersionList, New version: $newVersionList');
   bool needUpdate = false;
-  for (int i = 0; i < newVersionList.length; i++) {
-    int newVer = int.parse(newVersionList[i]);
-    int curVer = int.parse(currentVersionList[i]);
-    if (newVer > curVer) {
+  final maxLen = newVersionList.length > currentVersionList.length
+      ? newVersionList.length
+      : currentVersionList.length;
+  for (int i = 0; i < maxLen; i++) {
+    final nv = i < newVersionList.length ? int.tryParse(newVersionList[i]) ?? 0 : 0;
+    final cv = i < currentVersionList.length ? int.tryParse(currentVersionList[i]) ?? 0 : 0;
+    if (nv > cv) {
       needUpdate = true;
       break;
-    } else if (newVer < curVer) {
+    } else if (nv < cv) {
       needUpdate = false;
       break;
+    }
+  }
+
+  // If semantic versions are equal, compare build numbers (if present)
+  if (!needUpdate) {
+    final nvBuild = newParts.length > 1 ? int.tryParse(newParts[1]) ?? 0 : 0;
+    final cvBuild = curParts.length > 1 ? int.tryParse(curParts[1]) ?? 0 : 0;
+    if (nvBuild > cvBuild) {
+      needUpdate = true;
     }
   }
 
@@ -61,8 +86,7 @@ Future<void> checkUpdate(bool manualCheck) async {
     }
     SmartDialog.show(
       builder: (BuildContext context) {
-        final body =
-            response.data['body'].toString().split('\n').skip(1).join('\n');
+        final body = response.data['body']?.toString() ?? '';
         return AlertDialog(
           title: Text(L10n.of(context).commonNewVersion,
               style: const TextStyle(
@@ -82,17 +106,96 @@ $body'''),
               child: Text(L10n.of(context).commonCancel),
             ),
             TextButton(
-              onPressed: () {
-                launchUrl(
-                    Uri.parse(
-                        'https://github.com/Anxcye/anx-reader/releases/latest'),
-                    mode: LaunchMode.externalApplication);
+              onPressed: () async {
+                // Try to download the appropriate asset for this platform and launch it.
+                SmartDialog.showLoading(msg: L10n.of(context).commonDownloading);
+                try {
+                  final assets = response.data['assets'] as List? ?? [];
+                  String? downloadUrl;
+                  String? assetName;
+                  String lowerName;
+                  for (final a in assets) {
+                    final name = (a['name'] ?? '').toString();
+                    lowerName = name.toLowerCase();
+                    final url = a['browser_download_url']?.toString();
+                    if (url == null) continue;
+                    if (Platform.isWindows &&
+                        (lowerName.endsWith('.exe') || lowerName.endsWith('.msi') || lowerName.endsWith('.zip'))) {
+                      downloadUrl = url;
+                      assetName = name;
+                      break;
+                    }
+                    if (Platform.isMacOS &&
+                        (lowerName.endsWith('.dmg') || lowerName.endsWith('.pkg') || lowerName.endsWith('.zip'))) {
+                      downloadUrl = url;
+                      assetName = name;
+                      break;
+                    }
+                    if (Platform.isLinux &&
+                        (lowerName.endsWith('.AppImage'.toLowerCase()) || lowerName.endsWith('.deb') || lowerName.endsWith('.tar.gz') || lowerName.endsWith('.zip'))) {
+                      downloadUrl = url;
+                      assetName = name;
+                      break;
+                    }
+                    // For Android APKs in releases (rare) prefer direct APK
+                    if (!Platform.isWindows && !Platform.isMacOS && !Platform.isLinux && lowerName.endsWith('.apk')) {
+                      downloadUrl = url;
+                      assetName = name;
+                      break;
+                    }
+                  }
+
+                  if (downloadUrl == null) {
+                    SmartDialog.dismiss();
+                    // Fallback: open releases page in browser
+                    await launchUrl(
+                        Uri.parse('https://github.com/thymine42/VoidReader/releases/latest'),
+                        mode: LaunchMode.externalApplication);
+                    return;
+                  }
+
+                  final tempDir = Directory.systemTemp.createTempSync('void_update_');
+                  final filename = assetName ?? downloadUrl.split('/').last;
+                  final filePath = '${tempDir.path}${Platform.pathSeparator}$filename';
+                  final file = File(filePath);
+
+                  // Download
+                  await Dio().download(downloadUrl, file.path,
+                      onReceiveProgress: (received, total) {
+                    // Optionally update UI with progress
+                  });
+
+                  SmartDialog.dismiss();
+
+                  // Launch installer/open file depending on platform
+                  if (Platform.isWindows) {
+                    await Process.start(file.path, [], runInShell: true);
+                    exit(0);
+                  } else if (Platform.isMacOS) {
+                    await Process.start('open', [file.path]);
+                    // Do not force-exit on macOS — let user installer flow continue
+                  } else if (Platform.isLinux) {
+                    await Process.start('xdg-open', [file.path]);
+                  } else {
+                    // For mobile / unknown platforms, open the release page
+                    await launchUrl(
+                        Uri.parse('https://github.com/thymine42/VoidReader/releases/latest'),
+                        mode: LaunchMode.externalApplication);
+                  }
+                } catch (e) {
+                  SmartDialog.dismiss();
+                  VoidLog.severe('Update: Failed to download or launch update: $e');
+                  // fallback open release page
+                  await launchUrl(
+                      Uri.parse('https://github.com/thymine42/VoidReader/releases/latest'),
+                      mode: LaunchMode.externalApplication);
+                }
               },
               child: Text(L10n.of(context).updateViaGithub),
             ),
             TextButton(
               onPressed: () {
-                launchUrl(Uri.parse('https://anx.anxcye.com/download'),
+                launchUrl(Uri.parse('https://github.com/thymine42/VoidReader'),
                     mode: LaunchMode.externalApplication);
               },
               child: Text(L10n.of(context).updateViaOfficialWebsite),
