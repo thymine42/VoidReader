@@ -116,11 +116,11 @@ class ExcerptMenuState extends State<ExcerptMenu> {
     final BookNote bookNote = BookNote(
       id: existingNote?.id ?? widget.id,
       bookId:
-          existingNote?.bookId ?? epubPlayerKey.currentState!.widget.book.id,
+      existingNote?.bookId ?? epubPlayerKey.currentState!.widget.book.id,
       content: resolvedContent,
       cfi: existingNote?.cfi ?? widget.annoCfi,
       chapter:
-          existingNote?.chapter ?? epubPlayerKey.currentState!.chapterTitle,
+      existingNote?.chapter ?? epubPlayerKey.currentState!.chapterTitle,
       type: resolvedType,
       color: resolvedColor,
       readerNote: existingNote?.readerNote,
@@ -152,9 +152,9 @@ class ExcerptMenuState extends State<ExcerptMenu> {
   Icon deleteIcon() {
     return deleteConfirm
         ? const Icon(
-            EvaIcons.close_circle,
-            color: Colors.red,
-          )
+      EvaIcons.close_circle,
+      color: Colors.red,
+    )
         : const Icon(Icons.delete);
   }
 
@@ -238,7 +238,7 @@ class ExcerptMenuState extends State<ExcerptMenu> {
   @override
   Widget build(BuildContext context) {
     Widget annotationMenu = Container(
-      padding: const EdgeInsets.all(6),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
       decoration: widget.decoration,
       child: AxisFlex(
         axis: widget.axis,
@@ -254,12 +254,14 @@ class ExcerptMenuState extends State<ExcerptMenu> {
       ),
     );
 
+    // MODIFIED OPERATOR MENU BLOCK
     Widget operatorMenu = Container(
       // width: 48,
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       decoration: widget.decoration,
       child: AxisFlex(
         axis: widget.axis,
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: MainAxisSize.max,
         children: [
           // copy
           InkWell(
@@ -273,6 +275,7 @@ class ExcerptMenuState extends State<ExcerptMenu> {
               text: L10n.of(context).contextMenuCopy,
             ),
           ),
+          const SizedBox(width: 24, height: 24), // Increased spacing
           // Web search
           InkWell(
             onTap: () {
@@ -288,6 +291,7 @@ class ExcerptMenuState extends State<ExcerptMenu> {
               text: L10n.of(context).contextMenuSearch,
             ),
           ),
+          const SizedBox(width: 24, height: 24), // Increased spacing
           // toggle translation menu
           InkWell(
             onTap: widget.toggleTranslationMenu,
@@ -296,6 +300,7 @@ class ExcerptMenuState extends State<ExcerptMenu> {
               text: L10n.of(context).contextMenuTranslate,
             ),
           ),
+          const SizedBox(width: 24, height: 24), // Increased spacing
           // edit note
           if (!widget.footnote)
             InkWell(
@@ -313,6 +318,7 @@ class ExcerptMenuState extends State<ExcerptMenu> {
                 text: L10n.of(context).contextMenuWriteIdea,
               ),
             ),
+          if (!widget.footnote) const SizedBox(width: 24, height: 24), // Increased spacing
           // AI chat
           InkWell(
             onTap: () {
@@ -332,6 +338,7 @@ class ExcerptMenuState extends State<ExcerptMenu> {
               text: L10n.of(context).navBarAI,
             ),
           ),
+          const SizedBox(width: 24, height: 24), // Increased spacing
           // share
           InkWell(
             onTap: () {
@@ -352,6 +359,7 @@ class ExcerptMenuState extends State<ExcerptMenu> {
         ],
       ),
     );
+    // END OF MODIFIED BLOCK
 
     return Expanded(
       child: AxisFlex(
