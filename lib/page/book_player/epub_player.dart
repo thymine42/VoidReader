@@ -53,6 +53,7 @@ import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'minute_clock.dart';
+import 'package:void_reader/widgets/reading_page/battery_icon.dart';
 
 class EpubPlayer extends ConsumerStatefulWidget {
   final Book book;
@@ -934,9 +935,9 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
                         fontSize: 9,
                       )),
                 ),
-                Icon(
-                  HeroIcons.battery_0,
-                  size: 27,
+                BatteryIcon(
+                  size: 20,
+                  strokeWidth: 0.6,
                   color: Color(int.parse('0x$textColor')),
                 ),
               ],
