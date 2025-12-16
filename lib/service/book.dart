@@ -487,6 +487,7 @@ Future<void> saveBook(
       readingPercentage: provideBook?.readingPercentage ?? 0,
       author: provideBook?.author ?? author,
       isDeleted: false,
+      description: provideBook?.description ?? description,
       rating: provideBook?.rating ?? 0.0,
       md5: md5,
       createTime: provideBook?.createTime ?? DateTime.now(),

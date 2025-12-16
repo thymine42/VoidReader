@@ -307,6 +307,34 @@ class _BookDetailState extends ConsumerState<BookDetail> {
       );
     }
 
+    Widget buildDescription() {
+      if (widget.book.description == null || widget.book.description!.isEmpty) {
+        return const SizedBox.shrink();
+      }
+      return FilledContainer(
+        width: MediaQuery.of(context).size.width,
+        margin: const EdgeInsets.symmetric(vertical: 10),
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              L10n.of(context).bookDetailDescription,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              widget.book.description!,
+              style: const TextStyle(fontSize: 15),
+            ),
+          ],
+        ),
+      );
+    }
+
     Widget buildEditButton() {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -817,6 +845,7 @@ class _BookDetailState extends ConsumerState<BookDetail> {
                                     buildBookBaseDetail(
                                         constraints.maxWidth / 2 - 20),
                                     buildTagEditor(),
+                                    buildDescription(),
                                     buildEditButton(),
                                     const SizedBox(height: 5),
                                     buildBookStatistics(),
@@ -839,6 +868,7 @@ class _BookDetailState extends ConsumerState<BookDetail> {
                             children: [
                               buildBookBaseDetail(constraints.maxWidth),
                               buildTagEditor(),
+                              buildDescription(),
                               buildEditButton(),
                               const SizedBox(height: 5),
                               buildBookStatistics(),
