@@ -1,30 +1,30 @@
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:anx_reader/dao/book.dart';
-import 'package:anx_reader/dao/reading_time.dart';
-import 'package:anx_reader/enums/hint_key.dart';
-import 'package:anx_reader/enums/sync_direction.dart';
-import 'package:anx_reader/enums/sync_trigger.dart';
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/models/book.dart';
-import 'package:anx_reader/models/reading_time.dart';
-import 'package:anx_reader/models/tag.dart';
-import 'package:anx_reader/providers/sync.dart';
-import 'package:anx_reader/providers/book_list.dart';
-import 'package:anx_reader/providers/tags.dart';
-import 'package:anx_reader/service/book.dart';
-import 'package:anx_reader/utils/date/convert_seconds.dart';
-import 'package:anx_reader/utils/get_path/get_base_path.dart';
-import 'package:anx_reader/utils/log/common.dart';
-import 'package:anx_reader/utils/color/hash_color.dart';
-import 'package:anx_reader/widgets/bookshelf/book_cover.dart';
-import 'package:anx_reader/widgets/common/async_skeleton_wrapper.dart';
-import 'package:anx_reader/widgets/common/container/filled_container.dart';
-import 'package:anx_reader/widgets/common/color_picker_sheet.dart';
-import 'package:anx_reader/widgets/common/tag_chip.dart';
-import 'package:anx_reader/widgets/highlight_digit.dart';
-import 'package:anx_reader/widgets/hint/hint_banner.dart';
+import 'package:void_reader/dao/book.dart';
+import 'package:void_reader/dao/reading_time.dart';
+import 'package:void_reader/enums/hint_key.dart';
+import 'package:void_reader/enums/sync_direction.dart';
+import 'package:void_reader/enums/sync_trigger.dart';
+import 'package:void_reader/l10n/generated/L10n.dart';
+import 'package:void_reader/models/book.dart';
+import 'package:void_reader/models/reading_time.dart';
+import 'package:void_reader/models/tag.dart';
+import 'package:void_reader/providers/sync.dart';
+import 'package:void_reader/providers/book_list.dart';
+import 'package:void_reader/providers/tags.dart';
+import 'package:void_reader/service/book.dart';
+import 'package:void_reader/utils/date/convert_seconds.dart';
+import 'package:void_reader/utils/get_path/get_base_path.dart';
+import 'package:void_reader/utils/log/common.dart';
+import 'package:void_reader/utils/color/hash_color.dart';
+import 'package:void_reader/widgets/bookshelf/book_cover.dart';
+import 'package:void_reader/widgets/common/async_skeleton_wrapper.dart';
+import 'package:void_reader/widgets/common/container/filled_container.dart';
+import 'package:void_reader/widgets/common/color_picker_sheet.dart';
+import 'package:void_reader/widgets/common/tag_chip.dart';
+import 'package:void_reader/widgets/highlight_digit.dart';
+import 'package:void_reader/widgets/hint/hint_banner.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -178,7 +178,7 @@ class _BookDetailState extends ConsumerState<BookDetail> {
 
                   File image = File(result.files.single.path!);
 
-                  AnxLog.info('BookDetail: Image path: ${image.path}');
+                  VoidLog.info('BookDetail: Image path: ${image.path}');
                   // Delete the existing cover image file
                   final File oldCoverImageFile =
                       File(widget.book.coverFullPath);
@@ -198,7 +198,7 @@ class _BookDetailState extends ConsumerState<BookDetail> {
                       '$oldName-${DateTime.now().millisecondsSinceEpoch.toString()}.png'
                           .trim();
 
-                  AnxLog.info('BookDetail: New path: $newPath');
+                  VoidLog.info('BookDetail: New path: $newPath');
                   String newFullPath = getBasePath(newPath);
 
                   final File newCoverImageFile = File(newFullPath);

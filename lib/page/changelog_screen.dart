@@ -1,9 +1,9 @@
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/utils/get_current_language_code.dart';
-import 'package:anx_reader/widgets/markdown/styled_markdown.dart';
+import 'package:void_reader/l10n/generated/L10n.dart';
+import 'package:void_reader/utils/get_current_language_code.dart';
+import 'package:void_reader/widgets/markdown/styled_markdown.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:anx_reader/utils/log/common.dart';
+import 'package:void_reader/utils/log/common.dart';
 
 /// Changelog screen for showing app updates
 /// Displays version history and new features
@@ -43,7 +43,7 @@ class _ChangelogScreenState extends State<ChangelogScreen> {
           await rootBundle.loadString('assets/CHANGELOG.md');
       _changelogContent = _extractVersionChangelog(fullChangelog);
     } catch (e) {
-      AnxLog.warning('Failed to load changelog from assets: $e');
+      VoidLog.warning('Failed to load changelog from assets: $e');
       _changelogContent = _getDefaultChangelog();
     } finally {
       _changelogContent = processChangelogContent(_changelogContent);
@@ -96,7 +96,7 @@ class _ChangelogScreenState extends State<ChangelogScreen> {
     final startIndex = lines.indexWhere((line) => line.trim() == versionHeader);
 
     if (startIndex == -1) {
-      AnxLog.warning('Version $version not found in changelog');
+      VoidLog.warning('Version $version not found in changelog');
       return _getDefaultChangelog();
     }
 

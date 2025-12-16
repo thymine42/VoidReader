@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/providers/current_reading.dart';
-import 'package:anx_reader/service/ai/tools/ai_tool_registry.dart';
+import 'package:void_reader/config/shared_preference_provider.dart';
+import 'package:void_reader/providers/current_reading.dart';
+import 'package:void_reader/service/ai/tools/ai_tool_registry.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:langchain_anthropic/langchain_anthropic.dart';
 import 'package:langchain_core/chat_models.dart';
@@ -142,7 +142,7 @@ class LangchainAiRegistry {
         : '📚 User is browsing the library - You are a wise librarian, helping organize books and plan reading strategies.';
 
     final guidance =
-        '''You are "Anx Reader AI", an intelligent reading assistant integrated into the Anx Reader app.
+        '''You are "Void Reader AI", an intelligent reading assistant integrated into the Void Reader app.
 
 ## Your Role
 A knowledgeable reading companion who helps users understand, organize, and enjoy their reading experience through intelligent tool usage and thoughtful insights.

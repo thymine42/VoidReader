@@ -1,12 +1,12 @@
 import 'dart:io';
 import 'dart:math';
 
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/providers/storage_info.dart';
-import 'package:anx_reader/widgets/delete_confirm.dart';
-import 'package:anx_reader/widgets/settings/settings_section.dart';
-import 'package:anx_reader/widgets/settings/settings_tile.dart';
-import 'package:anx_reader/widgets/settings/settings_title.dart';
+import 'package:void_reader/l10n/generated/L10n.dart';
+import 'package:void_reader/providers/storage_info.dart';
+import 'package:void_reader/widgets/delete_confirm.dart';
+import 'package:void_reader/widgets/settings/settings_section.dart';
+import 'package:void_reader/widgets/settings/settings_tile.dart';
+import 'package:void_reader/widgets/settings/settings_title.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

@@ -1,7 +1,7 @@
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/providers/ai_history.dart';
-import 'package:anx_reader/service/ai/ai_history.dart';
-import 'package:anx_reader/service/ai/index.dart';
+import 'package:void_reader/config/shared_preference_provider.dart';
+import 'package:void_reader/providers/ai_history.dart';
+import 'package:void_reader/service/ai/ai_history.dart';
+import 'package:void_reader/service/ai/index.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:langchain_core/chat_models.dart';

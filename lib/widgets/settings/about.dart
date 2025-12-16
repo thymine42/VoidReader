@@ -1,14 +1,14 @@
 import 'dart:async';
 
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/main.dart';
-import 'package:anx_reader/page/settings_page/developer/developer_options_page.dart';
-import 'package:anx_reader/utils/env_var.dart';
-import 'package:anx_reader/utils/toast/common.dart';
-import 'package:anx_reader/widgets/settings/link_icon.dart';
-import 'package:anx_reader/utils/check_update.dart';
-import 'package:anx_reader/widgets/settings/show_donate_dialog.dart';
+import 'package:void_reader/config/shared_preference_provider.dart';
+import 'package:void_reader/l10n/generated/L10n.dart';
+import 'package:void_reader/main.dart';
+import 'package:void_reader/page/settings_page/developer/developer_options_page.dart';
+import 'package:void_reader/utils/env_var.dart';
+import 'package:void_reader/utils/toast/common.dart';
+import 'package:void_reader/widgets/settings/link_icon.dart';
+import 'package:void_reader/utils/check_update.dart';
+import 'package:void_reader/widgets/settings/show_donate_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -70,7 +70,7 @@ void _handleDeveloperUnlockTap(BuildContext context) {
   _developerUnlockTapCount = 0;
   if (!alreadyEnabled) {
     Prefs().developerOptionsEnabled = true;
-    AnxToast.show('Developer options enabled');
+    VoidToast.show('Developer options enabled');
   }
 
   final navigator = Navigator.of(context, rootNavigator: true);
@@ -115,9 +115,9 @@ Future<void> openAboutDialog() async {
                   padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
                   child: Center(
                     child: Text(
-                      'Anx',
+                      'Void Reader',
                       style: TextStyle(
-                        fontSize: 50,
+                        fontSize: 36,
                         fontWeight: FontWeight.bold,
                         color: Theme.of(context).colorScheme.primary,
                       ),
@@ -130,7 +130,7 @@ Future<void> openAboutDialog() async {
                   subtitle: Text(version + (kDebugMode ? ' (debug)' : '')),
                   onTap: () {
                     Clipboard.setData(ClipboardData(text: version));
-                    AnxToast.show(L10n.of(context).notesPageCopied);
+                    VoidToast.show(L10n.of(context).notesPageCopied);
                     _handleDeveloperUnlockTap(context);
                   },
                 ),
@@ -150,7 +150,7 @@ Future<void> openAboutDialog() async {
                   onTap: () {
                     showLicensePage(
                       context: context,
-                      applicationName: 'Anx',
+                      applicationName: 'Void Reader',
                       applicationVersion: version,
                     );
                   },
@@ -160,7 +160,7 @@ Future<void> openAboutDialog() async {
                   onTap: () {
                     launchUrl(
                       Uri.parse(
-                          'https://github.com/Anxcye/anx-reader/graphs/contributors'),
+                          'https://github.com/thymine42/VoidReader/graphs/contributors'),
                       mode: LaunchMode.externalApplication,
                     );
                   },
@@ -169,7 +169,7 @@ Future<void> openAboutDialog() async {
                   title: Text(L10n.of(context).aboutPrivacyPolicy),
                   onTap: () async {
                     launchUrl(
-                      Uri.parse('https://anx.anxcye.com/privacy'),
+                      Uri.parse('https://github.com/thymine42/VoidReader#privacy'),
                       mode: LaunchMode.externalApplication,
                     );
                   },
@@ -178,7 +178,7 @@ Future<void> openAboutDialog() async {
                   title: Text(L10n.of(context).aboutTermsOfUse),
                   onTap: () async {
                     launchUrl(
-                      Uri.parse('https://anx.anxcye.com/terms'),
+                      Uri.parse('https://github.com/thymine42/VoidReader#terms'),
                       mode: LaunchMode.externalApplication,
                     );
                   },
@@ -202,14 +202,14 @@ Future<void> openAboutDialog() async {
                           IonIcons.earth,
                           color: Theme.of(context).colorScheme.secondary,
                         ),
-                        url: 'https://anx.anxcye.com',
+                        url: 'https://github.com/thymine42/VoidReader',
                         mode: LaunchMode.externalApplication),
                     linkIcon(
                         icon: Icon(
                           IonIcons.logo_github,
                           color: Theme.of(context).colorScheme.secondary,
                         ),
-                        url: 'https://github.com/Anxcye/anx-reader',
+                        url: 'https://github.com/thymine42/VoidReader',
                         mode: LaunchMode.externalApplication),
                     if (EnvVar.showTelegramLink)
                       linkIcon(

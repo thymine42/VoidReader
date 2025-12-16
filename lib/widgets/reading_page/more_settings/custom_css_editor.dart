@@ -1,7 +1,7 @@
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/page/reading_page.dart';
-import 'package:anx_reader/utils/toast/common.dart';
+import 'package:void_reader/config/shared_preference_provider.dart';
+import 'package:void_reader/l10n/generated/L10n.dart';
+import 'package:void_reader/page/reading_page.dart';
+import 'package:void_reader/utils/toast/common.dart';
 import 'package:flutter/material.dart';
 
 class CustomCSSEditor extends StatefulWidget {
@@ -99,7 +99,7 @@ class _CustomCSSEditorState extends State<CustomCSSEditor> {
       _applyCSS();
     }
 
-    AnxToast.show(L10n.of(context).commonSaved);
+    VoidToast.show(L10n.of(context).commonSaved);
   }
 
   void _restoreDefault() {

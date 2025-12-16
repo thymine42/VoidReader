@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/service/ai/tools/ai_tool_registry.dart';
-import 'package:anx_reader/service/ai/tools/input/calculator_input.dart';
-import 'package:anx_reader/utils/log/common.dart';
+import 'package:void_reader/l10n/generated/L10n.dart';
+import 'package:void_reader/service/ai/tools/ai_tool_registry.dart';
+import 'package:void_reader/service/ai/tools/input/calculator_input.dart';
+import 'package:void_reader/utils/log/common.dart';
 import 'package:math_expressions/math_expressions.dart';
 
 import 'base_tool.dart';
@@ -54,7 +54,7 @@ class CalculatorTool
   }
 
   String _evaluateExpression(String expression) {
-    AnxLog.info('Evaluating expression: $expression');
+    VoidLog.info('Evaluating expression: $expression');
     final parser = ShuntingYardParser();
     final parsed = parser.parse(expression);
     final evaluation = parsed.evaluate(EvaluationType.REAL, ContextModel());

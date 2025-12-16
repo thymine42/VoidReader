@@ -1,7 +1,7 @@
-import 'package:anx_reader/dao/tag.dart';
-import 'package:anx_reader/models/tag.dart';
-import 'package:anx_reader/utils/color/hash_color.dart';
-import 'package:anx_reader/utils/color/rgb.dart';
+import 'package:void_reader/dao/tag.dart';
+import 'package:void_reader/models/tag.dart';
+import 'package:void_reader/utils/color/hash_color.dart';
+import 'package:void_reader/utils/color/rgb.dart';
 import 'package:flutter/material.dart';
 
 class TagRepository {

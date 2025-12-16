@@ -12,6 +12,7 @@ abstract class BookmarkModel with _$BookmarkModel {
     required String cfi,
     required String chapter,
     required double percentage,
+    String? name,
     DateTime? createTime,
     required DateTime updateTime,
   }) = _BookmarkModel;
@@ -30,7 +31,7 @@ extension BookmarkModelExtension on BookmarkModel {
       'chapter': chapter,
       'type': 'bookmark',
       'color': percentage,
-      'reader_note': '',
+      'reader_note': name ?? '',
       'create_time': createTime?.toIso8601String(),
       'update_time': updateTime.toIso8601String(),
     };

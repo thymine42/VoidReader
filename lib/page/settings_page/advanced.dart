@@ -1,20 +1,20 @@
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/dao/book.dart';
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/models/md5_statistics.dart';
-import 'package:anx_reader/page/settings_page/subpage/chapter_split_rules_page.dart';
-import 'package:anx_reader/page/settings_page/subpage/log_page.dart';
-import 'package:anx_reader/page/changelog_screen.dart';
-import 'package:anx_reader/page/onboarding_screen.dart';
-import 'package:anx_reader/utils/app_version.dart';
-import 'package:anx_reader/service/md5_service.dart';
-import 'package:anx_reader/utils/toast/common.dart';
-import 'package:anx_reader/widgets/settings/settings_section.dart';
-import 'package:anx_reader/widgets/settings/settings_tile.dart';
-import 'package:anx_reader/widgets/settings/settings_title.dart';
+import 'package:void_reader/config/shared_preference_provider.dart';
+import 'package:void_reader/dao/book.dart';
+import 'package:void_reader/l10n/generated/L10n.dart';
+import 'package:void_reader/models/md5_statistics.dart';
+import 'package:void_reader/page/settings_page/subpage/chapter_split_rules_page.dart';
+import 'package:void_reader/page/settings_page/subpage/log_page.dart';
+import 'package:void_reader/page/changelog_screen.dart';
+import 'package:void_reader/page/onboarding_screen.dart';
+import 'package:void_reader/utils/app_version.dart';
+import 'package:void_reader/service/md5_service.dart';
+import 'package:void_reader/utils/toast/common.dart';
+import 'package:void_reader/widgets/settings/settings_section.dart';
+import 'package:void_reader/widgets/settings/settings_tile.dart';
+import 'package:void_reader/widgets/settings/settings_title.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:anx_reader/main.dart';
+import 'package:void_reader/main.dart';
 
 class AdvancedSetting extends StatefulWidget {
   const AdvancedSetting({super.key});
@@ -173,7 +173,7 @@ class _AdvancedSettingState extends State<AdvancedSetting> {
               leading: const Icon(Icons.lightbulb_outline),
               onPressed: (_) {
                 Prefs().resetHints();
-                AnxToast.show(L10n.of(context).allHintsWillBeShownAgain);
+                VoidToast.show(L10n.of(context).allHintsWillBeShownAgain);
               },
             ),
             SettingsTile.navigation(
@@ -196,7 +196,7 @@ class _AdvancedSettingState extends State<AdvancedSetting> {
     if (_isCalculating) return;
 
     if (_md5Stats?.localFilesWithoutMd5 == 0) {
-      AnxToast.show(L10n.of(context).md5NoCalculationNeeded);
+      VoidToast.show(L10n.of(context).md5NoCalculationNeeded);
       return;
     }
 
@@ -320,7 +320,7 @@ class _AdvancedSettingState extends State<AdvancedSetting> {
       });
 
       if (context.mounted) {
-        AnxToast.show(L10n.of(context).md5CalculationError(e.toString()));
+        VoidToast.show(L10n.of(context).md5CalculationError(e.toString()));
       }
     }
   }

@@ -1,29 +1,29 @@
 import 'dart:async';
 
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/main.dart';
-import 'package:anx_reader/providers/ai_chat.dart';
-import 'package:anx_reader/providers/ai_history.dart';
-import 'package:anx_reader/service/ai/ai_services.dart';
-import 'package:anx_reader/service/ai/ai_history.dart';
-import 'package:anx_reader/service/ai/index.dart';
-import 'package:anx_reader/utils/toast/common.dart';
-import 'package:anx_reader/utils/ai_reasoning_parser.dart';
-import 'package:anx_reader/widgets/ai/tool_step_tile.dart';
-import 'package:anx_reader/widgets/ai/tool_tiles/apply_book_tags_step_tile.dart';
-import 'package:anx_reader/widgets/ai/tool_tiles/mindmap_step_tile.dart';
-import 'package:anx_reader/widgets/ai/tool_tiles/organize_bookshelf_step_tile.dart';
-import 'package:anx_reader/widgets/common/container/filled_container.dart';
-import 'package:anx_reader/widgets/delete_confirm.dart';
-import 'package:anx_reader/widgets/markdown/styled_markdown.dart';
+import 'package:void_reader/config/shared_preference_provider.dart';
+import 'package:void_reader/l10n/generated/L10n.dart';
+import 'package:void_reader/main.dart';
+import 'package:void_reader/providers/ai_chat.dart';
+import 'package:void_reader/providers/ai_history.dart';
+import 'package:void_reader/service/ai/ai_services.dart';
+import 'package:void_reader/service/ai/ai_history.dart';
+import 'package:void_reader/service/ai/index.dart';
+import 'package:void_reader/utils/toast/common.dart';
+import 'package:void_reader/utils/ai_reasoning_parser.dart';
+import 'package:void_reader/widgets/ai/tool_step_tile.dart';
+import 'package:void_reader/widgets/ai/tool_tiles/apply_book_tags_step_tile.dart';
+import 'package:void_reader/widgets/ai/tool_tiles/mindmap_step_tile.dart';
+import 'package:void_reader/widgets/ai/tool_tiles/organize_bookshelf_step_tile.dart';
+import 'package:void_reader/widgets/common/container/filled_container.dart';
+import 'package:void_reader/widgets/delete_confirm.dart';
+import 'package:void_reader/widgets/markdown/styled_markdown.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:langchain_core/chat_models.dart';
 
-import 'package:anx_reader/models/ai_quick_prompt_chip.dart';
+import 'package:void_reader/models/ai_quick_prompt_chip.dart';
 
 class AiChatStream extends ConsumerStatefulWidget {
   const AiChatStream({
@@ -457,7 +457,7 @@ class AiChatStreamState extends ConsumerState<AiChatStream> {
     final parsed = parseReasoningContent(content);
     final clipboardText = _buildCopyableText(parsed, content);
     Clipboard.setData(ClipboardData(text: clipboardText));
-    AnxToast.show(L10n.of(context).notesPageCopied);
+    VoidToast.show(L10n.of(context).notesPageCopied);
   }
 
   void _cancelStreaming() {
@@ -684,7 +684,7 @@ class AiChatStreamState extends ConsumerState<AiChatStream> {
       appBar: AppBar(
         title: Text(L10n.of(context).aiChat),
         leading: IconButton(
-          icon: const Icon(Icons.insert_drive_file),
+          icon: const Icon(Icons.access_time_filled),
           tooltip: L10n.of(context).history,
           onPressed: () => _scaffoldKey.currentState?.openDrawer(),
         ),

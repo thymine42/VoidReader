@@ -1,12 +1,12 @@
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/page/iap_page.dart';
-import 'package:anx_reader/page/settings_page/more_settings_page.dart';
-import 'package:anx_reader/providers/iap.dart';
-import 'package:anx_reader/service/iap/iap_service.dart';
-import 'package:anx_reader/utils/env_var.dart';
-import 'package:anx_reader/widgets/settings/about.dart';
-import 'package:anx_reader/widgets/settings/theme_mode.dart';
-import 'package:anx_reader/widgets/settings/webdav_switch.dart';
+import 'package:void_reader/l10n/generated/L10n.dart';
+import 'package:void_reader/page/iap_page.dart';
+import 'package:void_reader/page/settings_page/more_settings_page.dart';
+import 'package:void_reader/providers/iap.dart';
+import 'package:void_reader/service/iap/iap_service.dart';
+import 'package:void_reader/utils/env_var.dart';
+import 'package:void_reader/widgets/settings/about.dart';
+import 'package:void_reader/widgets/settings/theme_mode.dart';
+import 'package:void_reader/widgets/settings/webdav_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -40,9 +40,9 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                     child: Container(
                       constraints: const BoxConstraints(maxWidth: 500),
                       child: Text(
-                        'Anx',
+                        'Void Reader',
                         style: TextStyle(
-                          fontSize: 130,
+                          fontSize: 50,
                           fontWeight: FontWeight.bold,
                           color: Theme.of(context).colorScheme.primary,
                         ),

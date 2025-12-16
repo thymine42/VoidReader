@@ -1,8 +1,8 @@
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/main.dart';
-import 'package:anx_reader/utils/save_file_to_download.dart';
-import 'package:anx_reader/utils/log/common.dart';
-import 'package:anx_reader/utils/toast/common.dart';
+import 'package:void_reader/l10n/generated/L10n.dart';
+import 'package:void_reader/main.dart';
+import 'package:void_reader/utils/save_file_to_download.dart';
+import 'package:void_reader/utils/log/common.dart';
+import 'package:void_reader/utils/toast/common.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -82,7 +82,7 @@ class SaveImg {
         img,
         fileName: '$name.$extension',
         skipIfExists: false,
-        androidRelativePath: "Pictures/AnxReader",
+        androidRelativePath: "Pictures/VoidReader",
       );
 
       SmartDialog.dismiss();
@@ -93,8 +93,8 @@ class SaveImg {
       return true;
     } catch (err) {
       SmartDialog.dismiss();
-      AnxToast.show(L10n.of(navigatorKey.currentContext!).commonFailed);
-      AnxLog.severe("saveImage: saveImage error: $err");
+      VoidToast.show(L10n.of(navigatorKey.currentContext!).commonFailed);
+      VoidLog.severe("saveImage: saveImage error: $err");
       return true;
     }
   }
@@ -109,7 +109,7 @@ class SaveImg {
       final deviceInfoPlugin = DeviceInfoPlugin();
       final deviceInfo = await deviceInfoPlugin.androidInfo;
       final sdkInt = deviceInfo.version.sdkInt;
-      AnxLog.info('sdkInt: $sdkInt');
+      VoidLog.info('sdkInt: $sdkInt');
 
       if (sdkInt > 33) {
         if (!await requestPhotoPer()) {
@@ -123,8 +123,8 @@ class SaveImg {
       return await saveImg(img, extension, name);
     } catch (err) {
       SmartDialog.dismiss();
-      AnxToast.show(L10n.of(navigatorKey.currentContext!).commonFailed);
-      AnxLog.severe("saveImage: saveImage error: $err");
+      VoidToast.show(L10n.of(navigatorKey.currentContext!).commonFailed);
+      VoidLog.severe("saveImage: saveImage error: $err");
       return true;
     }
   }
@@ -143,7 +143,7 @@ class SaveImg {
     if (path == null) {
       return false;
     }
-    AnxToast.show(
+    VoidToast.show(
         '「$name.$extension」${L10n.of(navigatorKey.currentContext!).commonSaved}');
     return true;
   }
@@ -162,7 +162,7 @@ class SaveImg {
     String name,
   ) async {
     String picName =
-        "AnxReader_${name}_${DateTime.now().toString().replaceAll(RegExp(r'[- :]'), '').split('.').first}";
+        "VoidReader_${name}_${DateTime.now().toString().replaceAll(RegExp(r'[- :]'), '').split('.').first}";
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return await androidImgSaver(img, extension, picName);

@@ -1,11 +1,11 @@
 import 'dart:io';
 
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/page/reading_page.dart';
-import 'package:anx_reader/utils/ui/status_bar.dart';
-import 'package:anx_reader/widgets/reading_page/more_settings/page_turning/diagram.dart';
-import 'package:anx_reader/widgets/reading_page/more_settings/page_turning/types_and_icons.dart';
+import 'package:void_reader/config/shared_preference_provider.dart';
+import 'package:void_reader/l10n/generated/L10n.dart';
+import 'package:void_reader/page/reading_page.dart';
+import 'package:void_reader/utils/ui/status_bar.dart';
+import 'package:void_reader/widgets/reading_page/more_settings/page_turning/diagram.dart';
+import 'package:void_reader/widgets/reading_page/more_settings/page_turning/types_and_icons.dart';
 import 'package:flutter/material.dart';
 
 class OtherSettings extends StatefulWidget {

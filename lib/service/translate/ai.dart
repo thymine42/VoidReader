@@ -1,10 +1,10 @@
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/enums/lang_list.dart';
-import 'package:anx_reader/main.dart';
-import 'package:anx_reader/service/ai/prompt_generate.dart';
-import 'package:anx_reader/service/ai/index.dart';
-import 'package:anx_reader/service/translate/index.dart';
-import 'package:anx_reader/widgets/ai/ai_stream.dart';
+import 'package:void_reader/l10n/generated/L10n.dart';
+import 'package:void_reader/enums/lang_list.dart';
+import 'package:void_reader/main.dart';
+import 'package:void_reader/service/ai/prompt_generate.dart';
+import 'package:void_reader/service/ai/index.dart';
+import 'package:void_reader/service/translate/index.dart';
+import 'package:void_reader/widgets/ai/ai_stream.dart';
 import 'package:flutter/material.dart';
 
 class AiTranslateProvider extends TranslateServiceProvider {

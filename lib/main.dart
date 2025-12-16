@@ -1,19 +1,19 @@
 import 'dart:io';
 
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/dao/database.dart';
-import 'package:anx_reader/enums/sync_direction.dart';
-import 'package:anx_reader/enums/sync_trigger.dart';
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/models/window_info.dart';
-import 'package:anx_reader/page/home_page.dart';
-import 'package:anx_reader/service/book_player/book_player_server.dart';
-import 'package:anx_reader/service/tts/tts_handler.dart';
-import 'package:anx_reader/utils/color_scheme.dart';
-import 'package:anx_reader/utils/error/common.dart';
-import 'package:anx_reader/utils/get_path/get_base_path.dart';
-import 'package:anx_reader/utils/log/common.dart';
-import 'package:anx_reader/providers/sync.dart';
+import 'package:void_reader/config/shared_preference_provider.dart';
+import 'package:void_reader/dao/database.dart';
+import 'package:void_reader/enums/sync_direction.dart';
+import 'package:void_reader/enums/sync_trigger.dart';
+import 'package:void_reader/l10n/generated/L10n.dart';
+import 'package:void_reader/models/window_info.dart';
+import 'package:void_reader/page/home_page.dart';
+import 'package:void_reader/service/book_player/book_player_server.dart';
+import 'package:void_reader/service/tts/tts_handler.dart';
+import 'package:void_reader/utils/color_scheme.dart';
+import 'package:void_reader/utils/error/common.dart';
+import 'package:void_reader/utils/get_path/get_base_path.dart';
+import 'package:void_reader/utils/log/common.dart';
+import 'package:void_reader/providers/sync.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -42,7 +42,7 @@ Future<void> main() async {
 
     final isMaximized = Prefs().windowInfo.isMaximized;
 
-    WindowManager.instance.setTitle('Anx Reader');
+    WindowManager.instance.setTitle('Void Reader');
 
     if (isMaximized) {
       await WindowManager.instance.maximize();
@@ -57,8 +57,8 @@ Future<void> main() async {
   }
 
   initBasePath();
-  AnxLog.init();
-  AnxError.init();
+  VoidLog.init();
+  VoidError.init();
 
   await DBHelper().initDB();
 
@@ -68,7 +68,7 @@ Future<void> main() async {
     builder: () => TtsHandler(),
     config: const AudioServiceConfig(
       androidNotificationChannelId: 'com.anx.reader.tts.channel.audio',
-      androidNotificationChannelName: 'ANX Reader TTS',
+      androidNotificationChannelName: 'Void Reader TTS',
       androidNotificationOngoing: true,
       androidStopForegroundOnPause: true,
     ),
@@ -144,7 +144,7 @@ class _MyAppState extends ConsumerState<MyApp>
       height: windowSize.height,
       isMaximized: isMaximized
     );
-    AnxLog.info('onWindowClose: Offset: $windowOffset, Size: $windowSize');
+    VoidLog.info('onWindowClose: Offset: $windowOffset, Size: $windowSize');
   }
 
   @override
@@ -191,7 +191,7 @@ class _MyAppState extends ConsumerState<MyApp>
             locale: prefsNotifier.locale,
             localizationsDelegates: L10n.localizationsDelegates,
             supportedLocales: L10n.supportedLocales,
-            title: 'Anx',
+            title: 'Void Reader',
             themeMode: prefsNotifier.themeMode,
             theme: colorSchema(prefsNotifier, context, Brightness.light),
             darkTheme: colorSchema(prefsNotifier, context, Brightness.dark),

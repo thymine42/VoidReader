@@ -1,33 +1,33 @@
 import 'dart:io';
 
-import 'package:anx_reader/dao/book.dart';
-import 'package:anx_reader/dao/theme.dart';
-import 'package:anx_reader/enums/sync_direction.dart';
-import 'package:anx_reader/enums/sync_trigger.dart';
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/main.dart';
-import 'package:anx_reader/models/book.dart';
-import 'package:anx_reader/models/current_reading_state.dart';
-import 'package:anx_reader/page/home_page.dart';
-import 'package:anx_reader/page/iap_page.dart';
-import 'package:anx_reader/providers/ai_chat.dart';
-import 'package:anx_reader/providers/chapter_content_bridge.dart';
-import 'package:anx_reader/providers/current_reading.dart';
-import 'package:anx_reader/providers/sync.dart';
-import 'package:anx_reader/providers/iap.dart';
-import 'package:anx_reader/providers/book_list.dart';
-import 'package:anx_reader/providers/toc_search.dart';
-import 'package:anx_reader/service/convert_to_epub/txt/convert_from_txt.dart';
-import 'package:anx_reader/service/md5_service.dart';
-import 'package:anx_reader/utils/webView/anx_headless_webview.dart';
-import 'package:anx_reader/utils/env_var.dart';
-import 'package:anx_reader/utils/get_path/get_base_path.dart';
-import 'package:anx_reader/page/reading_page.dart';
-import 'package:anx_reader/utils/import_book.dart';
-import 'package:anx_reader/utils/log/common.dart';
-import 'package:anx_reader/utils/toast/common.dart';
-import 'package:anx_reader/utils/webView/gererate_url.dart';
-import 'package:anx_reader/utils/webView/webview_console_message.dart';
+import 'package:void_reader/dao/book.dart';
+import 'package:void_reader/dao/theme.dart';
+import 'package:void_reader/enums/sync_direction.dart';
+import 'package:void_reader/enums/sync_trigger.dart';
+import 'package:void_reader/l10n/generated/L10n.dart';
+import 'package:void_reader/main.dart';
+import 'package:void_reader/models/book.dart';
+import 'package:void_reader/models/current_reading_state.dart';
+import 'package:void_reader/page/home_page.dart';
+import 'package:void_reader/page/iap_page.dart';
+import 'package:void_reader/providers/ai_chat.dart';
+import 'package:void_reader/providers/chapter_content_bridge.dart';
+import 'package:void_reader/providers/current_reading.dart';
+import 'package:void_reader/providers/sync.dart';
+import 'package:void_reader/providers/iap.dart';
+import 'package:void_reader/providers/book_list.dart';
+import 'package:void_reader/providers/toc_search.dart';
+import 'package:void_reader/service/convert_to_epub/txt/convert_from_txt.dart';
+import 'package:void_reader/service/md5_service.dart';
+import 'package:void_reader/utils/webView/anx_headless_webview.dart';
+import 'package:void_reader/utils/env_var.dart';
+import 'package:void_reader/utils/get_path/get_base_path.dart';
+import 'package:void_reader/page/reading_page.dart';
+import 'package:void_reader/utils/import_book.dart';
+import 'package:void_reader/utils/log/common.dart';
+import 'package:void_reader/utils/toast/common.dart';
+import 'package:void_reader/utils/webView/gererate_url.dart';
+import 'package:void_reader/utils/webView/webview_console_message.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
@@ -40,7 +40,7 @@ final allowBookExtensions = ["epub", "mobi", "azw3", "fb2", "txt", "pdf"];
 
 /// import book list and **delete file**
 void importBookList(List<File> fileList, BuildContext context, WidgetRef ref) {
-  AnxLog.info('importBook fileList: ${fileList.toString()}');
+  VoidLog.info('importBook fileList: ${fileList.toString()}');
 
   List<File> supportedFiles = fileList.where((file) {
     return allowBookExtensions
@@ -115,7 +115,7 @@ void _checkDuplicatesAndShowDialog(
     );
   } catch (e) {
     Navigator.of(navigatorKey.currentContext!).pop();
-    AnxLog.severe('MD5 check failed: $e');
+    VoidLog.severe('MD5 check failed: $e');
     _showImportDialog(
       supportedFiles,
       [],
@@ -313,7 +313,7 @@ void _showImportDialog(
                       }
 
                       for (var file in filesToImport) {
-                        AnxToast.show(file.path.split('/').last);
+                        VoidToast.show(file.path.split('/').last);
                         setState(() {
                           currentHandlingFile = file.path;
                         });
@@ -378,7 +378,7 @@ Future<void> pushToReadingPage(
   String? heroTag,
 }) async {
   if (book.isDeleted) {
-    AnxToast.show(L10n.of(context).bookDeleted);
+    VoidToast.show(L10n.of(context).bookDeleted);
     return;
   }
 
@@ -428,11 +428,11 @@ Future<void> pushToReadingPage(
       ),
     ),
   ).then((_) {
-    AnxLog.info('ReadingPage: poped: ${book.title}');
+    VoidLog.info('ReadingPage: poped: ${book.title}');
     currentReading.finish();
     chapterContentBridge.state = null;
     tocSearch.clear();
-    AnxLog.info('Pop successfully ReadingPage: ${book.title}');
+    VoidLog.info('Pop successfully ReadingPage: ${book.title}');
   });
 }
 
@@ -493,7 +493,7 @@ Future<void> saveBook(
       updateTime: DateTime.now());
 
   book.id = await bookDao.insertBook(book);
-  AnxToast.show(L10n.of(navigatorKey.currentContext!).serviceImportSuccess);
+  VoidToast.show(L10n.of(navigatorKey.currentContext!).serviceImportSuccess);
   await headlessInAppWebView?.dispose();
   headlessInAppWebView = null;
   return;
@@ -510,7 +510,7 @@ Future<void> getBookMetadata(
   String cfi = '';
 
   String bookUrl = "http://127.0.0.1:${Server().port}/$serverFileName";
-  AnxLog.info("import start: book url: $bookUrl");
+  VoidLog.info("import start: book url: $bookUrl");
 
   AnxHeadlessWebView webview = AnxHeadlessWebView(
     webViewEnvironment: webViewEnvironment,

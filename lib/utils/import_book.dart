@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:anx_reader/utils/get_path/get_base_path.dart';
-import 'package:anx_reader/utils/log/common.dart';
+import 'package:void_reader/utils/get_path/get_base_path.dart';
+import 'package:void_reader/utils/log/common.dart';
 
 Future<String> saveImageToLocal(String? imageFile, String name) async {
   if (imageFile == null) {
@@ -25,7 +25,7 @@ Future<String> saveImageToLocal(String? imageFile, String name) async {
 
     return name;
   } catch (e) {
-    AnxLog.severe('Error saving image\n$e');
+    VoidLog.severe('Error saving image\n$e');
     return name;
   }
 }

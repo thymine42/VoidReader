@@ -1,13 +1,13 @@
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/constants/note_annotations.dart';
-import 'package:anx_reader/dao/book_note.dart';
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/models/book_note.dart';
-import 'package:anx_reader/page/reading_page.dart';
-import 'package:anx_reader/utils/toast/common.dart';
-import 'package:anx_reader/widgets/book_share/excerpt_share_service.dart';
-import 'package:anx_reader/widgets/common/axis_flex.dart';
-import 'package:anx_reader/widgets/icon_and_text.dart';
+import 'package:void_reader/config/shared_preference_provider.dart';
+import 'package:void_reader/constants/note_annotations.dart';
+import 'package:void_reader/dao/book_note.dart';
+import 'package:void_reader/l10n/generated/L10n.dart';
+import 'package:void_reader/models/book_note.dart';
+import 'package:void_reader/page/reading_page.dart';
+import 'package:void_reader/utils/toast/common.dart';
+import 'package:void_reader/widgets/book_share/excerpt_share_service.dart';
+import 'package:void_reader/widgets/common/axis_flex.dart';
+import 'package:void_reader/widgets/icon_and_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:icons_plus/icons_plus.dart';
@@ -265,7 +265,7 @@ class ExcerptMenuState extends State<ExcerptMenu> {
           InkWell(
             onTap: () {
               Clipboard.setData(ClipboardData(text: widget.annoContent));
-              AnxToast.show(L10n.of(context).notesPageCopied);
+              VoidToast.show(L10n.of(context).notesPageCopied);
               widget.onClose();
             },
             child: IconAndText(

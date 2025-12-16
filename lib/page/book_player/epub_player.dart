@@ -2,45 +2,46 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/dao/book.dart';
-import 'package:anx_reader/dao/book_note.dart';
-import 'package:anx_reader/enums/reading_info.dart';
-import 'package:anx_reader/enums/translation_mode.dart';
-import 'package:anx_reader/enums/writing_mode.dart';
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/service/translate/index.dart';
-import 'package:anx_reader/main.dart';
-import 'package:anx_reader/models/book.dart';
-import 'package:anx_reader/models/book_style.dart';
-import 'package:anx_reader/models/bookmark.dart';
-import 'package:anx_reader/models/font_model.dart';
-import 'package:anx_reader/models/read_theme.dart';
-import 'package:anx_reader/models/reading_rules.dart';
-import 'package:anx_reader/models/search_result_model.dart';
-import 'package:anx_reader/models/toc_item.dart';
-import 'package:anx_reader/page/book_player/image_viewer.dart';
-import 'package:anx_reader/page/home_page.dart';
-import 'package:anx_reader/page/reading_page.dart';
-import 'package:anx_reader/providers/book_list.dart';
-import 'package:anx_reader/providers/book_toc.dart';
-import 'package:anx_reader/providers/bookmark.dart';
-import 'package:anx_reader/providers/chapter_content_bridge.dart';
-import 'package:anx_reader/providers/current_reading.dart';
-import 'package:anx_reader/service/book_player/book_player_server.dart';
-import 'package:anx_reader/providers/toc_search.dart';
-import 'package:anx_reader/service/tts/models/tts_sentence.dart';
-import 'package:anx_reader/utils/coordinates_to_part.dart';
-import 'package:anx_reader/utils/js/convert_dart_color_to_js.dart';
-import 'package:anx_reader/models/book_note.dart';
-import 'package:anx_reader/utils/log/common.dart';
-import 'package:anx_reader/utils/webView/gererate_url.dart';
-import 'package:anx_reader/utils/webView/webview_console_message.dart';
-import 'package:anx_reader/widgets/bookshelf/book_cover.dart';
-import 'package:anx_reader/widgets/context_menu/context_menu.dart';
-import 'package:anx_reader/widgets/reading_page/more_settings/page_turning/diagram.dart';
-import 'package:anx_reader/widgets/reading_page/more_settings/page_turning/types_and_icons.dart';
-import 'package:anx_reader/widgets/reading_page/style_widget.dart';
+import 'package:void_reader/widgets/reading_page/widgets/bookmark_name_dialog.dart';
+import 'package:void_reader/config/shared_preference_provider.dart';
+import 'package:void_reader/dao/book.dart';
+import 'package:void_reader/dao/book_note.dart';
+import 'package:void_reader/enums/reading_info.dart';
+import 'package:void_reader/enums/translation_mode.dart';
+import 'package:void_reader/enums/writing_mode.dart';
+import 'package:void_reader/l10n/generated/L10n.dart';
+import 'package:void_reader/service/translate/index.dart';
+import 'package:void_reader/main.dart';
+import 'package:void_reader/models/book.dart';
+import 'package:void_reader/models/book_style.dart';
+import 'package:void_reader/models/bookmark.dart';
+import 'package:void_reader/models/font_model.dart';
+import 'package:void_reader/models/read_theme.dart';
+import 'package:void_reader/models/reading_rules.dart';
+import 'package:void_reader/models/search_result_model.dart';
+import 'package:void_reader/models/toc_item.dart';
+import 'package:void_reader/page/book_player/image_viewer.dart';
+import 'package:void_reader/page/home_page.dart';
+import 'package:void_reader/page/reading_page.dart';
+import 'package:void_reader/providers/book_list.dart';
+import 'package:void_reader/providers/book_toc.dart';
+import 'package:void_reader/providers/bookmark.dart';
+import 'package:void_reader/providers/chapter_content_bridge.dart';
+import 'package:void_reader/providers/current_reading.dart';
+import 'package:void_reader/service/book_player/book_player_server.dart';
+import 'package:void_reader/providers/toc_search.dart';
+import 'package:void_reader/service/tts/models/tts_sentence.dart';
+import 'package:void_reader/utils/coordinates_to_part.dart';
+import 'package:void_reader/utils/js/convert_dart_color_to_js.dart';
+import 'package:void_reader/models/book_note.dart';
+import 'package:void_reader/utils/log/common.dart';
+import 'package:void_reader/utils/webView/gererate_url.dart';
+import 'package:void_reader/utils/webView/webview_console_message.dart';
+import 'package:void_reader/widgets/bookshelf/book_cover.dart';
+import 'package:void_reader/widgets/context_menu/context_menu.dart';
+import 'package:void_reader/widgets/reading_page/more_settings/page_turning/diagram.dart';
+import 'package:void_reader/widgets/reading_page/more_settings/page_turning/types_and_icons.dart';
+import 'package:void_reader/widgets/reading_page/style_widget.dart';
 import 'package:battery_plus/battery_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -440,7 +441,7 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
 
     final uri = Uri.tryParse(link);
     if (uri == null || uri.scheme.isEmpty || uri.scheme == 'javascript') {
-      AnxLog.warning('Ignored invalid external link: $link');
+      VoidLog.warning('Ignored invalid external link: $link');
       return;
     }
 
@@ -482,7 +483,7 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
       mode: LaunchMode.externalApplication,
     );
     if (!opened) {
-      AnxLog.warning('Failed to open external link: $link');
+      VoidLog.warning('Failed to open external link: $link');
     }
   }
 
@@ -750,6 +751,12 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
           bookmarkCfi = '';
           bookmarkExists = false;
         } else {
+          String? name = await showDialog<String>(
+            context: context,
+            builder: (context) => const BookmarkNameDialog(),
+          );
+          if (name == null) return;
+
           BookmarkModel bookmark = await ref
               .read(BookmarkProvider(widget.book.id).notifier)
               .addBookmark(
@@ -759,6 +766,7 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
                   percentage: percentage,
                   content: content,
                   chapter: chapterTitle,
+                  name: name,
                   updateTime: DateTime.now(),
                   createTime: DateTime.now(),
                 ),
@@ -783,7 +791,7 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
           return await TranslateFactory.getProvider(service)
               .translateTextOnly(text, from, to);
         } catch (e) {
-          AnxLog.severe('Translation error: $e');
+          VoidLog.severe('Translation error: $e');
           return 'Translation error: $e';
         }
       },

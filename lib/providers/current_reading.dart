@@ -1,5 +1,5 @@
-import 'package:anx_reader/models/current_reading_state.dart';
-import 'package:anx_reader/utils/log/common.dart';
+import 'package:void_reader/models/current_reading_state.dart';
+import 'package:void_reader/utils/log/common.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'current_reading.g.dart';
@@ -38,7 +38,7 @@ class CurrentReading extends _$CurrentReading {
 
   void finish() {
     state = state.copyWith(isReading: false);
-    AnxLog.info('CurrentReading: finish reading ${state.book?.title}');
+    VoidLog.info('CurrentReading: finish reading ${state.book?.title}');
   }
 
   bool get isReading => state.isReading;

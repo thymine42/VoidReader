@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:io' show Platform;
 
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/page/reading_page.dart';
-import 'package:anx_reader/service/tts/base_tts.dart';
+import 'package:void_reader/config/shared_preference_provider.dart';
+import 'package:void_reader/page/reading_page.dart';
+import 'package:void_reader/service/tts/base_tts.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';

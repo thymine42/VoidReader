@@ -1,5 +1,5 @@
-import 'package:anx_reader/main.dart';
-import 'package:anx_reader/widgets/settings/settings_section.dart';
+import 'package:void_reader/main.dart';
+import 'package:void_reader/widgets/settings/settings_section.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

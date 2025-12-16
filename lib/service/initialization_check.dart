@@ -1,11 +1,11 @@
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/enums/version_check_type.dart';
-import 'package:anx_reader/main.dart';
-import 'package:anx_reader/utils/app_version.dart';
+import 'package:void_reader/config/shared_preference_provider.dart';
+import 'package:void_reader/enums/version_check_type.dart';
+import 'package:void_reader/main.dart';
+import 'package:void_reader/utils/app_version.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:anx_reader/page/onboarding_screen.dart';
-import 'package:anx_reader/page/changelog_screen.dart';
-import 'package:anx_reader/utils/log/common.dart';
+import 'package:void_reader/page/onboarding_screen.dart';
+import 'package:void_reader/page/changelog_screen.dart';
+import 'package:void_reader/utils/log/common.dart';
 import 'package:flutter/material.dart';
 
 class InitializationCheck {
@@ -28,7 +28,7 @@ class InitializationCheck {
 
   static Future<void> check() async {
     final result = await _checkVersion();
-    AnxLog.info('Version check result: $result');
+    VoidLog.info('Version check result: $result');
     if (result == VersionCheckType.firstLaunch) {
       _handleFirstLaunch();
     } else if (result == VersionCheckType.updated) {
@@ -53,7 +53,7 @@ class InitializationCheck {
   }
 
   static Future<void> _handleFirstLaunch() async {
-    AnxLog.info('First launch detected, showing onboarding');
+    VoidLog.info('First launch detected, showing onboarding');
     final cv = await currentVersion;
     // wait 0.8 seconds to ensure the app is ready
     Future.delayed(const Duration(milliseconds: 800), () {
@@ -74,7 +74,7 @@ class InitializationCheck {
   static Future<void> _handleUpdateAvailable() async {
     final lv = await lastVersion;
     final cv = await currentVersion;
-    AnxLog.info('Version update detected: $lv -> $cv');
+    VoidLog.info('Version update detected: $lv -> $cv');
     Future.delayed(const Duration(milliseconds: 800), () {
       showCupertinoSheet(
         context: navigatorKey.currentContext!,
@@ -91,6 +91,6 @@ class InitializationCheck {
   }
 
   static void _handleNormalStartup() {
-    AnxLog.info('Normal startup, proceeding to main app');
+    VoidLog.info('Normal startup, proceeding to main app');
   }
 }

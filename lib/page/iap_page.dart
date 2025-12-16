@@ -1,11 +1,11 @@
 import 'dart:io';
 
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/models/iap_state.dart';
-import 'package:anx_reader/service/iap/iap_service.dart';
-import 'package:anx_reader/providers/iap.dart';
-import 'package:anx_reader/utils/log/common.dart';
-import 'package:anx_reader/widgets/common/container/filled_container.dart';
+import 'package:void_reader/l10n/generated/L10n.dart';
+import 'package:void_reader/models/iap_state.dart';
+import 'package:void_reader/service/iap/iap_service.dart';
+import 'package:void_reader/providers/iap.dart';
+import 'package:void_reader/utils/log/common.dart';
+import 'package:void_reader/widgets/common/container/filled_container.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,7 +26,7 @@ class IAPPage extends ConsumerWidget {
         body: const Center(child: CircularProgressIndicator()),
       ),
       error: (error, s) {
-        AnxLog.severe('IAP: Error loading IAP state: $error', s);
+        VoidLog.severe('IAP: Error loading IAP state: $error', s);
 
         return Scaffold(
           appBar: AppBar(
@@ -138,16 +138,16 @@ class IAPPage extends ConsumerWidget {
                         child: Text(L10n.of(context).aboutPrivacyPolicy),
                         onPressed: () async {
                           launchUrl(
-                            Uri.parse('https://anx.anxcye.com/privacy.html'),
-                            mode: LaunchMode.externalApplication,
-                          );
+                                Uri.parse('https://github.com/thymine42/VoidReader#privacy'),
+                                mode: LaunchMode.externalApplication,
+                              );
                         },
                       ),
                       TextButton(
                         child: Text(L10n.of(context).aboutTermsOfUse),
                         onPressed: () async {
                           launchUrl(
-                            Uri.parse('https://anx.anxcye.com/terms.html'),
+                            Uri.parse('https://github.com/thymine42/VoidReader#terms'),
                             mode: LaunchMode.externalApplication,
                           );
                         },

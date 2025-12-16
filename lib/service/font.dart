@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/main.dart';
-import 'package:anx_reader/utils/get_path/get_base_path.dart';
-import 'package:anx_reader/utils/toast/common.dart';
+import 'package:void_reader/l10n/generated/L10n.dart';
+import 'package:void_reader/main.dart';
+import 'package:void_reader/utils/get_path/get_base_path.dart';
+import 'package:void_reader/utils/toast/common.dart';
 import 'package:file_picker/file_picker.dart';
 
 Future<void> importFont() async {
@@ -23,6 +23,6 @@ Future<void> importFont() async {
     File newFile = File(file.path!);
     newFile.copy('${fontDir.path}/${file.name}');
 
-    AnxToast.show(L10n.of(navigatorKey.currentContext!).commonSuccess);
+    VoidToast.show(L10n.of(navigatorKey.currentContext!).commonSuccess);
   }
 }

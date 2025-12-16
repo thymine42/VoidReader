@@ -1,19 +1,19 @@
 import 'dart:io';
 import 'dart:ui' as ui;
 
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/enums/excerpt_share_template.dart';
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/models/font_model.dart';
-import 'package:anx_reader/providers/font_list.dart';
-import 'package:anx_reader/utils/get_path/get_temp_dir.dart';
-import 'package:anx_reader/utils/log/common.dart';
-import 'package:anx_reader/utils/save_img.dart';
-import 'package:anx_reader/utils/share_file.dart';
-import 'package:anx_reader/utils/toast/common.dart';
-import 'package:anx_reader/widgets/book_share/excerpt_share_card.dart';
-import 'package:anx_reader/widgets/icon_and_text.dart';
-import 'package:anx_reader/widgets/show_loading.dart';
+import 'package:void_reader/config/shared_preference_provider.dart';
+import 'package:void_reader/enums/excerpt_share_template.dart';
+import 'package:void_reader/l10n/generated/L10n.dart';
+import 'package:void_reader/models/font_model.dart';
+import 'package:void_reader/providers/font_list.dart';
+import 'package:void_reader/utils/get_path/get_temp_dir.dart';
+import 'package:void_reader/utils/log/common.dart';
+import 'package:void_reader/utils/save_img.dart';
+import 'package:void_reader/utils/share_file.dart';
+import 'package:void_reader/utils/toast/common.dart';
+import 'package:void_reader/widgets/book_share/excerpt_share_card.dart';
+import 'package:void_reader/widgets/icon_and_text.dart';
+import 'package:void_reader/widgets/show_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -111,8 +111,8 @@ class _ExcerptShareBottomSheetState
           await image.toByteData(format: ui.ImageByteFormat.png);
       return byteData?.buffer.asUint8List();
     } catch (e) {
-      AnxToast.show('Capture card error');
-      AnxLog.severe('Capture card error: $e');
+      VoidToast.show('Capture card error');
+      VoidLog.severe('Capture card error: $e');
       return null;
     }
   }
@@ -137,7 +137,7 @@ class _ExcerptShareBottomSheetState
     SmartDialog.dismiss();
     if (imageData == null) return;
 
-    final fileName = 'AnxReader_${widget.bookTitle.replaceAll(' ', '_')}';
+    final fileName = 'VoidReader_${widget.bookTitle.replaceAll(' ', '_')}';
     await SaveImg.downloadImg(imageData, 'png', fileName);
   }
 
@@ -383,7 +383,7 @@ class _ExcerptShareBottomSheetState
                 text: L10n.of(context).commonCopy,
                 onTap: () {
                   Clipboard.setData(ClipboardData(text: widget.excerpt));
-                  AnxToast.show(L10n.of(context).notesPageCopied);
+                  VoidToast.show(L10n.of(context).notesPageCopied);
                 },
               ),
             ],

@@ -1,7 +1,7 @@
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/page/book_player/epub_player.dart';
-import 'package:anx_reader/widgets/reading_page/widgets/book_toc.dart';
-import 'package:anx_reader/widgets/reading_page/widgets/bookmark.dart';
+import 'package:void_reader/l10n/generated/L10n.dart';
+import 'package:void_reader/page/book_player/epub_player.dart';
+import 'package:void_reader/widgets/reading_page/widgets/book_toc.dart';
+import 'package:void_reader/widgets/reading_page/widgets/bookmark.dart';
 import 'package:flutter/material.dart';
 
 class TocWidget extends StatefulWidget {

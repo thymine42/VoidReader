@@ -1,21 +1,21 @@
 import 'dart:io';
 
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/utils/log/string_to_level.dart';
-import 'package:anx_reader/utils/get_path/log_file.dart';
+import 'package:void_reader/config/shared_preference_provider.dart';
+import 'package:void_reader/utils/log/string_to_level.dart';
+import 'package:void_reader/utils/get_path/log_file.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 
-class AnxLog {
-  static final log = Logger('AnxReader');
+class VoidLog {
+  static final log = Logger('VoidReader');
   static late File? logFile;
 
   Level level;
   DateTime time;
   String message;
 
-  AnxLog(this.level, this.time, this.message);
+  VoidLog(this.level, this.time, this.message);
 
   get color => level == Level.SEVERE
       ? Colors.red
@@ -23,15 +23,15 @@ class AnxLog {
           ? Colors.orange
           : Colors.grey;
 
-  static AnxLog parse(String log) {
+  static VoidLog parse(String log) {
     try {
       final logParts = log.split('^*^');
       final level = stringToLevel(logParts[0]);
       final time = DateTime.parse(logParts[1].trim());
       final message = logParts[2];
-      return AnxLog(level, time, message);
+      return VoidLog(level, time, message);
     } catch (e) {
-      return AnxLog(Level.SEVERE, DateTime.now(), 'Parse log error: $e');
+      return VoidLog(Level.SEVERE, DateTime.now(), 'Parse log error: $e');
     }
   }
 

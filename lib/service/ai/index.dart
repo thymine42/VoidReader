@@ -1,14 +1,14 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/main.dart';
-import 'package:anx_reader/service/ai/langchain_ai_config.dart';
-import 'package:anx_reader/service/ai/langchain_registry.dart';
-import 'package:anx_reader/service/ai/langchain_runner.dart';
-import 'package:anx_reader/utils/ai_reasoning_parser.dart';
-import 'package:anx_reader/utils/log/common.dart';
+import 'package:void_reader/config/shared_preference_provider.dart';
+import 'package:void_reader/l10n/generated/L10n.dart';
+import 'package:void_reader/main.dart';
+import 'package:void_reader/service/ai/langchain_ai_config.dart';
+import 'package:void_reader/service/ai/langchain_registry.dart';
+import 'package:void_reader/service/ai/langchain_runner.dart';
+import 'package:void_reader/utils/ai_reasoning_parser.dart';
+import 'package:void_reader/utils/log/common.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:langchain_core/chat_models.dart';
 import 'package:langchain_core/prompts.dart';
@@ -49,7 +49,7 @@ Stream<String> _generateStream({
   required bool useAgent,
   required LangchainAiRegistry registry,
 }) async* {
-  AnxLog.info('aiGenerateStream called identifier: $identifier');
+  VoidLog.info('aiGenerateStream called identifier: $identifier');
   final sanitizedMessages = _sanitizeMessagesForPrompt(messages);
   final selectedIdentifier = identifier ?? Prefs().selectedAiService;
   final savedConfig = Prefs().getAiConfig(selectedIdentifier);
@@ -71,7 +71,7 @@ Stream<String> _generateStream({
     config = mergeConfigs(config, override);
   }
 
-  AnxLog.info(
+  VoidLog.info(
       'aiGenerateStream: $selectedIdentifier, model: ${config.model}, baseUrl: ${config.baseUrl}');
 
   final pipeline = registry.resolve(config, useAgent: useAgent);
@@ -116,7 +116,7 @@ Stream<String> _generateStream({
     }
   } catch (error, stack) {
     final mapped = _mapError(error);
-    AnxLog.severe('AI error: $mapped\n$stack');
+    VoidLog.severe('AI error: $mapped\n$stack');
     yield mapped;
   } finally {
     try {

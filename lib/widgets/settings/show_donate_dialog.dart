@@ -1,4 +1,4 @@
-import 'package:anx_reader/l10n/generated/L10n.dart';
+import 'package:void_reader/l10n/generated/L10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -12,7 +12,7 @@ void showDonateDialog(BuildContext context) {
         TextButton(
           onPressed: () {
             launchUrl(
-              Uri.parse('https://anxcye.com/home/7'),
+              Uri.parse('https://github.com/thymine42?tab=sponsors'),
               mode: LaunchMode.externalApplication,
             );
           },

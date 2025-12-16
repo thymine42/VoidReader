@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:anx_reader/service/iap/base_iap_service.dart';
-import 'package:anx_reader/utils/log/common.dart';
+import 'package:void_reader/service/iap/base_iap_service.dart';
+import 'package:void_reader/utils/log/common.dart';
 import 'package:asn1lib/asn1lib.dart';
 // import 'package:http/http.dart' as http;
 import 'package:in_app_purchase/in_app_purchase.dart';
@@ -22,7 +22,7 @@ class AppStoreIAPService extends BaseIAPService {
         };
   final InAppPurchase _inAppPurchase;
   Map<String, dynamic> _parsedReceipt;
-  final String _productId = 'anx_reader_lifetime';
+  final String _productId = 'void_reader_lifetime';
   List<String> originalUserVersions = [
     '1.4.0',
     '1.4.1',
@@ -101,15 +101,15 @@ class AppStoreIAPService extends BaseIAPService {
     try {
       final receiptBase64 = await _getReceiptBase64();
       if (receiptBase64.isEmpty) {
-        AnxLog.warning('IAP: Empty receipt during initialization');
+        VoidLog.warning('IAP: Empty receipt during initialization');
         return;
       }
 
       _parsedReceipt = _parseReceiptLocally(receiptBase64);
 
-      AnxLog.info('IAP: receipt loaded, $_parsedReceipt');
+      VoidLog.info('IAP: receipt loaded, $_parsedReceipt');
     } catch (e) {
-      AnxLog.severe('IAP: Error loading receipt: $e');
+      VoidLog.severe('IAP: Error loading receipt: $e');
     }
   }
 
@@ -121,7 +121,7 @@ class AppStoreIAPService extends BaseIAPService {
           await iosPlatformAddition.refreshPurchaseVerificationData();
       return receiptBase64?.localVerificationData ?? '';
     } catch (e) {
-      AnxLog.severe('IAP: Error getting receipt base64: $e');
+      VoidLog.severe('IAP: Error getting receipt base64: $e');
       return '';
     }
   }
@@ -153,7 +153,7 @@ class AppStoreIAPService extends BaseIAPService {
   //   }
 
   //   Map<String, dynamic> handleReceiptResponse(Map<String, dynamic> response) {
-  //     AnxLog.info('IAP: handleReceiptResponse: $response');
+  //     VoidLog.info('IAP: handleReceiptResponse: $response');
   //     final status = response['status'];
   //     if (status == 0) {
   //       return response['receipt'];
@@ -171,7 +171,7 @@ class AppStoreIAPService extends BaseIAPService {
   //       return handleReceiptResponse(productionResponse);
   //     }
   //   } catch (e) {
-  //     AnxLog.severe('IAP: Server verification error: $e');
+  //     VoidLog.severe('IAP: Server verification error: $e');
   //     rethrow;
   //   }
   // }
@@ -272,7 +272,7 @@ class AppStoreIAPService extends BaseIAPService {
               try {
                 parseInappPurchaseField(field, purchase);
               } catch (e) {
-                AnxLog.severe('IAP: Error parsing in-app purchase field: $e');
+                VoidLog.severe('IAP: Error parsing in-app purchase field: $e');
               }
             }
           }
@@ -300,7 +300,7 @@ class AppStoreIAPService extends BaseIAPService {
           try {
             parseInAppPurchase(ASN1Parser(fieldValue.valueBytes()), result);
           } catch (e) {
-            AnxLog.severe('IAP: Error parsing in-app purchase: $e');
+            VoidLog.severe('IAP: Error parsing in-app purchase: $e');
           }
           return;
         }
@@ -347,7 +347,7 @@ class AppStoreIAPService extends BaseIAPService {
           try {
             extractFieldValue(field, result);
           } catch (e) {
-            AnxLog.severe('IAP: Error extracting field value: $e');
+            VoidLog.severe('IAP: Error extracting field value: $e');
           }
         }
       }
@@ -379,7 +379,7 @@ class AppStoreIAPService extends BaseIAPService {
     try {
       parseReceipt(set, result);
     } catch (e) {
-      AnxLog.severe('IAP: Error parsing receipt fields: $e');
+      VoidLog.severe('IAP: Error parsing receipt fields: $e');
     }
 
     return result;
@@ -396,7 +396,7 @@ class AppStoreIAPService extends BaseIAPService {
       }
       return false;
     } catch (e) {
-      AnxLog.severe('IAP: Error checking original user: $e');
+      VoidLog.severe('IAP: Error checking original user: $e');
       return false;
     }
   }
@@ -415,7 +415,7 @@ class AppStoreIAPService extends BaseIAPService {
       final inApp = receipt['receipt']?['in_app'];
       return inApp != null && inApp.isNotEmpty;
     } catch (e) {
-      AnxLog.severe('IAP: Error checking active purchase: $e');
+      VoidLog.severe('IAP: Error checking active purchase: $e');
       return false;
     }
   }
@@ -428,7 +428,7 @@ class AppStoreIAPService extends BaseIAPService {
       }
       return null;
     } catch (e) {
-      AnxLog.severe('IAP: Error getting purchase date: $e');
+      VoidLog.severe('IAP: Error getting purchase date: $e');
       return null;
     }
   }

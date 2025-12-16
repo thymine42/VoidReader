@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/dao/book.dart';
-import 'package:anx_reader/service/book.dart';
-import 'package:anx_reader/utils/get_path/get_base_path.dart';
-import 'package:anx_reader/utils/get_path/databases_path.dart';
-import 'package:anx_reader/utils/log/common.dart';
+import 'package:void_reader/config/shared_preference_provider.dart';
+import 'package:void_reader/dao/book.dart';
+import 'package:void_reader/service/book.dart';
+import 'package:void_reader/utils/get_path/get_base_path.dart';
+import 'package:void_reader/utils/get_path/databases_path.dart';
+import 'package:void_reader/utils/log/common.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -118,7 +118,7 @@ class DBHelper {
     switch (defaultTargetPlatform) {
       case TargetPlatform.macOS:
       case TargetPlatform.android:
-        final databasePath = await getAnxDataBasesPath();
+        final databasePath = await getVoidDatabasePath();
         final path = join(databasePath, 'app_database.db');
         return await openDatabase(
           path,
@@ -134,8 +134,8 @@ class DBHelper {
         sqfliteFfiInit();
         var databaseFactory = databaseFactoryFfi;
 
-        final databasePath = await getAnxDataBasesPath();
-        AnxLog.info('Database: database path: $databasePath');
+        final databasePath = await getVoidDatabasePath();
+        VoidLog.info('Database: database path: $databasePath');
         final path = join(databasePath, 'app_database.db');
 
         return await databaseFactory.openDatabase(
@@ -160,10 +160,10 @@ class DBHelper {
 
   Future<void> onUpgradeDatabase(
       Database db, int oldVersion, int newVersion) async {
-    AnxLog.info('Database: upgrade database from $oldVersion to $newVersion');
+    VoidLog.info('Database: upgrade database from $oldVersion to $newVersion');
     switch (oldVersion) {
       case 0:
-        AnxLog.info('Database: create database version $newVersion');
+        VoidLog.info('Database: create database version $newVersion');
         await db.execute(createBookSQL);
         await db.execute(createNoteSQL);
         await db.execute(createThemeSQL);
@@ -177,10 +177,10 @@ class DBHelper {
         // add a column (rating) to tb_books
         await db.execute('ALTER TABLE tb_books ADD COLUMN rating REAL');
         // remove '/data/user/0/com.anxcye.anx_reader/app_flutter/' from file_path & cover_path
-        await db.execute(
-            "UPDATE tb_books SET file_path = REPLACE(file_path, '/data/user/0/com.anxcye.anx_reader/app_flutter/', '')");
-        await db.execute(
-            "UPDATE tb_books SET cover_path = REPLACE(cover_path, '/data/user/0/com.anxcye.anx_reader/app_flutter/', '')");
+          await db.execute(
+              "UPDATE tb_books SET file_path = REPLACE(file_path, '/data/user/0/com.thymine42.void_reader/app_flutter/', '')");
+          await db.execute(
+              "UPDATE tb_books SET cover_path = REPLACE(cover_path, '/data/user/0/com.thymine42.void_reader/app_flutter/', '')");
         continue case2;
       case2:
       case 2:

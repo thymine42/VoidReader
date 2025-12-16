@@ -1,9 +1,9 @@
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/widgets/book_notes/book_notes_list.dart';
-import 'package:anx_reader/widgets/reading_page/widget_title.dart';
+import 'package:void_reader/l10n/generated/L10n.dart';
+import 'package:void_reader/widgets/book_notes/book_notes_list.dart';
+import 'package:void_reader/widgets/reading_page/widget_title.dart';
 import 'package:flutter/material.dart';
 
-import 'package:anx_reader/models/book.dart';
+import 'package:void_reader/models/book.dart';
 
 class ReadingNotes extends StatelessWidget {
   const ReadingNotes({super.key, required this.book});

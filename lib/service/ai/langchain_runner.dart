@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:anx_reader/utils/log/common.dart';
+import 'package:void_reader/utils/log/common.dart';
 import 'package:langchain/langchain.dart';
 
 class CancelableLangchainRunner {
@@ -266,7 +266,7 @@ class CancelableLangchainRunner {
                 ),
               );
             } catch (error) {
-              AnxLog.severe(
+              VoidLog.severe(
                   'Tool ${agentAction.tool} execution failed: $error');
               final message = error.toString();
               toolStep.status = ToolStepStatus.failed;

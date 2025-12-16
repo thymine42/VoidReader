@@ -1,8 +1,8 @@
-import 'package:anx_reader/dao/base_dao.dart';
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/main.dart';
-import 'package:anx_reader/models/read_theme.dart';
-import 'package:anx_reader/utils/toast/common.dart';
+import 'package:void_reader/dao/base_dao.dart';
+import 'package:void_reader/l10n/generated/L10n.dart';
+import 'package:void_reader/main.dart';
+import 'package:void_reader/models/read_theme.dart';
+import 'package:void_reader/utils/toast/common.dart';
 
 class ThemeDao extends BaseDao {
   ThemeDao();
@@ -26,7 +26,7 @@ class ThemeDao extends BaseDao {
       mapper: ReadTheme.fromDb,
     );
     if (currentThemes.length <= 2) {
-      AnxToast.show(
+      VoidToast.show(
           L10n.of(navigatorKey.currentContext!).readingPageAtLeastTwoThemes);
       return;
     }

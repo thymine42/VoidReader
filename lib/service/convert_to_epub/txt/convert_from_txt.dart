@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/models/chapter_split_presets.dart';
-import 'package:anx_reader/service/convert_to_epub/create_epub.dart';
-import 'package:anx_reader/service/convert_to_epub/section.dart';
-import 'package:anx_reader/utils/log/common.dart';
+import 'package:void_reader/config/shared_preference_provider.dart';
+import 'package:void_reader/models/chapter_split_presets.dart';
+import 'package:void_reader/service/convert_to_epub/create_epub.dart';
+import 'package:void_reader/service/convert_to_epub/section.dart';
+import 'package:void_reader/utils/log/common.dart';
 import 'package:charset/charset.dart';
 
 String readFileWithEncoding(File file) {
@@ -32,14 +32,14 @@ String readFileWithEncoding(File file) {
 
   for (final entry in decoder.entries) {
     try {
-      AnxLog.info('Convert: Reading file with encoding: ${entry.key}');
+      VoidLog.info('Convert: Reading file with encoding: ${entry.key}');
       final content = entry.value(file.readAsBytesSync());
       if (!checkGarbled(content)) {
         return content;
       }
-      AnxLog.info('Convert: Detected garbled text ${entry.key}');
+      VoidLog.info('Convert: Detected garbled text ${entry.key}');
     } catch (e) {
-      AnxLog.warning(
+      VoidLog.warning(
           'Convert: Failed to read file with encoding: ${entry.key}');
     }
   }
@@ -126,7 +126,7 @@ Future<File> convertFromTxt(File file) async {
   final authorString =
       RegExp(r'(?<=作者：).*').firstMatch(filename)?.group(0) ?? 'Unknown';
 
-  AnxLog.info('convert from txt. title: $titleString, author: $authorString');
+  VoidLog.info('convert from txt. title: $titleString, author: $authorString');
 
   // read file
   String content = readFileWithEncoding(file);
@@ -134,20 +134,20 @@ Future<File> convertFromTxt(File file) async {
 
   // content = content.replaceAll(RegExp(r'(\n*|^)(\s|　)+'), '\n');
 
-  AnxLog.info('convert from txt. content: ${content.length}');
+  VoidLog.info('convert from txt. content: ${content.length}');
 
   final rule = Prefs().activeChapterSplitRule;
   RegExp patternStr;
   try {
     patternStr = rule.buildRegExp();
   } catch (error) {
-    AnxLog.warning(
+    VoidLog.warning(
         'Convert: Invalid chapter split rule ${rule.name}, using default. $error');
     patternStr = getDefaultChapterSplitRule().buildRegExp();
   }
 
   final matches = patternStr.allMatches(content).toList();
-  AnxLog.info('matches: ${matches.length}');
+  VoidLog.info('matches: ${matches.length}');
 
   List<Section> sections;
   if (matches.isEmpty) {

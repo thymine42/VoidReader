@@ -1,12 +1,12 @@
 import 'dart:io';
 
-import 'package:anx_reader/dao/book.dart';
-import 'package:anx_reader/enums/sync_direction.dart';
-import 'package:anx_reader/models/book.dart';
-import 'package:anx_reader/models/sync_status.dart';
-import 'package:anx_reader/providers/sync.dart';
-import 'package:anx_reader/utils/get_path/get_base_path.dart';
-import 'package:anx_reader/utils/log/common.dart';
+import 'package:void_reader/dao/book.dart';
+import 'package:void_reader/enums/sync_direction.dart';
+import 'package:void_reader/models/book.dart';
+import 'package:void_reader/models/sync_status.dart';
+import 'package:void_reader/providers/sync.dart';
+import 'package:void_reader/utils/get_path/get_base_path.dart';
+import 'package:void_reader/utils/log/common.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'sync_status.g.dart';
@@ -87,11 +87,11 @@ class SyncStatus extends _$SyncStatus {
       try {
         return await core();
       } catch (e) {
-        AnxLog.info(
+        VoidLog.info(
             'Webdav: Failed to list remote files: $e try again $count/$maxCount');
         count++;
         if (count >= maxCount) {
-          AnxLog.info('Webdav: Failed to list remote files: $e');
+          VoidLog.info('Webdav: Failed to list remote files: $e');
           return [];
         }
       }

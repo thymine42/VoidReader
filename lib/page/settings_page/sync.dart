@@ -1,23 +1,23 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:anx_reader/dao/database.dart';
-import 'package:anx_reader/enums/sync_protocol.dart';
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/main.dart';
-import 'package:anx_reader/providers/sync.dart';
-import 'package:anx_reader/service/sync/sync_client_factory.dart';
-import 'package:anx_reader/utils/save_file_to_download.dart';
-import 'package:anx_reader/utils/get_path/get_temp_dir.dart';
-import 'package:anx_reader/utils/get_path/databases_path.dart';
-import 'package:anx_reader/utils/get_path/get_base_path.dart';
-import 'package:anx_reader/utils/log/common.dart';
-import 'package:anx_reader/utils/sync_test_helper.dart';
-import 'package:anx_reader/utils/toast/common.dart';
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/utils/webdav/test_webdav.dart';
-import 'package:anx_reader/widgets/settings/settings_title.dart';
-import 'package:anx_reader/widgets/settings/webdav_switch.dart';
+import 'package:void_reader/dao/database.dart';
+import 'package:void_reader/enums/sync_protocol.dart';
+import 'package:void_reader/l10n/generated/L10n.dart';
+import 'package:void_reader/main.dart';
+import 'package:void_reader/providers/sync.dart';
+import 'package:void_reader/service/sync/sync_client_factory.dart';
+import 'package:void_reader/utils/save_file_to_download.dart';
+import 'package:void_reader/utils/get_path/get_temp_dir.dart';
+import 'package:void_reader/utils/get_path/databases_path.dart';
+import 'package:void_reader/utils/get_path/get_base_path.dart';
+import 'package:void_reader/utils/log/common.dart';
+import 'package:void_reader/utils/sync_test_helper.dart';
+import 'package:void_reader/utils/toast/common.dart';
+import 'package:void_reader/config/shared_preference_provider.dart';
+import 'package:void_reader/utils/webdav/test_webdav.dart';
+import 'package:void_reader/widgets/settings/settings_title.dart';
+import 'package:void_reader/widgets/settings/webdav_switch.dart';
 import 'package:archive/archive_io.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
@@ -26,8 +26,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:path/path.dart' as path;
-import 'package:anx_reader/widgets/settings/settings_section.dart';
-import 'package:anx_reader/widgets/settings/settings_tile.dart';
+import 'package:void_reader/widgets/settings/settings_section.dart';
+import 'package:void_reader/widgets/settings/settings_tile.dart';
 
 const String _prefsBackupFileName = 'anx_shared_prefs.json';
 
@@ -137,7 +137,7 @@ class _SyncSettingState extends ConsumerState<SyncSetting> {
   }
 
   Future<void> exportData(BuildContext context) async {
-    AnxLog.info('exportData: start');
+    VoidLog.info('exportData: start');
     if (!mounted) return;
 
     _showDataDialog(L10n.of(context).exporting);
@@ -159,7 +159,7 @@ class _SyncSettingState extends ConsumerState<SyncSetting> {
       // );
       // final filePath = await FlutterFileDialog.saveFile(params: params);
       String fileName =
-          'AnxReader-Backup-${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}-v3.zip';
+          'VoidReader-Backup-${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}-v3.zip';
 
       String? filePath = await saveFileToDownload(
           sourceFilePath: file.path,
@@ -169,17 +169,17 @@ class _SyncSettingState extends ConsumerState<SyncSetting> {
       await file.delete();
 
       if (filePath != null) {
-        AnxLog.info('exportData: Saved to: $filePath');
-        AnxToast.show(L10n.of(navigatorKey.currentContext!).exportTo(filePath));
+        VoidLog.info('exportData: Saved to: $filePath');
+        VoidToast.show(L10n.of(navigatorKey.currentContext!).exportTo(filePath));
       } else {
-        AnxLog.info('exportData: Cancelled');
-        AnxToast.show(L10n.of(navigatorKey.currentContext!).commonCanceled);
+        VoidLog.info('exportData: Cancelled');
+        VoidToast.show(L10n.of(navigatorKey.currentContext!).commonCanceled);
       }
     }
   }
 
   Future<void> importData() async {
-    AnxLog.info('importData: start');
+    VoidLog.info('importData: start');
     if (!mounted) return;
 
     FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -193,16 +193,16 @@ class _SyncSettingState extends ConsumerState<SyncSetting> {
 
     String? filePath = result.files.single.path;
     if (filePath == null) {
-      AnxLog.info('importData: cannot get file path');
-      AnxToast.show(
+      VoidLog.info('importData: cannot get file path');
+      VoidToast.show(
           L10n.of(navigatorKey.currentContext!).importCannotGetFilePath);
       return;
     }
 
     File zipFile = File(filePath);
     if (!await zipFile.exists()) {
-      AnxLog.info('importData: zip file not found');
-      AnxToast.show(
+      VoidLog.info('importData: zip file not found');
+      VoidToast.show(
           L10n.of(navigatorKey.currentContext!).importCannotGetFilePath);
       return;
     }
@@ -212,7 +212,7 @@ class _SyncSettingState extends ConsumerState<SyncSetting> {
 
     Directory cacheDir = await getAnxTempDir();
     String cachePath = cacheDir.path;
-    String extractPath = '$cachePath${pathSeparator}anx_reader_import';
+    String extractPath = '$cachePath${pathSeparator}void_reader_import';
 
     try {
       await Directory(extractPath).create(recursive: true);
@@ -234,17 +234,17 @@ class _SyncSettingState extends ConsumerState<SyncSetting> {
 
       DBHelper.close();
       _copyDirectorySync(Directory('$extractPath${pathSeparator}databases'),
-          await getAnxDataBasesDir());
+          await getVoidDatabaseDir());
       DBHelper().initDB();
 
       await _restorePrefsFromBackup(extractPath);
 
-      AnxLog.info('importData: import success');
-      AnxToast.show(
+      VoidLog.info('importData: import success');
+      VoidToast.show(
           L10n.of(navigatorKey.currentContext!).importSuccessRestartApp);
     } catch (e) {
-      AnxLog.info('importData: error while unzipping or copying files: $e');
-      AnxToast.show(
+      VoidLog.info('importData: error while unzipping or copying files: $e');
+      VoidToast.show(
           L10n.of(navigatorKey.currentContext!).importFailed(e.toString()));
     } finally {
       SmartDialog.dismiss();
@@ -280,20 +280,19 @@ Future<String> createZipFile(Map<String, dynamic> params) async {
   BackgroundIsolateBinaryMessenger.ensureInitialized(token);
   final date =
       '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}';
-  final zipPath = '${(await getAnxTempDir()).path}/AnxReader-Backup-$date.zip';
+  final zipPath = '${(await getAnxTempDir()).path}/VoidReader-Backup-$date.zip';
   final docPath = await getAnxDocumentsPath();
   final directoryList = [
     getFileDir(path: docPath),
     getCoverDir(path: docPath),
     getFontDir(path: docPath),
     getBgimgDir(path: docPath),
-    await getAnxDataBasesDir(),
-    // await getAnxSharedPrefsDir(),
-    // await getAnxShredPrefsFile(),
+    await getVoidDatabaseDir(),
+
     prefsBackupFile,
   ];
 
-  AnxLog.info('exportData: directoryList: $directoryList');
+  VoidLog.info('exportData: directoryList: $directoryList');
 
   final encoder = ZipFileEncoder();
   encoder.create(zipPath);
@@ -344,9 +343,9 @@ Future<bool> _restorePrefsFromBackup(String extractPath) async {
       await Prefs().applyPrefsBackupMap(decoded);
       return true;
     }
-    AnxLog.info('importData: prefs backup has unexpected format');
+    VoidLog.info('importData: prefs backup has unexpected format');
   } catch (e) {
-    AnxLog.info('importData: failed to restore prefs backup: $e');
+    VoidLog.info('importData: failed to restore prefs backup: $e');
   }
   return false;
 }

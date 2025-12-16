@@ -1,4 +1,4 @@
-import 'package:anx_reader/utils/log/common.dart';
+import 'package:void_reader/utils/log/common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -110,7 +110,7 @@ class AsyncSkeletonWrapper<T> extends StatelessWidget {
     if (T == double) return 1.0 as T;
     if (T == String) return 'a ' * 5 as T;
     if (T == bool) return false as T;
-    AnxLog.severe('No default mock available for type $T');
+    VoidLog.severe('No default mock available for type $T');
 
     throw Exception('No default mock available for type $T');
   }

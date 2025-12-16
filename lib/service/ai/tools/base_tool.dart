@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:anx_reader/utils/log/common.dart';
+import 'package:void_reader/utils/log/common.dart';
 import 'package:langchain_core/tools.dart';
 
 typedef JsonMap = Map<String, dynamic>;
@@ -53,16 +53,16 @@ abstract class RepositoryTool<I extends Object, O> {
 
   Future<String> _execute(I input) async {
     try {
-      AnxLog.info(
+      VoidLog.info(
           'AiTool: Executing tool $name with input: ${jsonEncode(input)}');
       final result = await _runWithTimeout(() => run(input));
       final serialized = serializeSuccess(result);
       final resultJson = jsonEncode(serialized);
-      AnxLog.info('AiTool: Tool $name completed with result: $resultJson');
+      VoidLog.info('AiTool: Tool $name completed with result: $resultJson');
       return resultJson;
     } catch (error, stack) {
       if (shouldLogError(error)) {
-        AnxLog.severe('Tool $name failed: $error\n$stack');
+        VoidLog.severe('Tool $name failed: $error\n$stack');
       }
       final serialized = serializeError(error);
       return jsonEncode(serialized);

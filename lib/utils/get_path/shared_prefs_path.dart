@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:anx_reader/utils/get_path/get_base_path.dart';
+import 'package:void_reader/utils/get_path/get_base_path.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -26,7 +26,7 @@ String getSharedPrefsFileName() {
       return 'shared_preferences.json';
     case TargetPlatform.macOS:
     case TargetPlatform.iOS:
-      return 'com.anxcye.anxReader.plist';
+      return 'com.anxcye.voidReader.plist';
     default:
       throw Exception('Unsupported platform');
   }

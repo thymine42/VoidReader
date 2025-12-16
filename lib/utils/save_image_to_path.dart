@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:anx_reader/utils/log/common.dart';
+import 'package:void_reader/utils/log/common.dart';
 
 Future<String> saveB64ImageToPath(
     String image, String path, String? name) async {
@@ -22,7 +22,7 @@ Future<String> saveB64ImageToPath(
 
     return path;
   } catch (e) {
-    AnxLog.severe('Error saving image\n$e');
+    VoidLog.severe('Error saving image\n$e');
     return '';
   }
 }

@@ -1,10 +1,10 @@
 import 'dart:io';
 
-import 'package:anx_reader/enums/bgimg_alignment.dart';
-import 'package:anx_reader/enums/bgimg_type.dart';
-import 'package:anx_reader/models/bgimg.dart';
-import 'package:anx_reader/utils/get_path/get_base_path.dart';
-import 'package:anx_reader/utils/log/common.dart';
+import 'package:void_reader/enums/bgimg_alignment.dart';
+import 'package:void_reader/enums/bgimg_type.dart';
+import 'package:void_reader/models/bgimg.dart';
+import 'package:void_reader/utils/get_path/get_base_path.dart';
+import 'package:void_reader/utils/log/common.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -82,7 +82,7 @@ class Bgimg extends _$Bgimg {
 
     File image = File(result.files.single.path!);
 
-    AnxLog.info('BookDetail: Image path: ${image.path}');
+    VoidLog.info('BookDetail: Image path: ${image.path}');
 
     final extName = image.path.split('.').last;
     final newName = '${DateTime.now().millisecondsSinceEpoch}.$extName';

@@ -1,8 +1,8 @@
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/enums/sync_protocol.dart';
-import 'package:anx_reader/main.dart';
-import 'package:anx_reader/service/sync/sync_client_factory.dart';
-import 'package:anx_reader/utils/log/common.dart';
+import 'package:void_reader/l10n/generated/L10n.dart';
+import 'package:void_reader/enums/sync_protocol.dart';
+import 'package:void_reader/main.dart';
+import 'package:void_reader/service/sync/sync_client_factory.dart';
+import 'package:void_reader/utils/log/common.dart';
 
 /// Utility class for testing sync connections
 class SyncConnectionTester {
@@ -24,12 +24,12 @@ class SyncConnectionTester {
       // Execute ping test
       await client.ping();
 
-      AnxLog.info('${protocol.displayName} connection test successful');
+      VoidLog.info('${protocol.displayName} connection test successful');
       return SyncTestResult.success(
           L10n.of(navigatorKey.currentContext!).connectionSuccessful);
     } catch (e) {
       final errorMessage = '${getErrorMessage(e)}\n$e';
-      AnxLog.severe(
+      VoidLog.severe(
           '${protocol.displayName} connection test failed: $errorMessage');
       return SyncTestResult.failure(errorMessage);
     }

@@ -5,7 +5,7 @@ import 'package:sqflite/sqflite.dart';
 
 import 'get_base_path.dart';
 
-Future<String> getAnxDataBasesPath() async {
+Future<String> getVoidDatabasePath() async {
   switch (defaultTargetPlatform) {
     case TargetPlatform.android:
       final path = await getDatabasesPath();
@@ -21,6 +21,6 @@ Future<String> getAnxDataBasesPath() async {
   }
 }
 
-Future<Directory> getAnxDataBasesDir() async {
-  return Directory(await getAnxDataBasesPath());
+Future<Directory> getVoidDatabaseDir() async {
+  return Directory(await getVoidDatabasePath());
 }

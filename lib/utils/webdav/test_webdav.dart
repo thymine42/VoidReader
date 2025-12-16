@@ -1,12 +1,12 @@
-import 'package:anx_reader/enums/sync_direction.dart';
-import 'package:anx_reader/enums/sync_trigger.dart';
-import 'package:anx_reader/enums/sync_protocol.dart';
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/providers/sync.dart';
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/main.dart';
-import 'package:anx_reader/service/sync/sync_connection_tester.dart';
-import 'package:anx_reader/utils/toast/common.dart';
+import 'package:void_reader/enums/sync_direction.dart';
+import 'package:void_reader/enums/sync_trigger.dart';
+import 'package:void_reader/enums/sync_protocol.dart';
+import 'package:void_reader/l10n/generated/L10n.dart';
+import 'package:void_reader/providers/sync.dart';
+import 'package:void_reader/config/shared_preference_provider.dart';
+import 'package:void_reader/main.dart';
+import 'package:void_reader/service/sync/sync_connection_tester.dart';
+import 'package:void_reader/utils/toast/common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -26,11 +26,11 @@ Future<bool> testEnableWebdav() async {
     if (result.isSuccess) {
       return true;
     } else {
-      AnxToast.show(
+      VoidToast.show(
           L10n.of(navigatorKey.currentContext!).webdavConnectionFailed);
     }
   } else {
-    AnxToast.show(L10n.of(navigatorKey.currentContext!).webdavSetInfoFirst);
+    VoidToast.show(L10n.of(navigatorKey.currentContext!).webdavSetInfoFirst);
   }
   return false;
 }

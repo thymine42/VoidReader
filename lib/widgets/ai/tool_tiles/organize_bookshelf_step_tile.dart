@@ -1,14 +1,14 @@
 import 'dart:convert';
 
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/providers/tb_groups.dart';
-import 'package:anx_reader/service/ai/tools/models/bookshelf_organize_plan.dart';
-import 'package:anx_reader/service/ai/tools/models/bookshelf_organize_plan_group.dart';
-import 'package:anx_reader/service/bookshelf/bookshelf_organize_service.dart';
-import 'package:anx_reader/utils/ai_reasoning_parser.dart';
-import 'package:anx_reader/utils/toast/common.dart';
-import 'package:anx_reader/widgets/ai/tool_tiles/tool_tile_base.dart';
-import 'package:anx_reader/widgets/common/container/filled_container.dart';
+import 'package:void_reader/l10n/generated/L10n.dart';
+import 'package:void_reader/providers/tb_groups.dart';
+import 'package:void_reader/service/ai/tools/models/bookshelf_organize_plan.dart';
+import 'package:void_reader/service/ai/tools/models/bookshelf_organize_plan_group.dart';
+import 'package:void_reader/service/bookshelf/bookshelf_organize_service.dart';
+import 'package:void_reader/utils/ai_reasoning_parser.dart';
+import 'package:void_reader/utils/toast/common.dart';
+import 'package:void_reader/widgets/ai/tool_tiles/tool_tile_base.dart';
+import 'package:void_reader/widgets/common/container/filled_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/services.dart';
@@ -170,7 +170,7 @@ class _OrganizeBookshelfStepTileState
                   : () {
                       Clipboard.setData(
                           ClipboardData(text: widget.step.output!));
-                      AnxToast.show(L10n.of(context).planCopied);
+                      VoidToast.show(L10n.of(context).planCopied);
                     },
               icon: const Icon(Icons.copy, size: 14),
               label: Text(L10n.of(context).copyJson),
@@ -356,13 +356,13 @@ class _OrganizeBookshelfStepTileState
         _isApplying = false;
         _applied = true;
       });
-      AnxToast.show(L10n.of(context).bookshelfUpdated);
+      VoidToast.show(L10n.of(context).bookshelfUpdated);
     } catch (error) {
       if (!mounted) return;
       setState(() {
         _isApplying = false;
       });
-      AnxToast.show(L10n.of(context).failedToApplyPlan(error));
+      VoidToast.show(L10n.of(context).failedToApplyPlan(error));
     }
   }
 

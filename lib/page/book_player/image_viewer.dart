@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:anx_reader/utils/save_img.dart';
-import 'package:anx_reader/utils/get_path/get_temp_dir.dart';
-import 'package:anx_reader/utils/log/common.dart';
-import 'package:anx_reader/utils/save_image_to_path.dart';
-import 'package:anx_reader/utils/share_file.dart';
+import 'package:void_reader/utils/save_img.dart';
+import 'package:void_reader/utils/get_path/get_temp_dir.dart';
+import 'package:void_reader/utils/log/common.dart';
+import 'package:void_reader/utils/save_image_to_path.dart';
+import 'package:void_reader/utils/share_file.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 
@@ -30,7 +30,7 @@ class ImageViewer extends StatelessWidget {
       imageBytes = base64Decode(base64);
       imgType = parts[0].split('/')[1].split(';')[0];
     } catch (e) {
-      AnxLog.severe('Error decoding image: $e');
+      VoidLog.severe('Error decoding image: $e');
       return const Center(child: Text('Error'));
     }
 
@@ -75,7 +75,7 @@ class ImageViewer extends StatelessWidget {
                           final path = await saveB64ImageToPath(
                             image,
                             (await getAnxTempDir()).path,
-                            "AnxReader_$bookName",
+                            "VoidReader_$bookName",
                           );
 
                           await shareFile(filePath: path);

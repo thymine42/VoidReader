@@ -1,19 +1,19 @@
 [English](README.md) | **简体中文** | [Türkçe](README_tr.md)
 
 <p align="center">
-  <img src="./docs/images/Anx-logo.jpg" alt="Anx-logo" width="100" />
+  <img src="./docs/images/Void-logo.jpg" alt="Void-logo" width="100" />
 </p>
-<h1 align="center">Anx Reader - 让阅读更专注</h1>
+<h1 align="center">Void Reader - 让阅读更专注</h1>
 
 <p align="center">
-  <a href="https://github.com/Anxcye/anx-reader/blob/main/LICENSE"><img src="https://img.shields.io/github/license/anxcye/anx-reader" alt="License" ></a>
-  <a href="https://github.com/Anxcye/anx-reader/releases"><img src="https://img.shields.io/github/downloads/anxcye/anx-reader/total" alt="Downloads"></a>
+  <a href="https://github.com/thymine42/VoidReader/blob/main/LICENSE"><img src="https://img.shields.io/github/license/thymine42/VoidReader" alt="License" ></a>
+  <a href="https://github.com/thymine42/VoidReader/releases"><img src="https://img.shields.io/github/downloads/thymine42/VoidReader/total" alt="Downloads"></a>
   <a href="https://hellogithub.com/repository/819a2b3050204451bed552a8812114e5" target="_blank"><img src="https://abroad.hellogithub.com/v1/widgets/recommend.svg?rid=819a2b3050204451bed552a8812114e5&claim_uid=WBA1XOQirm2GRqs&theme=small" alt="Featured｜HelloGitHub"/></a>
-  <a href="https://github.com/anxcye/anx-reader/stargazers"><img src="https://img.shields.io/github/stars/anxcye/anx-reader" alt="stars"></a>
+  <a href="https://github.com/thymine42/VoidReader/stargazers"><img src="https://img.shields.io/github/stars/thymine42/VoidReader" alt="stars"></a>
 </p>
 
 
-Anx Reader，一款为热爱阅读的你精心打造的电子书阅读器。集成多种 AI 能力，支持丰富的电子书格式，让阅读更智能、更专注。现代化界面设计，只为提供纯粹的阅读体验。
+Void Reader，一款为热爱阅读的你精心打造的电子书阅读器。集成多种 AI 能力，支持丰富的电子书格式，让阅读更智能、更专注。现代化界面设计，只为提供纯粹的阅读体验。
 
 
 ![](./docs/images/main.jpg)
@@ -49,7 +49,7 @@ Anx Reader，一款为热爱阅读的你精心打造的电子书阅读器。集�
       <a href="https://apps.apple.com/app/anx-reader/id6743196413" target="_blank">
         <img src="https://developer.apple.com/app-store/marketing/guidelines/images/badge-download-on-the-mac-app-store.svg" alt="Mac App Store" height="45"/>
       </a>
-      <a href="https://github.com/Anxcye/anx-reader/releases/latest" target="_blank">
+      <a href="https://github.com/thymine42/VoidReader/releases/latest" target="_blank">
         <img src="https://github.com/user-attachments/assets/cf61e197-d756-4606-a8ad-fb591f79fdfc" alt="GitHub" height="45"/>
       </a>
     </td>
@@ -57,7 +57,7 @@ Anx Reader，一款为热爱阅读的你精心打造的电子书阅读器。集�
   <tr>
     <td>Windows</td>
     <td>
-      <a href="https://github.com/Anxcye/anx-reader/releases/latest" target="_blank">
+      <a href="https://github.com/thymine42/VoidReader/releases/latest" target="_blank">
         <img src="https://github.com/user-attachments/assets/cf61e197-d756-4606-a8ad-fb591f79fdfc" alt="GitHub" height="45"/>
       </a>
     </td>
@@ -65,10 +65,10 @@ Anx Reader，一款为热爱阅读的你精心打造的电子书阅读器。集�
   <tr>
     <td>Android</td>
     <td>
-      <a href="https://github.com/Anxcye/anx-reader/releases/latest" target="_blank">
+      <a href="https://github.com/thymine42/VoidReader/releases/latest" target="_blank">
         <img src="https://github.com/user-attachments/assets/cf61e197-d756-4606-a8ad-fb591f79fdfc" alt="GitHub" height="45"/>
       </a>
-      <a href="https://f-droid.org/packages/com.anxcye.anx_reader" target="_blank">
+      <a href="https://f-droid.org/packages/com.thymine42.void_reader" target="_blank">
         <img src="./docs/get-it-on.png" alt="Get it on F-Droid" height="45" />
       </a>
     </td>
@@ -79,7 +79,7 @@ Anx Reader，一款为热爱阅读的你精心打造的电子书阅读器。集�
 ### 我遇到了问题，怎么办？
 查看[故障排除](./docs/troubleshooting.md#简体中文)
 
-提出一个[issue](https://github.com/Anxcye/anx-reader/issues/new/choose)，将会尽快回复。
+提出一个[issue](https://github.com/thymine42/VoidReader/issues/new/choose)，将会尽快回复。
 
 Telegram 群组：[https://t.me/AnxReader](https://t.me/AnxReader)
 
@@ -102,7 +102,7 @@ QQ群：1042905699
 ## 捐赠
 如果你喜欢安读，请考虑捐赠支持项目。您的支持将帮助我优化功能、修复问题，并为您带来更好的阅读体验！感谢您的慷慨支持！
 
-❤️ [捐赠](https://anxcye.com/home/7)
+❤️ [捐赠](https://github.com/thymine42?tab=sponsors)
 
 
 

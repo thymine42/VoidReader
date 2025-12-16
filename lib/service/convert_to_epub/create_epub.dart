@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:anx_reader/service/convert_to_epub/generate_toc.dart';
-import 'package:anx_reader/service/convert_to_epub/section.dart';
-import 'package:anx_reader/utils/get_path/get_temp_dir.dart';
+import 'package:void_reader/service/convert_to_epub/generate_toc.dart';
+import 'package:void_reader/service/convert_to_epub/section.dart';
+import 'package:void_reader/utils/get_path/get_temp_dir.dart';
 import 'package:archive/archive_io.dart';
 import 'package:uuid/uuid.dart';
 

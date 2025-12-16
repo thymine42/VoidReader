@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:anx_reader/enums/lang_list.dart';
-import 'package:anx_reader/service/translate/index.dart';
-import 'package:anx_reader/utils/log/common.dart';
+import 'package:void_reader/enums/lang_list.dart';
+import 'package:void_reader/service/translate/index.dart';
+import 'package:void_reader/utils/log/common.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
@@ -52,7 +52,7 @@ class MicrosoftTranslateProvider extends TranslateServiceProvider {
           .post(uri.toString(), data: body, options: Options(headers: headers));
       yield response.data[0]['translations'][0]['text'];
     } catch (e) {
-      AnxLog.severe("Translate Microsoft Error: error=$e");
+      VoidLog.severe("Translate Microsoft Error: error=$e");
       yield* Stream.error(Exception(e));
     }
   }

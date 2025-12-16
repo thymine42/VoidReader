@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:anx_reader/models/book.dart';
+import 'package:void_reader/models/book.dart';
 import 'package:flutter/material.dart';
 
 class BookCover extends StatelessWidget {

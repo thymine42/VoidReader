@@ -1,8 +1,8 @@
 [English](#contributing-to-anx-reader) | [简体中文](#让安读更好) | [Русский](#вклад-в-anx-reader)
 
-# Contributing to Anx Reader
+# Contributing to Void Reader
 
-Anx Reader is an open-source project, and we welcome any contributions from you. You can help by translating, fixing bugs, adding new features, writing documentation, and more. If you want to contribute, the following guide may be helpful.
+Void Reader is an open-source project, and we welcome any contributions from you. You can help by translating, fixing bugs, adding new features, writing documentation, and more. If you want to contribute, the following guide may be helpful.
 
 Let's get started!
 
@@ -46,7 +46,7 @@ android {
 
 
 ### Translation
-If you'd like Anx Reader to support your language, let's work together on the translation!
+If you'd like Void Reader to support your language, let's work together on the translation!
 
 You can translate project documentation or the app interface.
 
@@ -57,7 +57,7 @@ Currently, we have the following documents that need translation:
 Please copy README.md as README_language_code.md, translate it, and place the translated file in the project root directory. Then, add a link to the translation at the top of the README.md.
 
 **Translate the App Interface**
-- Anx Reader uses [intl](https://pub.dev/packages/intl) for multilingual support. You can find the localization files in the `lib/l10n` directory. Please copy `app_en.arb` to `app_language_code.arb`, and then translate it.
+- Void Reader uses [intl](https://pub.dev/packages/intl) for multilingual support. You can find the localization files in the `lib/l10n` directory. Please copy `app_en.arb` to `app_language_code.arb`, and then translate it.
 - You can translate missing fields or modify existing translations.
 - Place the translated file in the `lib/l10n` directory and run `flutter gen-l10n` to generate the localization files.
 - Add your `language name` and `code` to the [Settings Page](lib/page/settings_page/appearance.dart#L83).

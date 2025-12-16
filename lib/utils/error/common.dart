@@ -1,17 +1,17 @@
 import 'dart:ui';
 
-import 'package:anx_reader/utils/log/common.dart';
+import 'package:void_reader/utils/log/common.dart';
 import 'package:flutter/material.dart';
 
-class AnxError {
+class VoidError {
   static Future<void> init() async {
-    AnxLog.info('AnxError init');
+    VoidLog.info('VoidError init');
     FlutterError.onError = (details) {
       FlutterError.presentError(details);
-      AnxLog.severe(details.exceptionAsString(), details.stack);
+      VoidLog.severe(details.exceptionAsString(), details.stack);
     };
     PlatformDispatcher.instance.onError = (error, stack) {
-      AnxLog.severe(error.toString(), stack);
+      VoidLog.severe(error.toString(), stack);
       return false;
     };
   }

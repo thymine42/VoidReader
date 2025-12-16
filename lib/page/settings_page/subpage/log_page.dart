@@ -1,10 +1,10 @@
 import 'dart:io';
 
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/utils/save_file_to_download.dart';
-import 'package:anx_reader/utils/get_path/log_file.dart';
-import 'package:anx_reader/utils/toast/common.dart';
-import 'package:anx_reader/utils/log/common.dart';
+import 'package:void_reader/l10n/generated/L10n.dart';
+import 'package:void_reader/utils/save_file_to_download.dart';
+import 'package:void_reader/utils/get_path/log_file.dart';
+import 'package:void_reader/utils/toast/common.dart';
+import 'package:void_reader/utils/log/common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -83,7 +83,7 @@ class _LogPageState extends State<LogPage> {
 
   Future<void> clearLog() async {
     Navigator.pop(context);
-    AnxLog.clear();
+    VoidLog.clear();
     initData();
   }
 
@@ -95,18 +95,18 @@ class _LogPageState extends State<LogPage> {
     // );
     // await FlutterFileDialog.saveFile(params: params);
     String fileName =
-        'AnxReader-Log-${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}.txt';
+        'VoidReader-Log-${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}.txt';
     String? filePath = await saveFileToDownload(
         bytes: await logFile.readAsBytes(),
         fileName: fileName,
         mimeType: 'text/plain');
 
-    AnxToast.show("saved $filePath");
+    VoidToast.show("saved $filePath");
   }
 }
 
 Widget logItem(String logStr, BuildContext context) {
-  final log = AnxLog.parse(logStr);
+  final log = VoidLog.parse(logStr);
   return SelectionArea(
       child: Container(
     padding: const EdgeInsets.all(20),

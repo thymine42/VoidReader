@@ -11,10 +11,10 @@ Future<String> getAnxDocumentsPath() async {
     case TargetPlatform.android:
       return directory.path;
     case TargetPlatform.windows:
-      // return '${directory.path}\\AnxReader';
+      // return '${directory.path}\\VoidReader';
       return (await getApplicationSupportDirectory()).path;
     case TargetPlatform.linux:
-      final path = '${directory.path}/AnxReader';
+      final path = '${directory.path}/VoidReader';
       return path;
     case TargetPlatform.macOS:
       return directory.path;

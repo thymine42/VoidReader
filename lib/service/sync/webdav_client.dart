@@ -1,6 +1,6 @@
-import 'package:anx_reader/models/remote_file.dart';
-import 'package:anx_reader/service/sync/sync_client_base.dart';
-import 'package:anx_reader/utils/log/common.dart';
+import 'package:void_reader/models/remote_file.dart';
+import 'package:void_reader/service/sync/sync_client_base.dart';
+import 'package:void_reader/utils/log/common.dart';
 import 'package:dio/dio.dart';
 import 'package:webdav_client/webdav_client.dart';
 
@@ -43,10 +43,10 @@ class WebdavClient extends SyncClientBase {
         await _client.ping();
         return;
       } catch (e) {
-        AnxLog.warning('WebDAV ping failed, retrying... ($count)');
+        VoidLog.warning('WebDAV ping failed, retrying... ($count)');
         count++;
         if (count >= 3) {
-          AnxLog.severe('WebDAV ping failed after 3 attempts: $e');
+          VoidLog.severe('WebDAV ping failed after 3 attempts: $e');
           rethrow;
         }
       }
@@ -98,7 +98,7 @@ class WebdavClient extends SyncClientBase {
       try {
         await remove(_safeEncodePath(remotePath));
       } catch (e) {
-        AnxLog.severe('Failed to remove file\n$e');
+        VoidLog.severe('Failed to remove file\n$e');
       }
     }
 

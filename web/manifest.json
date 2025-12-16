@@ -1,6 +1,6 @@
 {
-    "name": "anx_reader",
-    "short_name": "anx_reader",
+    "name": "void_reader",
+    "short_name": "void_reader",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#hexcode",

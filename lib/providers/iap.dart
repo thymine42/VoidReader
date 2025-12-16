@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/models/iap_state.dart';
-import 'package:anx_reader/service/iap/iap_service.dart';
-import 'package:anx_reader/utils/log/common.dart';
+import 'package:void_reader/config/shared_preference_provider.dart';
+import 'package:void_reader/models/iap_state.dart';
+import 'package:void_reader/service/iap/iap_service.dart';
+import 'package:void_reader/utils/log/common.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -23,7 +23,7 @@ class Iap extends _$Iap {
     _subscription ??= _iapService.purchaseUpdates.listen(
       _handlePurchaseUpdates,
       onError: (Object error, StackTrace stack) {
-        AnxLog.severe('IAP: purchase stream error: $error', stack);
+        VoidLog.severe('IAP: purchase stream error: $error', stack);
         _updateState((current) => current.copyWith(
               purchaseFlowStatus: IapPurchaseFlowStatus.error,
               errorMessage: error.toString(),
@@ -39,7 +39,7 @@ class Iap extends _$Iap {
     final lastCheck = Prefs().iapLastCheckTime;
     final cacheFresh = _isCacheFresh(lastCheck);
 
-    AnxLog.info(
+    VoidLog.info(
       'IAP: initialized. available=$available, '
       'snapshot.hasPurchase=${snapshot.hasPurchase}, '
       'cachedPurchased=$cachedPurchased, '
@@ -134,7 +134,7 @@ class Iap extends _$Iap {
         ),
       );
     } catch (e, stack) {
-      AnxLog.severe('IAP: loadProducts error: $e', stack);
+      VoidLog.severe('IAP: loadProducts error: $e', stack);
       _updateState(
         (c) => c.copyWith(
           errorMessage: 'Error loading product information: $e',
@@ -172,7 +172,7 @@ class Iap extends _$Iap {
     try {
       await _iapService.buy(products.first);
     } catch (e, stack) {
-      AnxLog.severe('IAP: buy error: $e', stack);
+      VoidLog.severe('IAP: buy error: $e', stack);
       _updateState((c) => c.copyWith(
             isPurchasing: false,
             purchaseFlowStatus: IapPurchaseFlowStatus.error,
@@ -192,7 +192,7 @@ class Iap extends _$Iap {
     try {
       await _iapService.restorePurchases();
     } catch (e, stack) {
-      AnxLog.severe('IAP: restore error: $e', stack);
+      VoidLog.severe('IAP: restore error: $e', stack);
       _updateState(
         (c) => c.copyWith(
           isRestoring: false,
@@ -219,7 +219,7 @@ class Iap extends _$Iap {
     try {
       await _refreshEntitlement(policy: policy);
     } catch (e, stack) {
-      AnxLog.severe('IAP: refresh error: $e', stack);
+      VoidLog.severe('IAP: refresh error: $e', stack);
       _updateState(
         (c) => c.copyWith(
           isRefreshing: false,
@@ -247,7 +247,7 @@ class Iap extends _$Iap {
     required bool cachedPurchased,
     required bool cacheFresh,
   }) async {
-    AnxLog.info(
+    VoidLog.info(
       'IAP: priming refresh. cachedPurchased=$cachedPurchased, cacheFresh=$cacheFresh',
     );
 
@@ -276,7 +276,7 @@ class Iap extends _$Iap {
     final now = DateTime.now();
 
     var purchased = current.isPurchased;
-    AnxLog.info(
+    VoidLog.info(
       'IAP: refreshEntitlement: policy=$policy, '
       'snapshot.hasPurchase=${snapshot.hasPurchase}, '
       'isPurchaseStatusReliable=${snapshot.isPurchaseStatusReliable}',
@@ -339,16 +339,16 @@ class Iap extends _$Iap {
     try {
       await _iapService.restorePurchases();
     } catch (e, stack) {
-      AnxLog.warning('IAP: silent restore error: $e', stack);
+      VoidLog.warning('IAP: silent restore error: $e', stack);
     }
   }
 
   void _handlePurchaseUpdates(List<PurchaseDetails> purchaseDetailsList) async {
-    AnxLog.info(
+    VoidLog.info(
       'IAP: Received ${purchaseDetailsList.length} purchase update(s)',
     );
     for (final purchaseDetails in purchaseDetailsList) {
-      AnxLog.info('IAP: Processing purchase update:'
+      VoidLog.info('IAP: Processing purchase update:'
           'pendingCompletePurchase: ${purchaseDetails.pendingCompletePurchase},'
           'productID: ${purchaseDetails.productID},'
           'status: ${purchaseDetails.status.name},'

@@ -1,12 +1,12 @@
 import 'dart:io';
 
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/enums/bgimg_type.dart';
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/models/bgimg.dart';
-import 'package:anx_reader/page/reading_page.dart';
-import 'package:anx_reader/providers/bgimg.dart';
-import 'package:anx_reader/utils/get_path/get_base_path.dart';
+import 'package:void_reader/config/shared_preference_provider.dart';
+import 'package:void_reader/enums/bgimg_type.dart';
+import 'package:void_reader/l10n/generated/L10n.dart';
+import 'package:void_reader/models/bgimg.dart';
+import 'package:void_reader/page/reading_page.dart';
+import 'package:void_reader/providers/bgimg.dart';
+import 'package:void_reader/utils/get_path/get_base_path.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';

@@ -1,11 +1,11 @@
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/main.dart';
-import 'package:anx_reader/utils/app_version.dart';
-import 'package:anx_reader/utils/env_var.dart';
-import 'package:anx_reader/utils/log/common.dart';
-import 'package:anx_reader/utils/toast/common.dart';
-import 'package:anx_reader/widgets/markdown/styled_markdown.dart';
+import 'package:void_reader/config/shared_preference_provider.dart';
+import 'package:void_reader/l10n/generated/L10n.dart';
+import 'package:void_reader/main.dart';
+import 'package:void_reader/utils/app_version.dart';
+import 'package:void_reader/utils/env_var.dart';
+import 'package:void_reader/utils/log/common.dart';
+import 'package:void_reader/utils/toast/common.dart';
+import 'package:void_reader/widgets/markdown/styled_markdown.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -29,18 +29,18 @@ Future<void> checkUpdate(bool manualCheck) async {
     response = await Dio().get('https://api.anx.anxcye.com/api/info/latest');
   } catch (e) {
     if (manualCheck) {
-      AnxToast.show(L10n.of(context).commonFailed);
+      VoidToast.show(L10n.of(context).commonFailed);
     }
-    AnxLog.severe('Update: Failed to check for updates $e');
+    VoidLog.severe('Update: Failed to check for updates $e');
     return;
   }
   String newVersion = response.data['version'].toString().substring(1);
   String currentVersion = (await getAppVersion()).split('+').first;
-  AnxLog.info('Update: new version $newVersion');
+  VoidLog.info('Update: new version $newVersion');
 
   List<String> newVersionList = newVersion.split('.');
   List<String> currentVersionList = currentVersion.split('.');
-  AnxLog.info(
+  VoidLog.info(
       'Current version: $currentVersionList, New version: $newVersionList');
   bool needUpdate = false;
   for (int i = 0; i < newVersionList.length; i++) {
@@ -103,7 +103,7 @@ $body'''),
     );
   } else {
     if (manualCheck) {
-      AnxToast.show(L10n.of(context).commonNoNewVersion);
+      VoidToast.show(L10n.of(context).commonNoNewVersion);
     }
   }
 }

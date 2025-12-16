@@ -1,12 +1,12 @@
 import 'dart:io';
 
-import 'package:anx_reader/models/storege_info_model.dart';
-import 'package:anx_reader/providers/font_list.dart';
-import 'package:anx_reader/utils/get_path/databases_path.dart';
-import 'package:anx_reader/utils/get_path/get_base_path.dart';
-import 'package:anx_reader/utils/get_path/get_cache_dir.dart';
-import 'package:anx_reader/utils/get_path/log_file.dart';
-import 'package:anx_reader/utils/log/common.dart';
+import 'package:void_reader/models/storege_info_model.dart';
+import 'package:void_reader/providers/font_list.dart';
+import 'package:void_reader/utils/get_path/databases_path.dart';
+import 'package:void_reader/utils/get_path/get_base_path.dart';
+import 'package:void_reader/utils/get_path/get_cache_dir.dart';
+import 'package:void_reader/utils/get_path/log_file.dart';
+import 'package:void_reader/utils/log/common.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'storage_info.g.dart';
@@ -16,11 +16,11 @@ class StorageInfo extends _$StorageInfo {
   @override
   Future<StorageInfoModel> build() async {
     return StorageInfoModel(
-      databaseSize: await calculatePathSize(await getAnxDataBasesDir()),
+      databaseSize: await calculatePathSize(await getVoidDatabaseDir()),
       booksSize: await calculatePathSize(getFileDir()),
       fontSize: await calculatePathSize(getFontDir()),
       cacheSize: await calculatePathSize(
-        await getAnxCacheDir(),
+        await getVoidCacheDir(),
         recursive: true,
       ),
       logSize: await calsulateFileSize(await getLogFile()),
@@ -30,7 +30,7 @@ class StorageInfo extends _$StorageInfo {
 
   Future<bool> clearCache() async {
     try {
-      final cacheDir = await getAnxCacheDir();
+      final cacheDir = await getVoidCacheDir();
       if (!cacheDir.existsSync()) {
         return true;
       }
@@ -50,7 +50,7 @@ class StorageInfo extends _$StorageInfo {
 
       return true;
     } catch (e) {
-      AnxLog.severe('StorageInfo clearCache error: $e');
+      VoidLog.severe('StorageInfo clearCache error: $e');
       return false;
     }
   }

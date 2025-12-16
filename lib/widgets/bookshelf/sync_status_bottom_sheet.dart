@@ -1,25 +1,25 @@
 import 'dart:io';
 
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/enums/book_sync_status.dart';
-import 'package:anx_reader/enums/sync_direction.dart';
-import 'package:anx_reader/enums/sync_trigger.dart';
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/main.dart';
-import 'package:anx_reader/models/sync_state_model.dart';
-import 'package:anx_reader/providers/sync.dart';
-import 'package:anx_reader/providers/sync_status.dart';
-import 'package:anx_reader/utils/get_path/databases_path.dart';
-import 'package:anx_reader/utils/toast/common.dart';
-import 'package:anx_reader/widgets/bookshelf/book_sync_status_icon.dart';
-import 'package:anx_reader/widgets/linear_proportion_bar.dart';
+import 'package:void_reader/config/shared_preference_provider.dart';
+import 'package:void_reader/enums/book_sync_status.dart';
+import 'package:void_reader/enums/sync_direction.dart';
+import 'package:void_reader/enums/sync_trigger.dart';
+import 'package:void_reader/l10n/generated/L10n.dart';
+import 'package:void_reader/main.dart';
+import 'package:void_reader/models/sync_state_model.dart';
+import 'package:void_reader/providers/sync.dart';
+import 'package:void_reader/providers/sync_status.dart';
+import 'package:void_reader/utils/get_path/databases_path.dart';
+import 'package:void_reader/utils/toast/common.dart';
+import 'package:void_reader/widgets/bookshelf/book_sync_status_icon.dart';
+import 'package:void_reader/widgets/linear_proportion_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 
 Future<void> showSyncStatusBottomSheet(BuildContext context) async {
-  final dbPath = await getAnxDataBasesPath();
+  final dbPath = await getVoidDatabasePath();
   showModalBottomSheet(
     useSafeArea: true,
     context: navigatorKey.currentContext!,
@@ -321,9 +321,9 @@ class SyncStatusBottomSheet extends ConsumerWidget {
                   ref
                       .read(syncProvider.notifier)
                       .downloadMultipleBooks(remoteOnlyIds);
-                  AnxToast.show('');
+                  VoidToast.show('');
                 } else {
-                  AnxToast.show(l10n.allBooksAreDownloaded);
+                  VoidToast.show(l10n.allBooksAreDownloaded);
                 }
               },
             ),
@@ -335,7 +335,7 @@ class SyncStatusBottomSheet extends ConsumerWidget {
                 onPressed: () {
                   final isSyncing = ref.watch(syncProvider).isSyncing;
                   if (isSyncing) {
-                    AnxToast.show(l10n.webdavSyncing);
+                    VoidToast.show(l10n.webdavSyncing);
                   } else {
                     ref.read(syncProvider.notifier).syncData(
                         SyncDirection.both, ref,

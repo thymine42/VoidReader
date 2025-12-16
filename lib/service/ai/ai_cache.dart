@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/main.dart';
-import 'package:anx_reader/utils/get_path/get_cache_dir.dart';
+import 'package:void_reader/config/shared_preference_provider.dart';
+import 'package:void_reader/l10n/generated/L10n.dart';
+import 'package:void_reader/main.dart';
+import 'package:void_reader/utils/get_path/get_cache_dir.dart';
 import 'package:langchain_core/chat_models.dart';
 
 class AiCacheEntry {
@@ -64,7 +64,7 @@ class AiCache {
   static const String cacheFileName = 'ai_cache.json';
 
   static Future<Map<String, dynamic>> readCache() async {
-    final cacheDir = await getAnxCacheDir();
+    final cacheDir = await getVoidCacheDir();
     final file = File('${cacheDir.path}/$cacheFileName');
 
     if (await file.exists()) {
@@ -85,7 +85,7 @@ class AiCache {
     String identifier,
     List<ChatMessage> conversation,
   ) async {
-    final cacheDir = await getAnxCacheDir();
+    final cacheDir = await getVoidCacheDir();
     final file = File('${cacheDir.path}/$cacheFileName');
     final cache = await readCache();
 
@@ -137,7 +137,7 @@ class AiCache {
       final keysToRemove = keys.sublist(0, cache.length - maxCount);
       cache.removeWhere((key, _) => keysToRemove.contains(key));
 
-      final cacheDir = await getAnxCacheDir();
+      final cacheDir = await getVoidCacheDir();
       final file = File('${cacheDir.path}/$cacheFileName');
       await file.writeAsString(json.encode(cache), mode: FileMode.writeOnly);
     }
@@ -149,7 +149,7 @@ class AiCache {
   }
 
   static Future<void> clearCache() async {
-    final cacheDir = await getAnxCacheDir();
+    final cacheDir = await getVoidCacheDir();
     final file = File('${cacheDir.path}/$cacheFileName');
     if (await file.exists()) {
       await file.delete();

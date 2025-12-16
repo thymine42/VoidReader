@@ -1,15 +1,15 @@
 import 'dart:convert';
 
-import 'package:anx_reader/dao/book.dart';
-import 'package:anx_reader/dao/tag.dart';
-import 'package:anx_reader/service/ai/tools/repository/tag_repository.dart';
-import 'package:anx_reader/utils/ai_reasoning_parser.dart';
-import 'package:anx_reader/utils/toast/common.dart';
-import 'package:anx_reader/utils/color/hash_color.dart';
-import 'package:anx_reader/utils/color/rgb.dart';
-import 'package:anx_reader/widgets/ai/tool_tiles/tool_tile_base.dart';
-import 'package:anx_reader/widgets/common/container/filled_container.dart';
-import 'package:anx_reader/widgets/common/tag_chip.dart';
+import 'package:void_reader/dao/book.dart';
+import 'package:void_reader/dao/tag.dart';
+import 'package:void_reader/service/ai/tools/repository/tag_repository.dart';
+import 'package:void_reader/utils/ai_reasoning_parser.dart';
+import 'package:void_reader/utils/toast/common.dart';
+import 'package:void_reader/utils/color/hash_color.dart';
+import 'package:void_reader/utils/color/rgb.dart';
+import 'package:void_reader/widgets/ai/tool_tiles/tool_tile_base.dart';
+import 'package:void_reader/widgets/common/container/filled_container.dart';
+import 'package:void_reader/widgets/common/tag_chip.dart';
 import 'package:flutter/material.dart';
 
 class ApplyBookTagsStepTile extends StatefulWidget {
@@ -277,13 +277,13 @@ class _ApplyBookTagsStepTileState extends State<ApplyBookTagsStepTile> {
         _isApplying = false;
         _applied = true;
       });
-      AnxToast.show('Tags updated');
+      VoidToast.show('Tags updated');
     } catch (e) {
       if (!mounted) return;
       setState(() {
         _isApplying = false;
       });
-      AnxToast.show('Failed to apply tag changes: $e');
+      VoidToast.show('Failed to apply tag changes: $e');
     }
   }
 }

@@ -1,14 +1,14 @@
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/enums/lang_list.dart';
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/service/translate/index.dart';
-import 'package:anx_reader/utils/toast/common.dart';
-import 'package:anx_reader/widgets/common/container/filled_container.dart';
-import 'package:anx_reader/widgets/settings/settings_tile.dart';
-import 'package:anx_reader/widgets/settings/settings_title.dart';
+import 'package:void_reader/config/shared_preference_provider.dart';
+import 'package:void_reader/enums/lang_list.dart';
+import 'package:void_reader/l10n/generated/L10n.dart';
+import 'package:void_reader/service/translate/index.dart';
+import 'package:void_reader/utils/toast/common.dart';
+import 'package:void_reader/widgets/common/container/filled_container.dart';
+import 'package:void_reader/widgets/settings/settings_tile.dart';
+import 'package:void_reader/widgets/settings/settings_title.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
-import 'package:anx_reader/widgets/settings/settings_section.dart';
+import 'package:void_reader/widgets/settings/settings_section.dart';
 
 class TranslateSetting extends StatefulWidget {
   const TranslateSetting({super.key});
@@ -548,9 +548,9 @@ class _TranslateSettingItemState extends State<TranslateSettingItem> {
   void _saveConfig() {
     try {
       saveTranslateServiceConfig(widget.service, _currentConfig);
-      AnxToast.show(L10n.of(context).commonSaved);
+      VoidToast.show(L10n.of(context).commonSaved);
     } catch (e) {
-      AnxToast.show(L10n.of(context).commonFailed);
+      VoidToast.show(L10n.of(context).commonFailed);
     }
   }
 

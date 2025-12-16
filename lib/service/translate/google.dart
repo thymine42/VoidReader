@@ -1,6 +1,6 @@
-import 'package:anx_reader/enums/lang_list.dart';
-import 'package:anx_reader/service/translate/index.dart';
-import 'package:anx_reader/utils/log/common.dart';
+import 'package:void_reader/enums/lang_list.dart';
+import 'package:void_reader/service/translate/index.dart';
+import 'package:void_reader/utils/log/common.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
@@ -47,7 +47,7 @@ class GoogleTranslateProvider extends TranslateServiceProvider {
       }
       yield response.data[0][0][0];
     } catch (e) {
-      AnxLog.severe("Translate Google Error: uri=$uri, error=$e");
+      VoidLog.severe("Translate Google Error: uri=$uri, error=$e");
       yield* Stream.error(Exception(e));
     }
   }

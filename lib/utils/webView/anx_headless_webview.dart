@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:anx_reader/main.dart';
-import 'package:anx_reader/utils/log/common.dart';
+import 'package:void_reader/main.dart';
+import 'package:void_reader/utils/log/common.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
@@ -59,7 +59,7 @@ class AnxHeadlessWebView {
       try {
         await _headlessWebView?.run();
       } catch (e) {
-        AnxLog.info(
+        VoidLog.info(
             "HeadlessInAppWebView failed to run, falling back to Overlay: $e");
         _headlessWebView = null;
         _runOverlay();
@@ -70,7 +70,7 @@ class AnxHeadlessWebView {
   void _runOverlay() {
     final context = navigatorKey.currentContext;
     if (context == null) {
-      AnxLog.severe("No context available for AnxHeadlessWebView overlay");
+      VoidLog.severe("No context available for AnxHeadlessWebView overlay");
       return;
     }
 

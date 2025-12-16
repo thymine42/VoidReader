@@ -50,7 +50,7 @@ Avoid verbatim repetition; preserve core information
 
       case AiPrompts.translate:
         return '''
-You are the Anx Reader "Translation & Reference" expert. Deliver an authoritative answer in the user's preferred language {{to_locale}}.
+You are the Void Reader "Translation & Reference" expert. Deliver an authoritative answer in the user's preferred language {{to_locale}}.
 
 Input for this request:
 - Source Text: {{text}}
@@ -104,7 +104,7 @@ When acting as a translator (different languages):
 
       case AiPrompts.mindmap:
         return '''
-You are the Mindmap Architect for Anx Reader. Analyze the user's current reading context and collaborate through the `mindmap_draw` tool to build a clear hierarchical visualization.
+You are the Mindmap Architect for Void Reader. Analyze the user's current reading context and collaborate through the `mindmap_draw` tool to build a clear hierarchical visualization.
 
 ## Objectives
 - Identify the central theme or focus topic

@@ -1,31 +1,31 @@
 import 'dart:async';
 import 'dart:math' as math;
 
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/dao/reading_time.dart';
-import 'package:anx_reader/dao/theme.dart';
-import 'package:anx_reader/enums/sync_direction.dart';
-import 'package:anx_reader/enums/sync_trigger.dart';
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/main.dart';
-import 'package:anx_reader/models/ai_quick_prompt_chip.dart';
-import 'package:anx_reader/models/book.dart';
-import 'package:anx_reader/models/read_theme.dart';
-import 'package:anx_reader/page/book_detail.dart';
-import 'package:anx_reader/page/book_player/epub_player.dart';
-import 'package:anx_reader/providers/sync.dart';
-import 'package:anx_reader/service/ai/index.dart';
-import 'package:anx_reader/service/ai/prompt_generate.dart';
-import 'package:anx_reader/utils/toast/common.dart';
-import 'package:anx_reader/utils/ui/status_bar.dart';
-import 'package:anx_reader/widgets/ai/ai_chat_stream.dart';
-import 'package:anx_reader/widgets/ai/ai_stream.dart';
-import 'package:anx_reader/widgets/reading_page/notes_widget.dart';
-import 'package:anx_reader/models/reading_time.dart';
-import 'package:anx_reader/widgets/reading_page/progress_widget.dart';
-import 'package:anx_reader/widgets/reading_page/tts_widget.dart';
-import 'package:anx_reader/widgets/reading_page/style_widget.dart';
-import 'package:anx_reader/widgets/reading_page/toc_widget.dart';
+import 'package:void_reader/config/shared_preference_provider.dart';
+import 'package:void_reader/dao/reading_time.dart';
+import 'package:void_reader/dao/theme.dart';
+import 'package:void_reader/enums/sync_direction.dart';
+import 'package:void_reader/enums/sync_trigger.dart';
+import 'package:void_reader/l10n/generated/L10n.dart';
+import 'package:void_reader/main.dart';
+import 'package:void_reader/models/ai_quick_prompt_chip.dart';
+import 'package:void_reader/models/book.dart';
+import 'package:void_reader/models/read_theme.dart';
+import 'package:void_reader/page/book_detail.dart';
+import 'package:void_reader/page/book_player/epub_player.dart';
+import 'package:void_reader/providers/sync.dart';
+import 'package:void_reader/service/ai/index.dart';
+import 'package:void_reader/service/ai/prompt_generate.dart';
+import 'package:void_reader/utils/toast/common.dart';
+import 'package:void_reader/utils/ui/status_bar.dart';
+import 'package:void_reader/widgets/ai/ai_chat_stream.dart';
+import 'package:void_reader/widgets/ai/ai_stream.dart';
+import 'package:void_reader/widgets/reading_page/notes_widget.dart';
+import 'package:void_reader/models/reading_time.dart';
+import 'package:void_reader/widgets/reading_page/progress_widget.dart';
+import 'package:void_reader/widgets/reading_page/tts_widget.dart';
+import 'package:void_reader/widgets/reading_page/style_widget.dart';
+import 'package:void_reader/widgets/reading_page/toc_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -86,7 +86,7 @@ class ReadingPageState extends ConsumerState<ReadingPage>
     _readerFocusNode = FocusNode(debugLabel: 'reading_page_focus');
     if (widget.book.isDeleted) {
       Navigator.pop(context);
-      AnxToast.show(L10n.of(context).bookDeleted);
+      VoidToast.show(L10n.of(context).bookDeleted);
       return;
     }
     if (Prefs().hideStatusBar) {

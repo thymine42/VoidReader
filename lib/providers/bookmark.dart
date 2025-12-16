@@ -1,7 +1,7 @@
-import 'package:anx_reader/dao/database.dart';
-import 'package:anx_reader/models/bookmark.dart';
-import 'package:anx_reader/page/reading_page.dart';
-import 'package:anx_reader/utils/log/common.dart';
+import 'package:void_reader/dao/database.dart';
+import 'package:void_reader/models/bookmark.dart';
+import 'package:void_reader/page/reading_page.dart';
+import 'package:void_reader/utils/log/common.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
@@ -23,6 +23,7 @@ class Bookmark extends _$Bookmark {
         cfi: maps[i]['cfi'],
         percentage: double.tryParse(maps[i]['color']) ?? 0.0,
         chapter: maps[i]['chapter'],
+        name: maps[i]['reader_note'],
         createTime: DateTime.parse(maps[i]['create_time']),
         updateTime: DateTime.parse(maps[i]['update_time']),
       );
@@ -58,6 +59,25 @@ class Bookmark extends _$Bookmark {
     return bookmark;
   }
 
+  Future<void> updateBookmark(BookmarkModel bookmark) async {
+    final db = await DBHelper().database;
+    await db.update(
+      'tb_notes',
+      bookmark.toMap(),
+      where: 'id = ?',
+      whereArgs: [bookmark.id],
+    );
+
+    List<BookmarkModel> newState = state.valueOrNull?.map((b) {
+          if (b.id == bookmark.id) {
+            return bookmark;
+          }
+          return b;
+        }).toList() ??
+        [];
+    state = AsyncData(newState);
+  }
+
   void removeBookmark({int? id, String? cfi}) {
     assert(id != null || cfi != null, 'Either id or cfi must be provided');
     assert(!(id != null && cfi != null),
@@ -88,7 +108,7 @@ class Bookmark extends _$Bookmark {
       final key = epubPlayerKey.currentState;
       key?.removeAnnotation(cfi!);
     } catch (e) {
-      AnxLog.info('Bookmark already removed: $e');
+      VoidLog.info('Bookmark already removed: $e');
     }
   }
 }

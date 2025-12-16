@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/utils/get_path/get_cache_dir.dart';
+import 'package:void_reader/config/shared_preference_provider.dart';
+import 'package:void_reader/utils/get_path/get_cache_dir.dart';
 import 'package:langchain_core/chat_models.dart';
 
 class AiChatHistoryEntry {
@@ -153,7 +153,7 @@ class AiHistoryStore {
   }
 
   static Future<File> _resolveFile() async {
-    final cacheDir = await getAnxCacheDir();
+    final cacheDir = await getVoidCacheDir();
     return File('${cacheDir.path}/$historyFileName');
   }
 }

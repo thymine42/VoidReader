@@ -2,12 +2,12 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:typed_data';
 
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/page/reading_page.dart';
-import 'package:anx_reader/service/tts/base_tts.dart';
-import 'package:anx_reader/service/tts/edge_tts_api.dart';
-import 'package:anx_reader/service/tts/models/tts_segment.dart';
-import 'package:anx_reader/service/tts/models/tts_sentence.dart';
+import 'package:void_reader/config/shared_preference_provider.dart';
+import 'package:void_reader/page/reading_page.dart';
+import 'package:void_reader/service/tts/base_tts.dart';
+import 'package:void_reader/service/tts/edge_tts_api.dart';
+import 'package:void_reader/service/tts/models/tts_segment.dart';
+import 'package:void_reader/service/tts/models/tts_sentence.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 

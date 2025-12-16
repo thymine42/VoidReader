@@ -1,5 +1,5 @@
-import 'package:anx_reader/enums/book_sync_status.dart';
-import 'package:anx_reader/widgets/bookshelf/spining_sync_icon.dart';
+import 'package:void_reader/enums/book_sync_status.dart';
+import 'package:void_reader/widgets/bookshelf/spining_sync_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
 

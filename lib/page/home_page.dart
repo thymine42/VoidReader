@@ -1,30 +1,30 @@
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:anx_reader/dao/database.dart';
-import 'package:anx_reader/enums/sync_direction.dart';
-import 'package:anx_reader/enums/sync_trigger.dart';
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/page/home_page/ai_page.dart';
-import 'package:anx_reader/service/initialization_check.dart';
-import 'package:anx_reader/page/home_page/bookshelf_page.dart';
-import 'package:anx_reader/page/home_page/notes_page.dart';
-import 'package:anx_reader/page/home_page/settings_page.dart';
-import 'package:anx_reader/page/home_page/statistics_page.dart';
-import 'package:anx_reader/service/receive_file/receive_share.dart';
-import 'package:anx_reader/service/vibration_service.dart';
-import 'package:anx_reader/utils/check_update.dart';
-import 'package:anx_reader/utils/env_var.dart';
-import 'package:anx_reader/utils/get_path/get_temp_dir.dart';
-import 'package:anx_reader/utils/load_default_font.dart';
-import 'package:anx_reader/utils/log/common.dart';
-import 'package:anx_reader/providers/sync.dart';
-import 'package:anx_reader/providers/iap.dart';
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/utils/toast/common.dart';
-import 'package:anx_reader/widgets/ai/ai_chat_stream.dart';
-import 'package:anx_reader/widgets/common/container/filled_container.dart';
-import 'package:anx_reader/widgets/settings/about.dart';
+import 'package:void_reader/dao/database.dart';
+import 'package:void_reader/enums/sync_direction.dart';
+import 'package:void_reader/enums/sync_trigger.dart';
+import 'package:void_reader/l10n/generated/L10n.dart';
+import 'package:void_reader/page/home_page/ai_page.dart';
+import 'package:void_reader/service/initialization_check.dart';
+import 'package:void_reader/page/home_page/bookshelf_page.dart';
+import 'package:void_reader/page/home_page/notes_page.dart';
+import 'package:void_reader/page/home_page/settings_page.dart';
+import 'package:void_reader/page/home_page/statistics_page.dart';
+import 'package:void_reader/service/receive_file/receive_share.dart';
+import 'package:void_reader/service/vibration_service.dart';
+import 'package:void_reader/utils/check_update.dart';
+import 'package:void_reader/utils/env_var.dart';
+import 'package:void_reader/utils/get_path/get_temp_dir.dart';
+import 'package:void_reader/utils/load_default_font.dart';
+import 'package:void_reader/utils/log/common.dart';
+import 'package:void_reader/providers/sync.dart';
+import 'package:void_reader/providers/iap.dart';
+import 'package:void_reader/config/shared_preference_provider.dart';
+import 'package:void_reader/utils/toast/common.dart';
+import 'package:void_reader/widgets/ai/ai_chat_stream.dart';
+import 'package:void_reader/widgets/common/container/filled_container.dart';
+import 'package:void_reader/widgets/settings/about.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
 import 'package:flutter/foundation.dart';
@@ -57,7 +57,7 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   Future<void> _checkWindowsWebview() async {
     final availableVersion = await WebViewEnvironment.getAvailableVersion();
-    AnxLog.info('WebView2 version: $availableVersion');
+    VoidLog.info('WebView2 version: $availableVersion');
 
     if (availableVersion == null) {
       SmartDialog.show(
@@ -107,7 +107,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     if (EnvVar.enableInAppPurchase) {
       ref.read(iapProvider.future);
     }
-    AnxToast.init(context);
+    VoidToast.init(context);
     checkUpdate(false);
     InitializationCheck.check();
     if (Prefs().webdavStatus) {
@@ -231,7 +231,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                             child: Image.asset(
                               width: 32,
                               height: 32,
-                              'assets/icon/Anx-logo-tined.png',
+                              'assets/icon/Void-logo-tined.png',
                               color: Theme.of(context).colorScheme.secondary,
                             ),
                           ),

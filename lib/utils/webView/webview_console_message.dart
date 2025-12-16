@@ -1,5 +1,5 @@
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/utils/log/common.dart';
+import 'package:void_reader/l10n/generated/L10n.dart';
+import 'package:void_reader/utils/log/common.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
@@ -53,7 +53,7 @@ void handleWebviewVersion(String message) {
     if (e.toString().contains("Invalid value: Only valid value is 0: 1")) {
       return;
     }
-    AnxLog.severe('Webview: $e');
+    VoidLog.severe('Webview: $e');
   }
 }
 
@@ -70,13 +70,13 @@ void webviewConsoleMessage(
   }
 
   if (consoleMessage.messageLevel == ConsoleMessageLevel.LOG) {
-    AnxLog.info('Webview: ${consoleMessage.message}');
+    VoidLog.info('Webview: ${consoleMessage.message}');
     if (consoleMessage.message.contains("AnxUA")) {
       handleWebviewVersion(consoleMessage.message);
     }
   } else if (consoleMessage.messageLevel == ConsoleMessageLevel.WARNING) {
-    AnxLog.warning('Webview: ${consoleMessage.message}');
+    VoidLog.warning('Webview: ${consoleMessage.message}');
   } else if (consoleMessage.messageLevel == ConsoleMessageLevel.ERROR) {
-    AnxLog.severe('Webview: ${consoleMessage.message}');
+    VoidLog.severe('Webview: ${consoleMessage.message}');
   }
 }

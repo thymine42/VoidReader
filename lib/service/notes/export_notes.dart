@@ -1,14 +1,14 @@
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/main.dart';
-import 'package:anx_reader/models/book.dart';
-import 'package:anx_reader/models/book_note.dart';
-import 'package:anx_reader/utils/convert_string_to_uint8list.dart';
-import 'package:anx_reader/utils/save_file_to_download.dart';
+import 'package:void_reader/l10n/generated/L10n.dart';
+import 'package:void_reader/main.dart';
+import 'package:void_reader/models/book.dart';
+import 'package:void_reader/models/book_note.dart';
+import 'package:void_reader/utils/convert_string_to_uint8list.dart';
+import 'package:void_reader/utils/save_file_to_download.dart';
 import 'package:csv/csv.dart';
 import 'package:fast_gbk/fast_gbk.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:anx_reader/utils/toast/common.dart';
+import 'package:void_reader/utils/toast/common.dart';
 
 enum ExportType { copy, md, txt, csv }
 
@@ -31,7 +31,7 @@ Future<void> exportNotes(
       notes += groups.map(_formatPlainGroup).join('\n\n');
 
       await Clipboard.setData(ClipboardData(text: notes));
-      AnxToast.show(L10n.of(context).notesPageCopied);
+      VoidToast.show(L10n.of(context).notesPageCopied);
       break;
 
     case ExportType.md:
@@ -44,7 +44,7 @@ Future<void> exportNotes(
           mimeType: 'text/markdown');
 
       if (filePath != null) {
-        AnxToast.show('${L10n.of(context).notesPageExportedTo} $filePath');
+        VoidToast.show('${L10n.of(context).notesPageExportedTo} $filePath');
       }
       break;
 
@@ -55,7 +55,7 @@ Future<void> exportNotes(
           fileName: '${book.title}.txt',
           mimeType: 'text/plain');
       if (filePath != null) {
-        AnxToast.show('${L10n.of(context).notesPageExportedTo} $filePath');
+        VoidToast.show('${L10n.of(context).notesPageExportedTo} $filePath');
       }
       break;
 
@@ -94,7 +94,7 @@ Future<void> exportNotes(
           fileName: '${book.title}.csv',
           mimeType: 'text/csv');
       if (filePath != null) {
-        AnxToast.show('${L10n.of(context).notesPageExportedTo} $filePath');
+        VoidToast.show('${L10n.of(context).notesPageExportedTo} $filePath');
       }
       break;
   }

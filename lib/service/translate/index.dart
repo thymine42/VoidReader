@@ -1,13 +1,13 @@
 import 'dart:core';
 
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/enums/lang_list.dart';
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/service/translate/ai.dart';
-import 'package:anx_reader/service/translate/deepl.dart';
-import 'package:anx_reader/service/translate/google.dart';
-import 'package:anx_reader/service/translate/microsoft.dart';
-import 'package:anx_reader/utils/log/common.dart';
+import 'package:void_reader/config/shared_preference_provider.dart';
+import 'package:void_reader/enums/lang_list.dart';
+import 'package:void_reader/l10n/generated/L10n.dart';
+import 'package:void_reader/service/translate/ai.dart';
+import 'package:void_reader/service/translate/deepl.dart';
+import 'package:void_reader/service/translate/google.dart';
+import 'package:void_reader/service/translate/microsoft.dart';
+import 'package:void_reader/utils/log/common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -113,7 +113,7 @@ abstract class TranslateServiceProvider {
             'Translation returned no valid result: ${lastResult ?? 'No result'}');
       } catch (e) {
         if (attempt < maxRetries) {
-          AnxLog.warning(
+          VoidLog.warning(
               'Translation attempt ${attempt + 1} failed with exception: $e. Retrying...');
           await Future.delayed(Duration(milliseconds: 100 * (attempt + 1)));
           continue;

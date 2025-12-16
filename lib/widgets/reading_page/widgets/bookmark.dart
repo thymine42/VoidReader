@@ -1,10 +1,11 @@
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/models/bookmark.dart';
-import 'package:anx_reader/page/book_player/epub_player.dart';
-import 'package:anx_reader/providers/bookmark.dart';
-import 'package:anx_reader/utils/error_handler.dart';
-import 'package:anx_reader/widgets/common/container/filled_container.dart';
-import 'package:anx_reader/widgets/delete_confirm.dart';
+import 'package:void_reader/l10n/generated/L10n.dart';
+import 'package:void_reader/models/bookmark.dart';
+import 'package:void_reader/page/book_player/epub_player.dart';
+import 'package:void_reader/providers/bookmark.dart';
+import 'package:void_reader/utils/error_handler.dart';
+import 'package:void_reader/widgets/common/container/filled_container.dart';
+import 'package:void_reader/widgets/delete_confirm.dart';
+import 'package:void_reader/widgets/reading_page/widgets/bookmark_name_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -63,6 +64,19 @@ class _BookmarkWidgetState extends ConsumerState<BookmarkWidget> {
                         id: id,
                       );
                 },
+                onEdit: (bookmark) async {
+                  String? name = await showDialog<String>(
+                    context: context,
+                    builder: (context) => BookmarkNameDialog(
+                      initialName: bookmark.name,
+                    ),
+                  );
+                  if (name != null) {
+                    ref.read(BookmarkProvider(bookId).notifier).updateBookmark(
+                          bookmark.copyWith(name: name),
+                        );
+                  }
+                },
               ),
             );
           },
@@ -86,11 +100,13 @@ class BookmarkItem extends StatelessWidget {
     required this.bookmark,
     required this.onTap,
     required this.onDelete,
+    required this.onEdit,
   });
 
   final BookmarkModel bookmark;
   final Function(String) onTap;
   final Function(int) onDelete;
+  final Function(BookmarkModel) onEdit;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -100,9 +116,17 @@ class BookmarkItem extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            if (bookmark.name != null && bookmark.name!.isNotEmpty)
+              Text(
+                bookmark.name!,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             Text(
               bookmark.content,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 16,
               ),
             ),
@@ -129,10 +153,19 @@ class BookmarkItem extends StatelessWidget {
                     ],
                   ),
                 ),
-                DeleteConfirm(
-                  delete: () {
-                    onDelete(bookmark.id!);
-                  },
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.edit, size: 20),
+                      onPressed: () => onEdit(bookmark),
+                    ),
+                    DeleteConfirm(
+                      delete: () {
+                        onDelete(bookmark.id!);
+                      },
+                    ),
+                  ],
                 )
               ],
             ),

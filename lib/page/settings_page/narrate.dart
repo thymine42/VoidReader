@@ -1,10 +1,10 @@
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/service/tts/edge_tts_api.dart';
-import 'package:anx_reader/service/tts/tts_handler.dart';
-import 'package:anx_reader/utils/tts_model_list.dart';
-import 'package:anx_reader/widgets/settings/settings_section.dart';
-import 'package:anx_reader/widgets/settings/settings_tile.dart';
+import 'package:void_reader/config/shared_preference_provider.dart';
+import 'package:void_reader/l10n/generated/L10n.dart';
+import 'package:void_reader/service/tts/edge_tts_api.dart';
+import 'package:void_reader/service/tts/tts_handler.dart';
+import 'package:void_reader/utils/tts_model_list.dart';
+import 'package:void_reader/widgets/settings/settings_section.dart';
+import 'package:void_reader/widgets/settings/settings_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

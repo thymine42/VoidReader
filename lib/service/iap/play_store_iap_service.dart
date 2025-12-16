@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:anx_reader/service/iap/base_iap_service.dart';
-import 'package:anx_reader/utils/log/common.dart';
+import 'package:void_reader/service/iap/base_iap_service.dart';
+import 'package:void_reader/utils/log/common.dart';
 import 'package:flutter/services.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:in_app_purchase_android/in_app_purchase_android.dart';
@@ -13,10 +13,10 @@ class PlayStoreIAPService extends BaseIAPService {
         _trialStartDate = DateTime.fromMillisecondsSinceEpoch(0);
 
   static const MethodChannel _installInfoChannel =
-      MethodChannel('com.anxcye.anx_reader/install_info');
+      MethodChannel('com.thymine42.void_reader/install_info');
   final InAppPurchase _inAppPurchase;
   DateTime _trialStartDate;
-  final String _productId = 'anx_reader_lifetime';
+  final String _productId = 'void_reader_lifetime';
 
   @override
   String get storeName => 'Play Store';
@@ -57,7 +57,7 @@ class PlayStoreIAPService extends BaseIAPService {
 
   @override
   Future<void> initialize() async {
-    AnxLog.info('IAP: Initializing Play Store IAP Service');
+    VoidLog.info('IAP: Initializing Play Store IAP Service');
     await _resolveTrialStartDate();
   }
 
@@ -79,7 +79,7 @@ class PlayStoreIAPService extends BaseIAPService {
         isOriginalUser: false,
       );
     } catch (e, stack) {
-      AnxLog.warning('IAP: Play Store snapshot error: $e', stack);
+      VoidLog.warning('IAP: Play Store snapshot error: $e', stack);
       return IapPlatformSnapshot(
         hasPurchase: null,
         isPurchaseStatusReliable: false,
@@ -92,7 +92,7 @@ class PlayStoreIAPService extends BaseIAPService {
 
   Future<void> _resolveTrialStartDate() async {
     final installDate = await _getInstallDate();
-    AnxLog.info('IAP: Install date: $installDate');
+    VoidLog.info('IAP: Install date: $installDate');
     if (installDate != null) {
       _trialStartDate = installDate;
       return;
@@ -117,7 +117,7 @@ class PlayStoreIAPService extends BaseIAPService {
       }
       return DateTime.fromMillisecondsSinceEpoch(timestampMs);
     } catch (e) {
-      AnxLog.warning('IAP: Unable to read install info: $e');
+      VoidLog.warning('IAP: Unable to read install info: $e');
       return null;
     }
   }
@@ -129,20 +129,20 @@ extension on PlayStoreIAPService {
         .getPlatformAddition<InAppPurchaseAndroidPlatformAddition>();
     final response = await addition.queryPastPurchases();
     if (response.error != null) {
-      AnxLog.warning(
+      VoidLog.warning(
           'IAP: Play Store queryPastPurchases error: ${response.error}');
     }
     return response;
   }
 
   PurchaseDetails? _selectActivePurchase(List<PurchaseDetails> purchases) {
-    AnxLog.info('IAP: Evaluating ${purchases.length} past purchases');
+    VoidLog.info('IAP: Evaluating ${purchases.length} past purchases');
 
     for (final purchase in purchases) {
       if (purchase.productID == _productId &&
           (purchase.status == PurchaseStatus.purchased ||
               purchase.status == PurchaseStatus.restored)) {
-        AnxLog.info('IAP: Found active purchase: '
+        VoidLog.info('IAP: Found active purchase: '
             'pendingCompletePurchase: ${purchase.pendingCompletePurchase},'
             'productID: ${purchase.productID},'
             'status: ${purchase.status.name},'

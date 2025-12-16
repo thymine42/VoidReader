@@ -3,26 +3,26 @@
 <br>
 
 <p align="center">
-  <img src="./docs/images/Anx-logo.jpg" alt="Anx-logo" width="100" />
+  <img src="./docs/images/Void-logo.jpg" alt="Void-logo" width="100" />
 </p>
-<h1 align="center">Anx Reader</h1>
+<h1 align="center">Void Reader</h1>
 <p align="center"><a href="https://trendshift.io/repositories/10329" target="_blank"><img src="https://trendshift.io/api/badge/repositories/10329" alt="Anxcye%2Fanx-reader | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a></p>
 
 <p align="center">
-  <a href="https://github.com/Anxcye/anx-reader#platform-support"><img src="https://img.shields.io/badge/platform-windows%20%7C%20macos%20%7C%20iOS%20%7C%20Android-lightgrey" alt="Platformlar"></a>
-  <a href="https://github.com/Anxcye/anx-reader#supported-formats"><img src="https://img.shields.io/badge/formats-epub%20%7C%20fb2%20%7C%20mobi%20%7C%20txt%20%7C%20azw3%20%7C%20pdf-brightgreen" alt="Desteklenen Formatlar"></a>
+  <a href="https://github.com/thymine42/VoidReader#platform-support"><img src="https://img.shields.io/badge/platform-windows%20%7C%20macos%20%7C%20iOS%20%7C%20Android-lightgrey" alt="Platformlar"></a>
+  <a href="https://github.com/thymine42/VoidReader#supported-formats"><img src="https://img.shields.io/badge/formats-epub%20%7C%20fb2%20%7C%20mobi%20%7C%20txt%20%7C%20azw3%20%7C%20pdf-brightgreen" alt="Desteklenen Formatlar"></a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/Anxcye/anx-reader/releases/latest"><img src="https://img.shields.io/github/v/release/anxcye/anx-reader" alt="En Son Sürüm"></a>
-  <a href="https://github.com/Anxcye/anx-reader/releases"><img src="https://img.shields.io/github/v/release/anxcye/anx-reader?include_prereleases" alt="Ön Sürüm"></a>
-  <a href="https://github.com/Anxcye/anx-reader/blob/main/LICENSE"><img src="https://img.shields.io/github/license/anxcye/anx-reader" alt="Lisans" ></a>
-  <a href="https://github.com/Anxcye/anx-reader/releases"><img src="https://img.shields.io/github/downloads/anxcye/anx-reader/total" alt="İndirmeler"></a>
+  <a href="https://github.com/thymine42/VoidReader/releases/latest"><img src="https://img.shields.io/github/v/release/thymine42/VoidReader" alt="En Son Sürüm"></a>
+  <a href="https://github.com/thymine42/VoidReader/releases"><img src="https://img.shields.io/github/v/release/thymine42/VoidReader?include_prereleases" alt="Ön Sürüm"></a>
+  <a href="https://github.com/thymine42/VoidReader/blob/main/LICENSE"><img src="https://img.shields.io/github/license/thymine42/VoidReader" alt="Lisans" ></a>
+  <a href="https://github.com/thymine42/VoidReader/releases"><img src="https://img.shields.io/github/downloads/thymine42/VoidReader/total" alt="İndirmeler"></a>
   <a href="https://hellogithub.com/repository/819a2b3050204451bed552a8812114e5" target="_blank"><img src="https://abroad.hellogithub.com/v1/widgets/recommend.svg?rid=819a2b3050204451bed552a8812114e5&claim_uid=WBA1XOQirm2GRqs&theme=small" alt="Öne Çıkan｜HelloGitHub"/></a>
-  <a href="https://github.com/anxcye/anx-reader/stargazers"><img src="https://img.shields.io/github/stars/anxcye/anx-reader" alt="Yıldızlar"></a>
+  <a href="https://github.com/thymine42/VoidReader/stargazers"><img src="https://img.shields.io/github/stars/thymine42/VoidReader" alt="Yıldızlar"></a>
 </p>
 
-Anx Reader, kitap severler için özenle hazırlanmış bir e-kitap okuma uygulamasıdır. Güçlü yapay zeka yetenekleri ve geniş format desteğiyle okuma deneyimini daha akıllı ve odaklı hâle getirir. Modern arayüz tasarımıyla, saf okuma keyfini sunmayı hedefliyoruz.
+Void Reader, kitap severler için özenle hazırlanmış bir e-kitap okuma uygulamasıdır. Güçlü yapay zeka yetenekleri ve geniş format desteğiyle okuma deneyimini daha akıllı ve odaklı hâle getirir. Modern arayüz tasarımıyla, saf okuma keyfini sunmayı hedefliyoruz.
 
 
 ![](./docs/images/main.jpg)
@@ -57,13 +57,13 @@ Anx Reader, kitap severler için özenle hazırlanmış bir e-kitap okuma uygula
     <td>macOS</td>
     <td>
       <a href="https://apps.apple.com/app/anx-reader/id6743196413" target="_blank"><img src="https://developer.apple.com/app-store/marketing/guidelines/images/badge-download-on-the-mac-app-store.svg" alt="Mac App Store" height="45"/></a>
-      <a href="https://github.com/Anxcye/anx-reader/releases/latest" target="_blank"><img src="https://github.com/user-attachments/assets/cf61e197-d756-4606-a8ad-fb591f79fdfc" alt="GitHub" height="45"/></a>
+      <a href="https://github.com/thymine42/VoidReader/releases/latest" target="_blank"><img src="https://github.com/user-attachments/assets/cf61e197-d756-4606-a8ad-fb591f79fdfc" alt="GitHub" height="45"/></a>
     </td>
   </tr>
   <tr>
     <td>Windows</td>
     <td>
-      <a href="https://github.com/Anxcye/anx-reader/releases/latest" target="_blank">
+      <a href="https://github.com/thymine42/VoidReader/releases/latest" target="_blank">
         <img src="https://github.com/user-attachments/assets/cf61e197-d756-4606-a8ad-fb591f79fdfc" alt="GitHub" height="45"/>
       </a>
     </td>
@@ -71,10 +71,10 @@ Anx Reader, kitap severler için özenle hazırlanmış bir e-kitap okuma uygula
   <tr>
     <td>Android</td>
     <td>
-      <a href="https://github.com/Anxcye/anx-reader/releases/latest" target="_blank">
+      <a href="https://github.com/thymine42/VoidReader/releases/latest" target="_blank">
         <img src="https://github.com/user-attachments/assets/cf61e197-d756-4606-a8ad-fb591f79fdfc" alt="GitHub" height="45"/>
       </a>
-      <a href="https://f-droid.org/packages/com.anxcye.anx_reader" target="_blank">
+      <a href="https://f-droid.org/packages/com.thymine42.void_reader" target="_blank">
         <img src="./docs/get-it-on.png" alt="Get it on F-Droid" height="45" />
       </a>
     </td>
@@ -87,16 +87,16 @@ Aşağıdaki projeler topluluk tarafından geliştirilmekte olup resmi olarak de
 
 **Calibre Eklentisi** [anx-reader-calibre-plugin](https://github.com/ptbsare/anx-reader-calibre-plugin)
 
-Calibre içinden ANX Reader e-kitap kütüphanenizi doğrudan yönetmenizi sağlayan bir eklenti. Özellikle kitaplığını NAS üzerinde merkezileştirmek isteyen kullanıcılar için faydalıdır.
+Calibre içinden Void Reader e-kitap kütüphanenizi doğrudan yönetmenizi sağlayan bir eklenti. Özellikle kitaplığını NAS üzerinde merkezileştirmek isteyen kullanıcılar için faydalıdır.
 
 **Web Kütüphane Yöneticisi** [anx-calibre-manager](https://github.com/ptbsare/anx-calibre-manager)
 
-Calibre entegrasyonu ve ANX Reader cihazları için WebDAV sunucu işlevleri sunan modern bir web uygulaması.
+Calibre entegrasyonu ve Void Reader cihazları için WebDAV sunucu işlevleri sunan modern bir web uygulaması.
 
 
 ## Bir Sorunla Karşılaştım, Ne Yapmalıyım?
 - [Sorun Giderme](./docs/troubleshooting.md#English) bölümünü kontrol edin.
-- Bir [sorun bildirin](https://github.com/Anxcye/anx-reader/issues/new/choose); en kısa sürede yanıtlayacağız.
+- Bir [sorun bildirin](https://github.com/thymine42/VoidReader/issues/new/choose); en kısa sürede yanıtlayacağız.
 
 Telegram Grubu: [https://t.me/AnxReader](https://t.me/AnxReader)
 
@@ -116,12 +116,12 @@ QQ Grubu: 1042905699
 | ![](./docs/images/mobile7.png) | ![](./docs/images/mobile8.png) | ![](./docs/images/mobile9.png) |
 
 ## Bağışlar
-Anx Reader'ı seviyorsanız projeyi desteklemek için bağış yapmayı düşünebilirsiniz. Bağışlarınız, projeyi sürdürmemize ve geliştirmemize yardımcı olur.
+Void Reader'ı seviyorsanız projeyi desteklemek için bağış yapmayı düşünebilirsiniz. Bağışlarınız, projeyi sürdürmemize ve geliştirmemize yardımcı olur.
 
-❤️ [Bağış Yap](https://anxcye.com/home/7)
+❤️ [Bağış Yap](https://github.com/thymine42?tab=sponsors)
 
 ## Derleme
-Anx Reader'ı kaynak kodundan derlemek ister misiniz? Lütfen şu adımları izleyin:
+Void Reader'ı kaynak kodundan derlemek ister misiniz? Lütfen şu adımları izleyin:
 - [Flutter](https://flutter.dev) kurun.
 - Projeyi klonlayın ve dizine girin.
 - `flutter pub get` komutunu çalıştırın.
@@ -133,10 +133,10 @@ Flutter sürüm uyumsuzluklarıyla karşılaşabilirsiniz. Detaylar için [Flutt
 
 
 ## Kod imzalama politikası
-- Katkıda bulunanlar ve gözden geçirenler: [Members ekibi](https://github.com/anxcye/anx-reader/graphs/contributors)
-- Onaylayıcılar: [Owners](https://github.com/anxcye)
-- [Gizlilik Politikası](https://anx.anxcye.com/privacy.html)
-- [Hizmet Şartları](https://anx.anxcye.com/terms.html)
+- Katkıda bulunanlar ve gözden geçirenler: [Members ekibi](https://github.com/thymine42/VoidReader/graphs/contributors)
+- Onaylayıcılar: [Owners](https://github.com/thymine42)
+- [Gizlilik Politikası](https://github.com/thymine42/VoidReader#privacy)
+- [Hizmet Şartları](https://github.com/thymine42/VoidReader#terms)
 
 ### Sponsorlar
 | ![signpath](https://signpath.org/assets/favicon-50x50.png) | Windows'ta ücretsiz kod imzalama [SignPath.io](https://about.signpath.io/) tarafından sağlanır, sertifika [SignPath Foundation](https://signpath.org/) tarafından temin edilir |
@@ -146,7 +146,7 @@ Flutter sürüm uyumsuzluklarıyla karşılaşabilirsiniz. Detaylar için [Flutt
 ## Lisans
 Bu proje [MIT Lisansı](./LICENSE) ile lisanslanmıştır.
 
-Sürüm 1.1.4'ten itibaren, Anx Reader projesinin açık kaynak lisansı MIT Lisansından GNU Genel Kamu Lisansı sürüm 3 (GPLv3) olarak değiştirilmiştir.
+Sürüm 1.1.4'ten itibaren, Void Reader projesinin açık kaynak lisansı MIT Lisansından GNU Genel Kamu Lisansı sürüm 3 (GPLv3) olarak değiştirilmiştir.
 
 Sürüm 1.2.6'dan sonra seçim ve vurgulama özelliği yeniden yazılmış ve açık kaynak lisansı GPL-3.0 Lisansından MIT Lisansına dönmüştür. Tüm katkıda bulunanlar bu değişikliği kabul etmiştir (#116).
 

@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/utils/log/common.dart';
+import 'package:void_reader/config/shared_preference_provider.dart';
+import 'package:void_reader/utils/log/common.dart';
 import 'package:http/http.dart' as http;
 import 'package:web_socket_channel/io.dart';
 import 'package:crypto/crypto.dart';
@@ -243,7 +243,7 @@ $ssml
           return Uint8List.fromList([]);
         }
         currentRetry++;
-        AnxLog.warning('Error on attempt $currentRetry/$maxRetries: $e');
+        VoidLog.warning('Error on attempt $currentRetry/$maxRetries: $e');
         if (currentRetry >= maxRetries) {
           return Uint8List.fromList([]);
         }

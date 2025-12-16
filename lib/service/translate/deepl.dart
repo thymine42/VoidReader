@@ -1,9 +1,9 @@
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/enums/lang_list.dart';
-import 'package:anx_reader/main.dart';
-import 'package:anx_reader/service/translate/index.dart';
-import 'package:anx_reader/utils/log/common.dart';
+import 'package:void_reader/l10n/generated/L10n.dart';
+import 'package:void_reader/config/shared_preference_provider.dart';
+import 'package:void_reader/enums/lang_list.dart';
+import 'package:void_reader/main.dart';
+import 'package:void_reader/service/translate/index.dart';
+import 'package:void_reader/utils/log/common.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
@@ -81,7 +81,7 @@ class DeepLTranslateProvider extends TranslateServiceProvider {
             Exception('Deepl returned unexpected data: ${response.data}'));
       }
     } catch (e) {
-      AnxLog.severe(
+      VoidLog.severe(
           "Deepl ${L10n.of(navigatorKey.currentContext!).translateError}: $e");
       yield* Stream.error(Exception(e));
     }

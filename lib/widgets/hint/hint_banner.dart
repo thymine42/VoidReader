@@ -1,8 +1,8 @@
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/enums/hint_key.dart';
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/utils/toast/common.dart';
-import 'package:anx_reader/widgets/common/container/filled_container.dart';
+import 'package:void_reader/config/shared_preference_provider.dart';
+import 'package:void_reader/enums/hint_key.dart';
+import 'package:void_reader/l10n/generated/L10n.dart';
+import 'package:void_reader/utils/toast/common.dart';
+import 'package:void_reader/widgets/common/container/filled_container.dart';
 import 'package:flutter/material.dart';
 
 class HintBanner extends StatefulWidget {
@@ -47,7 +47,7 @@ class _HintBannerState extends State<HintBanner>
       Prefs().setShowHint(widget.hintKey!, false);
     }
 
-    AnxToast.show(L10n.of(context).hintBannerRestoreToast);
+    VoidToast.show(L10n.of(context).hintBannerRestoreToast);
 
     setState(() {
       _visible = false;
