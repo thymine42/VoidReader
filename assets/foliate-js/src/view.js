@@ -178,11 +178,93 @@ export class View extends HTMLElement {
     const tocItem = this.#tocProgress?.getProgress(index, range)
     const pageItem = this.#pageProgress?.getProgress(index, range)
     const cfi = this.getCFI(index, range)
-    const totalPages = this.renderer.pages ? this.renderer.pages - 2 : progress.section.total
-    const currentPage = this.renderer.page ?? progress.section.current
-    const chapterLocation = {
-      current: currentPage,
-      total: totalPages
+
+    // Use SectionProgress and renderer info to compute consistent book/chapter pages
+    let chapterLocation = { current: 1, total: 1 }
+    progress.location = progress.location || {}
+
+    // clamp fraction upfront to avoid downstream errors
+    const rawFraction = fraction
+    const clampedFraction = Number.isFinite(rawFraction) ? Math.min(Math.max(rawFraction, 0), 1) : 0
+    if (rawFraction !== clampedFraction) {
+      console.warn('view#onRelocate: fraction out of bounds, clamped', { index, rawFraction, clampedFraction })
+      if (typeof callFlutter === 'function') callFlutter('pageDebug', { reason: 'fraction_clamped', index, rawFraction, clampedFraction })
+    }
+
+    if (this.#sectionProgress) {
+      const sizeInSection = this.#sectionProgress.sizes[index] ?? 0
+      const sizeBefore = this.#sectionProgress.sizes.slice(0, index).reduce((a, b) => a + b, 0)
+      const sizeTotal = this.#sectionProgress.sizeTotal
+
+      // Prefer using renderer's actual pages for this section when available
+      const renderedPages = typeof this.renderer.pages === 'number' ? Math.max(0, this.renderer.pages - 2) : null
+
+      // guard against invalid values: section size or rendered pages may be zero for e.g. footnotes
+      if (renderedPages && sizeInSection > 0) {
+        // chars per visual page for this section
+        let charsPerPage = sizeInSection / renderedPages
+
+        // if computed charsPerPage is < 1 (or NaN/Infinity), fallback to SectionProgress heuristic
+        if (!Number.isFinite(charsPerPage) || charsPerPage < 1) {
+          const info = this.#sectionProgress.getPageInfo(index, clampedFraction)
+          chapterLocation = { current: info.chapterCurrent, total: info.chapterTotal }
+          progress.location.current = info.bookCurrent
+          progress.location.total = info.bookTotal
+          console.warn('view#onRelocate: fallback to SectionProgress due to invalid charsPerPage', { index, sizeInSection, renderedPages, charsPerPage })
+            if (typeof callFlutter === 'function') callFlutter('pageDebug', { reason: 'invalid_charsPerPage', index, sizeInSection, renderedPages, charsPerPage })
+        } else {
+          // make charsPerPage an integer to prevent tiny fractions
+          charsPerPage = Math.max(1, Math.floor(charsPerPage))
+
+          // chapter pages come directly from rendered pages
+          const chapterTotal = renderedPages
+          const chapterCurrent = Math.min(chapterTotal,
+            Math.max(1, Math.floor((clampedFraction * sizeInSection) / charsPerPage) + 1))
+          chapterLocation = { current: chapterCurrent, total: chapterTotal }
+
+          // compute book pages by scaling across the whole book using charsPerPage
+          const bookTotal = Math.max(1, Math.ceil(sizeTotal / charsPerPage))
+          const absoluteSize = sizeBefore + clampedFraction * sizeInSection
+          let bookCurrent = Math.min(bookTotal, Math.max(1, Math.floor(absoluteSize / charsPerPage) + 1))
+
+          // fixups: clamp to sensible ranges
+          if (bookCurrent > bookTotal) {
+            console.warn('view#onRelocate: bookCurrent > bookTotal, clamping', { index, bookCurrent, bookTotal, absoluteSize, charsPerPage })
+            if (typeof callFlutter === 'function') callFlutter('pageDebug', { reason: 'bookCurrent_gt_total', index, bookCurrent, bookTotal, absoluteSize, charsPerPage })
+            bookCurrent = bookTotal
+          }
+
+          // small sanity cap to avoid absurd totals (if still present)
+          if (!Number.isFinite(bookTotal) || bookTotal > sizeTotal * 2) {
+            console.warn('view#onRelocate: suspicious bookTotal, falling back to SectionProgress', { index, bookTotal, sizeTotal, charsPerPage })
+            if (typeof callFlutter === 'function') callFlutter('pageDebug', { reason: 'suspicious_bookTotal', index, bookTotal, sizeTotal, charsPerPage })
+            const info = this.#sectionProgress.getPageInfo(index, clampedFraction)
+            chapterLocation = { current: info.chapterCurrent, total: info.chapterTotal }
+            progress.location.current = info.bookCurrent
+            progress.location.total = info.bookTotal
+          } else {
+            progress.location.current = bookCurrent
+            progress.location.total = bookTotal
+          }
+        }
+      } else {
+        // fallback to SectionProgress heuristic (sizePerLoc) when renderer pages not available
+        const info = this.#sectionProgress.getPageInfo(index, clampedFraction)
+        chapterLocation = { current: info.chapterCurrent, total: info.chapterTotal }
+        progress.location.current = info.bookCurrent
+        progress.location.total = info.bookTotal
+        if (sizeInSection === 0 || !renderedPages) {
+          console.warn('view#onRelocate: fallback because no rendered pages or empty section', { index, sizeInSection, renderedPages })
+          if (typeof callFlutter === 'function') callFlutter('pageDebug', { reason: 'no_rendered_pages_or_empty_section', index, sizeInSection, renderedPages })
+        }
+      }
+    } else {
+      // fallback to renderer values if SectionProgress not available
+      const rawPages = typeof this.renderer.pages === 'number' ? Math.max(1, this.renderer.pages - 2) : 1
+      const rawCurrent = typeof this.renderer.page === 'number' ? this.renderer.page + 1 : 1
+      chapterLocation = { current: rawCurrent, total: rawPages }
+      progress.location.current = rawCurrent
+      progress.location.total = rawPages
     }
 
     this.lastLocation = { ...progress, tocItem, pageItem, cfi, range, chapterLocation }

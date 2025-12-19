@@ -110,4 +110,31 @@ export class SectionProgress {
             / (this.sizes[index] / sizeTotal)
         return [index, fractionInSection]
     }
+
+    // Compute page numbers for a given section index and fraction within section.
+    // Returns 1-based page numbers for chapter and book.
+    getPageInfo(index, fractionInSection = 0) {
+        const sizeInSection = this.sizes[index] ?? 0
+        const sizeBefore = this.sizes.slice(0, index).reduce((a, b) => a + b, 0)
+        const sizeTotal = this.sizeTotal
+        const bookTotalPages = Math.max(1, Math.ceil(sizeTotal / this.sizePerLoc))
+
+        const chapterTotalPages = Math.max(1, Math.ceil(sizeInSection / this.sizePerLoc))
+
+        const absoluteSize = sizeBefore + fractionInSection * sizeInSection
+        const bookCurrentZeroBased = Math.floor(absoluteSize / this.sizePerLoc)
+        const bookCurrent = Math.min(bookTotalPages, Math.max(1, bookCurrentZeroBased + 1))
+
+        const chapterStartPageZeroBased = Math.floor(sizeBefore / this.sizePerLoc)
+        const chapterCurrentZeroBased = Math.floor(absoluteSize / this.sizePerLoc) - chapterStartPageZeroBased
+        const chapterCurrent = Math.min(chapterTotalPages, Math.max(1, chapterCurrentZeroBased + 1))
+
+        return {
+            bookCurrent,
+            bookTotal: bookTotalPages,
+            chapterCurrent,
+            chapterTotal: chapterTotalPages,
+            chapterStartPage: chapterStartPageZeroBased + 1,
+        }
+    }
 }

@@ -86,6 +86,8 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
   String chapterHref = '';
   int chapterCurrentPage = 0;
   int chapterTotalPages = 0;
+  int bookCurrentPage = 0;
+  int bookTotalPages = 0;
   OverlayEntry? contextMenuEntry;
   AnimationController? _animationController;
   Animation<double>? _animation;
@@ -572,6 +574,8 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
             chapterHref = location['chapterHref'] ?? '';
             chapterCurrentPage = location['chapterCurrentPage'] ?? 0;
             chapterTotalPages = location['chapterTotalPages'] ?? 0;
+            bookCurrentPage = location['bookCurrentPage'] ?? 0;
+            bookTotalPages = location['bookTotalPages'] ?? 0;
             bookmarkExists = location['bookmark']['exists'] ?? false;
             bookmarkCfi = location['bookmark']['cfi'] ?? '';
             writingMode =
@@ -609,6 +613,18 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
           final toc = t.map((i) => TocItem.fromJson(i)).toList();
           ref.read(bookTocProvider.notifier).setToc(toc);
         });
+
+    // Debug handler for page-related diagnostics from the webview
+    controller.addJavaScriptHandler(
+      handlerName: 'pageDebug',
+      callback: (args) {
+        final Map<String, dynamic> payload = args.isNotEmpty ? Map<String, dynamic>.from(args.first) : {};
+        // Print to debug console
+        debugPrint('pageDebug: $payload');
+        // Optionally store or surface payload for UI debugging
+        return null;
+      },
+    );
     controller.addJavaScriptHandler(
         handlerName: 'onSelectionEnd',
         callback: (args) {
@@ -915,6 +931,11 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
       style: textStyle,
     );
 
+    Widget bookPagesWidget = Text(
+      '$bookCurrentPage/$bookTotalPages',
+      style: textStyle,
+    );
+
     Widget bookProgressWidget =
         Text('${(percentage * 100).toStringAsFixed(2)}%', style: textStyle);
 
@@ -964,6 +985,8 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
           return chapterProgressWidget;
         case ReadingInfoEnum.bookProgress:
           return bookProgressWidget;
+        case ReadingInfoEnum.bookPages:
+          return bookPagesWidget;
         case ReadingInfoEnum.battery:
           return batteryWidget;
         case ReadingInfoEnum.time:
