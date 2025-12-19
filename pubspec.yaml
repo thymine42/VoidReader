@@ -2,7 +2,7 @@ name: void_reader
 description: "An e-book reader."
 publish_to: 'none'
 
-version: 1.10.2+6280
+version: 1.10.3+6281
 
 environment:
   sdk: '>=3.5.2 <4.0.0'
