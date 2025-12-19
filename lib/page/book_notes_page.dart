@@ -358,7 +358,7 @@ class _BookNotesPageState extends ConsumerState<BookNotesPage> {
   Row operators(BuildContext context, Book book) {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       IconAndText(
-          icon: const Icon(Icons.details),
+          icon: const Icon(Icons.info_outline_rounded),
           text: L10n.of(context).notesPageDetail,
           onTap: () {
             Navigator.push(

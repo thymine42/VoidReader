@@ -17,6 +17,8 @@ const List<String> notesColors = [
   '00FF00',
   'EB3BFF',
   'FFD700',
+  '191919',
+  'ff6c00'
 ];
 
 const List<NoteTypeOption> notesType = [

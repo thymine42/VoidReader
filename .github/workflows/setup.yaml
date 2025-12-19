@@ -2,9 +2,6 @@ name: Setup Environment
 
 on:
   workflow_call:
-    secrets:
-      NOTIFICATION_URL:
-        required: false
     outputs:
       tag:
         description: "Git tag"
@@ -41,13 +38,6 @@ jobs:
       xcode_version: ${{ steps.get_xcode_version.outputs.xcode_version }}
     
     steps:
-      - name: Send build start notification
-        if: ${{ secrets.NOTIFICATION_URL != '' }}
-        shell: bash
-        run: |
-          RUN_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          BASE_NOTIFICATION_URL="${{ secrets.NOTIFICATION_URL }}/Void-Reader%20Action"
-          curl -s "$BASE_NOTIFICATION_URL/Build%20Started?url=$RUN_URL&level=timeSensitive&icon=https://github.githubassets.com/assets/GitHub-Mark-ea2971cee799.png" || echo "Notification failed, continuing..."
 
       - name: Checkout repository
         uses: actions/checkout@v4

@@ -1,1 +1,57 @@
-{}
+{
+  "ar": [
+    "bookDetailDescription"
+  ],
+
+  "de": [
+    "bookDetailDescription"
+  ],
+
+  "es": [
+    "bookDetailDescription"
+  ],
+
+  "fr": [
+    "bookDetailDescription"
+  ],
+
+  "it": [
+    "bookDetailDescription"
+  ],
+
+  "ja": [
+    "bookDetailDescription"
+  ],
+
+  "ko": [
+    "bookDetailDescription"
+  ],
+
+  "pt": [
+    "bookDetailDescription"
+  ],
+
+  "ru": [
+    "bookDetailDescription"
+  ],
+
+  "tr": [
+    "bookDetailDescription"
+  ],
+
+  "zh": [
+    "bookDetailDescription"
+  ],
+
+  "zh_CN": [
+    "bookDetailDescription"
+  ],
+
+  "zh_LZH": [
+    "bookDetailDescription"
+  ],
+
+  "zh_TW": [
+    "bookDetailDescription"
+  ]
+}

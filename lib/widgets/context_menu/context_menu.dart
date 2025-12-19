@@ -25,7 +25,7 @@ void showContextMenu(
   if (playerKey == null) return;
 
   final renderBox =
-      epubPlayerKey.currentContext?.findRenderObject() as RenderBox?;
+  epubPlayerKey.currentContext?.findRenderObject() as RenderBox?;
   final renderBoxSize = renderBox?.size;
 
   final mediaQuery = MediaQuery.of(context);
@@ -54,12 +54,13 @@ void showContextMenu(
   const double verticalMargin = 16;
   const double gap = 12;
 
+  // MODIFIED SIZING FOR BIGGER MENU
   final double maxMenuWidth =
-      math.min(350, math.max(120, screenWidth - horizontalMargin * 2));
+  math.min(500, math.max(120, screenWidth - horizontalMargin * 2)); // Increased from 350 to 500
   final double effectiveHeight = math.max(0, screenHeight - keyboardInset);
   final double maxHeightCandidate = effectiveHeight - verticalMargin * 2;
   final double rawMaxHeight = math.min(
-    footnote ? 350 : 550,
+    footnote ? 500 : 700, // Increased footnote max height from 350 to 500, and regular from 550 to 700
     math.max(200, maxHeightCandidate),
   );
   final double maxMenuHeight = math.max(
@@ -71,6 +72,7 @@ void showContextMenu(
     maxWidth: maxMenuWidth,
     maxHeight: maxMenuHeight,
   );
+  // END OF MODIFIED SIZING
 
   final initialPlacement = _resolveMenuPlacement(
     axis: axis,
@@ -165,7 +167,7 @@ _MenuPlacement _resolveMenuPlacement({
   final double menuHeight = menuSize.height;
 
   final double clampedViewportBottom =
-      math.max(viewportRect.top, viewportRect.bottom - bottomInset);
+  math.max(viewportRect.top, viewportRect.bottom - bottomInset);
 
   if (axis == Axis.horizontal) {
     final double spaceAbove = selectionRect.top - viewportRect.top;
@@ -261,7 +263,7 @@ class _ContextMenuOverlayState extends State<_ContextMenuOverlay>
     with WidgetsBindingObserver {
   final GlobalKey _menuKey = GlobalKey();
   final GlobalKey<ReaderNoteMenuState> _readerNoteMenuKey =
-      GlobalKey<ReaderNoteMenuState>();
+  GlobalKey<ReaderNoteMenuState>();
 
   late Offset _position;
   late bool _reverse;
@@ -502,7 +504,7 @@ class _ContextMenuOverlayState extends State<_ContextMenuOverlay>
                                 decoration: widget.decoration,
                                 axis: widget.axis,
                                 onVisibilityChange:
-                                    _handleReaderNoteVisibilityChange,
+                                _handleReaderNoteVisibilityChange,
                                 onSizeChanged: _handleReaderNoteSizeChanged,
                               ),
                             ],

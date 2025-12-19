@@ -1,0 +1,1 @@
+<img src="assets/icon/Void-logo-white-rounded-bg.png">

@@ -18,13 +18,6 @@ on:
       release_notes:
         required: true
         type: string
-    secrets:
-      NOTIFICATION_URL:
-        required: false
-      TELEGRAM_TO:
-        required: false
-      TELEGRAM_TOKEN:
-        required: false
 
 permissions:
   contents: write
@@ -33,8 +26,6 @@ jobs:
   upload-artifacts:
     if: inputs.is_alpha == 'true'
     runs-on: ubuntu-latest
-    env:
-      BASE_NOTIFICATION_URL: ${{ secrets.NOTIFICATION_URL }}/Void-Reader%20Action
     steps:
       - name: Checkout tagged source
         uses: actions/checkout@v4
@@ -53,23 +44,11 @@ jobs:
           path: artifacts/
           if-no-files-found: warn
 
-      - name: Send build completion notification
-        shell: bash
-        env:
-          NOTIF_URL: ${{ secrets.NOTIFICATION_URL }}
-        run: |
-          if [ -z "$NOTIF_URL" ]; then
-            echo "No notification URL provided, skipping."
-            exit 0
-          fi
-          RUN_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          curl -s "$BASE_NOTIFICATION_URL/Build%20Completed?url=$RUN_URL&level=timeSensitive&icon=https://github.githubassets.com/assets/GitHub-Mark-ea2971cee799.png" || echo "Notification failed, continuing..."
+
 
   create-release:
     if: inputs.is_alpha != 'true'
     runs-on: ubuntu-latest
-    env:
-      BASE_NOTIFICATION_URL: ${{ secrets.NOTIFICATION_URL }}/Void-Reader%20Action
     steps:
       - name: Checkout tagged source
         uses: actions/checkout@v4
@@ -97,57 +76,10 @@ jobs:
           generate_release_notes: false
           prerelease: ${{ inputs.is_beta == 'true' }}
 
-      - name: Check Telegram Secrets
-        id: check_telegram
-        shell: bash
-        env:
-          TG_TO: ${{ secrets.TELEGRAM_TO }}
-          TG_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-        run: |
-          if [ -n "$TG_TO" ] && [ -n "$TG_TOKEN" ]; then
-            echo "has_secrets=true" >> $GITHUB_OUTPUT
-          else
-            echo "has_secrets=false" >> $GITHUB_OUTPUT
-          fi
 
-      - name: Send beta message
-        if: ${{ inputs.is_beta == 'true' && steps.check_telegram.outputs.has_secrets == 'true' }}
-        uses: appleboy/telegram-action@master
-        with:
-          to: ${{ secrets.TELEGRAM_TO }}
-          token: ${{ secrets.TELEGRAM_TOKEN }}
-          format: markdown
-          message: |
-            🧪 *Beta Version Released!*
-            
-            🧪 **Testing Version:** `${{ inputs.version }}`
-            
-            ⚠️ *This is a beta release for testing purposes. Please report any issues you encounter.*
-            
-            **What's New:**
-            ${{ inputs.release_notes }}
-            
-            📥 **Download:** https://github.com/Anxcye/anx-reader/releases/tag/${{ inputs.tag }}
 
-      - name: Send release message
-        if: ${{ inputs.is_beta != 'true' && inputs.is_alpha != 'true' }}
-        uses: appleboy/telegram-action@master
-        with:
-          to: ${{ secrets.TELEGRAM_TO }}
-          token: ${{ secrets.TELEGRAM_TOKEN }}
-          format: markdown
-          message: |
-            🎉 *New Release Available!*
-            
-            🚀 **Version:** `${{ inputs.version }}`
-            
-            **What's New:**
-            ${{ inputs.release_notes }}
-            
-            📥 **Download:** https://github.com/Anxcye/anx-reader/releases/tag/${{ inputs.tag }}
 
-      - name: Send build completion notification
-        shell: bash
-        run: |
-          RUN_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          curl -s "$BASE_NOTIFICATION_URL/Build%20Completed?url=$RUN_URL&level=timeSensitive&icon=https://github.githubassets.com/assets/GitHub-Mark-ea2971cee799.png" || echo "Notification failed, continuing..."
+
+
+
+
