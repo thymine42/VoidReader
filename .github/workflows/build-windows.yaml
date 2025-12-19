@@ -12,15 +12,11 @@ on:
     secrets:
       SIGNPATH_API_TOKEN:
         required: false
-      NOTIFICATION_URL:
-        required: false
 
 jobs:
   build-windows:
     runs-on: windows-latest
     env:
-      BASE_NOTIFICATION_URL: ${{ secrets.NOTIFICATION_URL }}/Void-Reader%20Action
-      NOTIFICATION_PARAMS: ?url=https://app.signpath.io/Web/254a26d6-6c3a-4a55-9ca6-890d0d34deb1/SigningRequests&level=timeSensitive&icon=https://github.githubassets.com/assets/GitHub-Mark-ea2971cee799.png
       IS_ALPHA: ${{ contains(inputs.version, '-alpha.') }}
     
     steps:
@@ -74,17 +70,7 @@ jobs:
           path: build/windows/unsigned/app.zip
           if-no-files-found: error
 
-      - name: Send notification after zip signing
-        if: ${{ env.IS_ALPHA != 'true' }}
-        env:
-          NOTIF_URL: ${{ secrets.NOTIFICATION_URL }}
-        run: |
-          if [ -z "$NOTIF_URL" ]; then
-            echo "No notification URL provided, skipping."
-            exit 0
-          fi
-          curl -s "$BASE_NOTIFICATION_URL/zip%20File%20Waiting%20for%20approval$NOTIFICATION_PARAMS" || echo "Notification failed, continuing..."
-        shell: bash
+
 
       - name: Sign Windows zip
         if: ${{ steps.check_signpath.outputs.has_token == 'true' }}
@@ -117,17 +103,7 @@ jobs:
           path: build/windows/unsigned/app.exe
           if-no-files-found: error
 
-      - name: Send notification after exe signing
-        if: ${{ env.IS_ALPHA != 'true' }}
-        env:
-          NOTIF_URL: ${{ secrets.NOTIFICATION_URL }}
-        run: |
-          if [ -z "$NOTIF_URL" ]; then
-            echo "No notification URL provided, skipping."
-            exit 0
-          fi
-          curl -s "$BASE_NOTIFICATION_URL/exe%20File%20Waiting%20for%20approval$NOTIFICATION_PARAMS" || echo "Notification failed, continuing..."
-        shell: bash
+
 
       - name: Sign Windows exe
         if: ${{ steps.check_signpath.outputs.has_token == 'true' }}
